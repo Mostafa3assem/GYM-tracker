@@ -4,17 +4,99 @@
 
 const I18N = {
   ar: {
-    app_title: 'تمريني', exercises_label: 'تمرين', sets_label: 'مجموعة', time_label: 'الوقت',
+    app_title: 'تمريني',
+    exercises_label: 'تمرين',
+    sets_label: 'مجموعة',
+    time_label: 'الوقت',
+    water_title: '💧 استهلاك الماء في التمرين',
+    plan_banner_sub: 'اضغط لبدء تمارين خطة اليوم بالتسلسل',
+    btn_start_plan: 'بدء التدريب ⚡',
     cat_all: 'الكل', cat_chest: 'صدر', cat_back: 'ظهر', cat_shoulders: 'أكتاف', cat_arms: 'ذراع', cat_legs: 'أرجل', cat_core: 'بطن', cat_cardio: 'كارديو',
+    multi_hint: '💡 اضغط على الدائرة لاختيار عدة تمارين ولعبها بالتسلسل:',
+    clear_sel: 'إلغاء التحديد',
+    multi_ready: 'جاهزة للإضافة وبدء الجلسة',
+    btn_start_multi: 'بدء التمارين الآن 🚀',
+    export_pdf_btn: '📄 تقرير PDF',
+    export_btn: '📥 نسخ احتياطي',
+    import_btn: '📤 استرجاع',
     nav_today: 'اليوم', nav_plan: 'المدرب الذكي', nav_exercises: 'التمارين', nav_history: 'السجل',
+    btn_alt_ex: '🔄 بديل التمرين',
+    lbl_weight: 'الوزن (كجم)',
+    lbl_reps: 'العدات (التكرار)',
+    btn_finish_set: '✅ أنهيت المجموعة وبدء الراحة ⏱️',
+    lbl_water_q: 'ماء؟ 💧',
+    lbl_rest: 'الراحة:',
+    chip_none: 'بدون',
+    tbl_set: 'المجموعة', tbl_wt: 'الوزن (كجم)', tbl_reps: 'العدات', tbl_del: 'حذف',
+    notes_label: 'ملاحظات التمرين',
+    cancel_btn: 'إلغاء', save_btn: 'حفظ وإنهاء التمرين',
+    swap_title: '🔄 بدائل الأجهزة والتمارين',
+    close_btn: 'إغلاق',
+    quiz_title: '🎯 إعداد خطتك التدريبية والبدنية',
+    quiz_weight_lbl: 'الوزن الحالي (كجم):',
+    quiz_height_lbl: 'الطول (سم):',
+    quiz_goal: '1. ما هو هدفك الأساسي؟',
+    quiz_level: '2. مستواك التدريبي في الجيم:',
+    quiz_days: '3. كم يوماً تستطيع التمرين أسبوعياً؟',
+    quiz_injury_lbl: '4. هل تعاني من أي إصابات لتجنبها؟',
+    quiz_focus: '5. عضلة ترغب في التركيز عليها كنقطة ضعف:',
+    generate_plan_btn: 'توليد الخطة الذكية 🚀',
+    approval_title: '🎉 تم تجهيز برنامجك التدريبي!',
+    edit_plan_btn: 'تعديل',
+    accept_plan_btn: 'اعتماد وبدء تمرين اليوم ⚡',
+    notif_title: '🔔 التنبيهات والمتابعة',
+    clear_all: 'مسح الكل',
+    manage_users_title: 'إدارة المتدربين',
+    add_user_btn: 'إضافة',
     edit_name: 'تعديل', delete_user: 'حذف',
     welcome_empty: 'مرحباً {user}! لم تسجل تمارين اليوم بعد.<br>اضغط على <strong>+</strong> لاختيار تمارينك أو افتح <strong>المدرب الذكي</strong> لتحميل جدولك!',
     search_placeholder: 'ابحث عن تمرين...'
   },
   en: {
-    app_title: 'Tamriny', exercises_label: 'Exercises', sets_label: 'Sets', time_label: 'Time',
+    app_title: 'Tamriny',
+    exercises_label: 'Exercises',
+    sets_label: 'Sets',
+    time_label: 'Time',
+    water_title: '💧 Intra-workout Hydration',
+    plan_banner_sub: 'Tap to start today scheduled workout',
+    btn_start_plan: 'Start Workout ⚡',
     cat_all: 'All', cat_chest: 'Chest', cat_back: 'Back', cat_shoulders: 'Shoulders', cat_arms: 'Arms', cat_legs: 'Legs', cat_core: 'Core', cat_cardio: 'Cardio',
+    multi_hint: '💡 Tap circles to select multiple exercises & start:',
+    clear_sel: 'Clear Selection',
+    multi_ready: 'Ready to log workout flow',
+    btn_start_multi: 'Start Selected Now 🚀',
+    export_pdf_btn: '📄 Export PDF',
+    export_btn: '📥 Backup',
+    import_btn: '📤 Restore',
     nav_today: 'Today', nav_plan: 'Smart Coach', nav_exercises: 'Exercises', nav_history: 'History',
+    btn_alt_ex: '🔄 Exercise Alternative',
+    lbl_weight: 'Weight (kg)',
+    lbl_reps: 'Reps Count',
+    btn_finish_set: '✅ Finish Set & Rest ⏱️',
+    lbl_water_q: 'Water? 💧',
+    lbl_rest: 'Rest:',
+    chip_none: 'None',
+    tbl_set: 'Set', tbl_wt: 'Weight (kg)', tbl_reps: 'Reps', tbl_del: 'Del',
+    notes_label: 'Exercise Notes',
+    cancel_btn: 'Cancel', save_btn: 'Save & Finish Exercise',
+    swap_title: '🔄 Exercise Alternatives',
+    close_btn: 'Close',
+    quiz_title: '🎯 Smart Workout Coach Setup',
+    quiz_weight_lbl: 'Current Weight (kg):',
+    quiz_height_lbl: 'Height (cm):',
+    quiz_goal: '1. What is your primary goal?',
+    quiz_level: '2. Your training experience:',
+    quiz_days: '3. Workout days per week:',
+    quiz_injury_lbl: '4. Any injuries to avoid?',
+    quiz_focus: '5. Weak point muscle focus:',
+    generate_plan_btn: 'Generate Smart Plan 🚀',
+    approval_title: '🎉 Your Workout Plan is Ready!',
+    edit_plan_btn: 'Edit',
+    accept_plan_btn: 'Accept & Start Today ⚡',
+    notif_title: '🔔 Notifications & Check-in',
+    clear_all: 'Clear All',
+    manage_users_title: 'Manage Athletes',
+    add_user_btn: 'Add',
     edit_name: 'Edit', delete_user: 'Delete',
     welcome_empty: 'Welcome {user}! No workouts logged today.<br>Tap <strong>+</strong> to pick your workout or open <strong>Smart Coach</strong>!',
     search_placeholder: 'Search exercise...'
@@ -73,7 +155,7 @@ const EXERCISES = [
   { id:'treadmill',           name_ar:'مشاية كهربائية (سير)',      name_en:'Treadmill Running / Incline',   category:'cardio', icon:'🏃', alts:['stationary-bike'] }
 ];
 
-const STORAGE_KEY_PREFIX = 'gymTracker_v8_';
+const STORAGE_KEY_PREFIX = 'gymTracker_v9_';
 
 // ── State ─────────────────────────────────────────────────────────
 let lang           = localStorage.getItem('gymTrackerLang') || 'ar';
@@ -146,10 +228,41 @@ const fmtTimer = (ms) => {
 };
 
 const fmtDuration = (ms) => {
-  if (!ms || ms < 0) return '0 دقيقة';
+  if (!ms || ms < 0) return lang === 'ar' ? '0 دقيقة' : '0 min';
   const h = Math.floor(ms / 3600000);
   const m = Math.floor((ms % 3600000) / 60000);
-  return h > 0 ? `${h} ساعة و ${m} دقيقة` : `${m} دقيقة`;
+  if (lang === 'ar') return h > 0 ? `${h} ساعة و ${m} دقيقة` : `${m} دقيقة`;
+  return h > 0 ? `${h}h ${m}m` : `${m} min`;
+};
+
+// ── Language Toggle & Localization ────────────────────────────────
+const applyLanguage = () => {
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  $('btn-lang-toggle').textContent = lang === 'ar' ? 'EN' : 'عربي';
+  $('search-input').placeholder = I18N[lang].search_placeholder;
+
+  $$('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (I18N[lang][key]) el.textContent = I18N[lang][key];
+  });
+
+  const dateEl = $('current-date');
+  if (dateEl) dateEl.textContent = fmtDate(todayISO());
+
+  renderUserSelect();
+  renderToday();
+  renderLibrary();
+  renderHistory();
+  renderPlanView();
+  renderWaterDisplay();
+};
+
+const toggleLanguage = () => {
+  lang = lang === 'ar' ? 'en' : 'ar';
+  localStorage.setItem('gymTrackerLang', lang);
+  applyLanguage();
+  toast(lang === 'ar' ? 'تم تحويل اللغة إلى العربية 🇸🇦' : 'Language switched to English 🇺🇸');
 };
 
 // ── Storage & User Switch ─────────────────────────────────────────
@@ -227,14 +340,16 @@ const toggleTheme = () => {
 const renderWaterDisplay = () => {
   const w = currentData.water || 0;
   const liters = (w * 0.25).toFixed(2);
-  $('water-count-display').textContent = `${liters} لتر (${w} أكواب)`;
+  const unitLit = lang === 'ar' ? 'لتر' : 'L';
+  const unitCups = lang === 'ar' ? 'أكواب' : 'cups';
+  $('water-count-display').textContent = `${liters} ${unitLit} (${w} ${unitCups})`;
 };
 
 const addWater = (delta) => {
   currentData.water = Math.max(0, (currentData.water || 0) + delta);
   saveUserData();
   renderWaterDisplay();
-  if (delta > 0) toast('عاش! كوب ماء إضافي للترطيب 💧');
+  if (delta > 0) toast(lang === 'ar' ? 'عاش! كوب ماء إضافي للترطيب 💧' : 'Great! +250ml Water 💧');
 };
 
 // ── Enhanced Smart Coach (5/6 Days & Injury Safe) ─────────────────
@@ -312,10 +427,10 @@ const openModal = (exId) => {
   $('modal-title').textContent = lang === 'ar' ? def.name_ar : def.name_en;
 
   if (last && last.sets && last.sets.length) {
-    const lastSetsStr = last.sets.map((s, i) => `م${i+1}: ${s.weight}kg×${s.reps}`).join(' | ');
-    $('last-session-text').innerHTML = `آخر تمرين (${fmtDate(last.date)}):<br><strong>${lastSetsStr}</strong>`;
+    const lastSetsStr = last.sets.map((s, i) => `${lang === 'ar' ? 'م' : 'S'}${i+1}: ${s.weight}kg×${s.reps}`).join(' | ');
+    $('last-session-text').innerHTML = `${lang === 'ar' ? 'آخر تمرين' : 'Last Session'} (${fmtDate(last.date)}):<br><strong>${lastSetsStr}</strong>`;
   } else {
-    $('last-session-text').textContent = 'أول مرة تلعب هذا التمرين! 💪';
+    $('last-session-text').textContent = lang === 'ar' ? 'أول مرة تلعب هذا التمرين! 💪' : 'First time doing this exercise! 💪';
   }
 
   if (existing && existing.sets && existing.sets.length) {
@@ -346,7 +461,8 @@ const populateActiveSetInputs = () => {
   const currentSet = modalSets[currentSetIdx] || modalSets[modalSets.length - 1] || { weight: 20, reps: 10 };
   $('active-set-weight').value = currentSet.weight;
   $('active-set-reps').value = currentSet.reps;
-  $('live-set-status').textContent = `المجموعة ${currentSetIdx + 1} من ${modalSets.length}`;
+  const setTxt = lang === 'ar' ? `المجموعة ${currentSetIdx + 1} من ${modalSets.length}` : `Set ${currentSetIdx + 1} of ${modalSets.length}`;
+  $('live-set-status').textContent = setTxt;
 };
 
 window.stepActiveWeight = (delta) => {
@@ -379,7 +495,7 @@ const handleFinishSetClick = () => {
     isResting = false;
     populateActiveSetInputs();
     const btn = $('btn-finish-set');
-    btn.textContent = '✅ أنهيت المجموعة وبدء الراحة ⏱️';
+    btn.textContent = I18N[lang].btn_finish_set;
     btn.classList.remove('start-next');
     return;
   }
@@ -390,7 +506,7 @@ const handleFinishSetClick = () => {
       modalSets.push({ weight: wt, reps: rp });
     }
     populateActiveSetInputs();
-    toast('تم تسجيل المجموعة والانتقال للمجموعة التالية ⚡');
+    toast(lang === 'ar' ? 'تم تسجيل المجموعة والانتقال للمجموعة التالية ⚡' : 'Set saved! Next set ready ⚡');
     return;
   }
 
@@ -408,16 +524,16 @@ const startLiveRestTimer = (seconds) => {
   counterEl.textContent = `⏱️ ${String(Math.floor(restRemaining / 60)).padStart(2,'0')}:${String(restRemaining % 60).padStart(2,'0')}`;
 
   const btn = $('btn-finish-set');
-  btn.textContent = '⚡ ابدأ المجموعة التالية';
+  btn.textContent = lang === 'ar' ? '⚡ ابدأ المجموعة التالية' : '⚡ Start Next Set';
   btn.classList.add('start-next');
 
   restRef = setInterval(() => {
     restRemaining--;
     if (restRemaining <= 0) {
       clearInterval(restRef);
-      counterEl.textContent = '🔔 انتهى وقت الراحة!';
+      counterEl.textContent = lang === 'ar' ? '🔔 انتهى وقت الراحة!' : '🔔 Rest Over!';
       playMultipleBeeps(5);
-      toast('انتهى وقت الراحة! ابدأ مجموعتك القادمة 💪');
+      toast(lang === 'ar' ? 'انتهى وقت الراحة! ابدأ مجموعتك القادمة 💪' : 'Rest time over! Start next set 💪');
     } else {
       const m = Math.floor(restRemaining / 60);
       const s = restRemaining % 60;
@@ -430,7 +546,7 @@ const cancelLiveRestTimer = () => {
   if (restRef) clearInterval(restRef);
   $('live-rest-counter').style.display = 'none';
   const btn = $('btn-finish-set');
-  btn.textContent = '✅ أنهيت المجموعة وبدء الراحة ⏱️';
+  btn.textContent = I18N[lang].btn_finish_set;
   btn.classList.remove('start-next');
   isResting = false;
 };
@@ -483,7 +599,7 @@ const saveExerciseModal = () => {
   saveUserData();
   const finishedExId = modalExId;
   closeModal();
-  toast('تم حفظ التمرين ✅');
+  toast(lang === 'ar' ? 'تم حفظ التمرين ✅' : 'Exercise Saved ✅');
 
   if ($('today-view').classList.contains('active')) renderToday();
   if ($('library-view').classList.contains('active')) renderLibrary();
@@ -499,14 +615,16 @@ const promptNextExerciseFlow = (currentFinishedId) => {
     const nextDef = EXERCISES.find(e => e.id === nextEx.id);
     if (nextDef) {
       setTimeout(() => {
-        if (confirm(`عاش يا بطل! هل ترغب في بدء التمرين التالي مباشرة (${nextDef.name_ar})؟`)) {
+        const nextName = lang === 'ar' ? nextDef.name_ar : nextDef.name_en;
+        const msg = lang === 'ar' ? `عاش يا بطل! هل ترغب في بدء التمرين التالي مباشرة (${nextName})؟` : `Great job! Start next exercise (${nextName})?`;
+        if (confirm(msg)) {
           openModal(nextEx.id);
         }
       }, 500);
     }
   } else if (currentIndex === w.exercises.length - 1 && w.exercises.length > 1) {
     setTimeout(() => {
-      toast('🎉 عاش جداً! أنهيت جميع تمارين جدول اليوم بنجاح!');
+      toast(lang === 'ar' ? '🎉 عاش جداً! أنهيت جميع تمارين جدول اليوم بنجاح!' : '🎉 Champion! Completed all of today workouts!');
     }, 500);
   }
 };
@@ -541,7 +659,7 @@ const updateMultiSelectUI = () => {
   if (selectedExIds.length > 0) {
     bar.style.display = 'flex';
     clearBtn.style.display = 'inline-block';
-    countEl.textContent = `${selectedExIds.length} تمارين محددة`;
+    countEl.textContent = lang === 'ar' ? `${selectedExIds.length} تمارين محددة` : `${selectedExIds.length} Exercises Selected`;
   } else {
     bar.style.display = 'none';
     clearBtn.style.display = 'none';
@@ -577,7 +695,7 @@ const startSelectedExercisesRoutine = () => {
   const firstExId = selectedExIds[0];
   clearExerciseSelection();
   switchView('today-view');
-  toast('تمت إضافة التمارين إلى جدول اليوم 🚀');
+  toast(lang === 'ar' ? 'تمت إضافة التمارين إلى جدول اليوم 🚀' : 'Exercises added to today workout 🚀');
 
   setTimeout(() => {
     openModal(firstExId);
@@ -616,7 +734,7 @@ const exportPDFReport = () => {
           <div class="pdf-day-title">${r.dayName}</div>
           ${r.exercises.map(exId => {
             const def = EXERCISES.find(e => e.id === exId);
-            return `<div class="pdf-ex-row"><span>${def ? def.name_ar : exId}</span><span>${p.setsCount} مجموعات × ${p.repScheme} عدات</span></div>`;
+            return `<div class="pdf-ex-row"><span>${def ? (lang === 'ar' ? def.name_ar : def.name_en) : exId}</span><span>${p.setsCount} مجموعات × ${p.repScheme} عدات</span></div>`;
           }).join('')}
         </div>
       `;
@@ -632,7 +750,7 @@ const exportPDFReport = () => {
           ${w.exercises.map(ex => {
             const def = EXERCISES.find(e => e.id === ex.id);
             const setsStr = (ex.sets || []).map((s, i) => `[م${i+1}: ${s.weight}كجم × ${s.reps}]`).join(' ');
-            return `<div class="pdf-ex-row"><span>${def ? def.name_ar : ex.id}</span><span>${setsStr}</span></div>`;
+            return `<div class="pdf-ex-row"><span>${def ? (lang === 'ar' ? def.name_ar : def.name_en) : ex.id}</span><span>${setsStr}</span></div>`;
           }).join('')}
         </div>
       `;
@@ -649,12 +767,12 @@ const openSwapperModal = (currentExId) => {
   const def = EXERCISES.find(e => e.id === currentExId);
   if (!def) return;
 
-  $('swap-current-name').innerHTML = `بدائل تمرين: <strong>${lang === 'ar' ? def.name_ar : def.name_en}</strong>`;
+  $('swap-current-name').innerHTML = `${lang === 'ar' ? 'بدائل تمرين:' : 'Alternatives for:'} <strong>${lang === 'ar' ? def.name_ar : def.name_en}</strong>`;
   const container = $('swap-alternatives-list');
   const alts = def.alts || [];
 
   if (alts.length === 0) {
-    container.innerHTML = `<p style="text-align:center;color:var(--text3);font-size:.85rem;">لا توجد بدائل مسجلة لهذا التمرين.</p>`;
+    container.innerHTML = `<p style="text-align:center;color:var(--text3);font-size:.85rem;">${lang === 'ar' ? 'لا توجد بدائل مسجلة لهذا التمرين.' : 'No alternatives found.'}</p>`;
   } else {
     container.innerHTML = alts.map(altId => {
       const altDef = EXERCISES.find(e => e.id === altId);
@@ -664,9 +782,9 @@ const openSwapperModal = (currentExId) => {
         <div class="swap-item" onclick="confirmExerciseSwap('${altId}')">
           <div class="swap-item-info">
             <h5>${altDef.icon} ${name}</h5>
-            <span>بديل فعال لنفس الزاوية العضلية</span>
+            <span>${lang === 'ar' ? 'بديل فعال لنفس الزاوية العضلية' : 'Effective muscle angle alternative'}</span>
           </div>
-          <span style="color:var(--accent);font-weight:800;font-size:.9rem;">اختيار ⚡</span>
+          <span style="color:var(--accent);font-weight:800;font-size:.9rem;">${lang === 'ar' ? 'اختيار ⚡' : 'Select ⚡'}</span>
         </div>`;
     }).join('');
   }
@@ -698,7 +816,7 @@ window.confirmExerciseSwap = (newExId) => {
     saveUserData();
     closeSwapperModal();
     renderToday();
-    toast('تم استبدال التمرين بنجاح 🔄');
+    toast(lang === 'ar' ? 'تم استبدال التمرين بنجاح 🔄' : 'Exercise replaced successfully 🔄');
   } else {
     closeSwapperModal();
     openModal(newExId);
@@ -742,12 +860,12 @@ const showPlanApprovalModal = () => {
   const container = $('approval-plan-content');
   container.innerHTML = `
     <h3 style="color:var(--accent);margin-bottom:6px;">${p.title}</h3>
-    <p style="margin-bottom:10px;color:var(--text2);">النظام: <strong>${p.setsCount} مجموعات × ${p.repScheme} عدات</strong> لكل تمرين.</p>
+    <p style="margin-bottom:10px;color:var(--text2);">${lang === 'ar' ? 'النظام:' : 'Scheme:'} <strong>${p.setsCount} ${lang === 'ar' ? 'مجموعات' : 'Sets'} × ${p.repScheme} ${lang === 'ar' ? 'عدات' : 'Reps'}</strong></p>
     <div style="display:flex;flex-direction:column;gap:8px;">
       ${p.routines.map(r => `
         <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:8px 12px;">
           <strong style="color:var(--text);font-size:.9rem;">${r.dayName}</strong>
-          <div style="color:var(--text2);font-size:.78rem;margin-top:4px;">${r.exercises.length} تمارين مخصصة</div>
+          <div style="color:var(--text2);font-size:.78rem;margin-top:4px;">${r.exercises.length} ${lang === 'ar' ? 'تمارين مخصصة' : 'exercises'}</div>
         </div>
       `).join('')}
     </div>
@@ -768,7 +886,7 @@ const acceptGeneratedPlan = () => {
   pendingPlan = null;
 
   applyPlanDayToToday(0);
-  toast('تم اعتماد الخطة وبدء تمرين اليوم 🚀');
+  toast(lang === 'ar' ? 'تم اعتماد الخطة وبدء تمرين اليوم 🚀' : 'Plan accepted! Starting workout 🚀');
 };
 
 // ── Render Views ──────────────────────────────────────────────────
@@ -805,7 +923,7 @@ const renderToday = () => {
     if (!def) return '';
     const exName = lang === 'ar' ? def.name_ar : def.name_en;
     const setsChips = (ex.sets || []).map((s, idx) => `
-      <span class="set-chip">م${idx+1}: <strong>${s.weight}kg</strong> × ${s.reps}</span>
+      <span class="set-chip">${lang === 'ar' ? 'م' : 'S'}${idx+1}: <strong>${s.weight}kg</strong> × ${s.reps}</span>
     `).join('');
 
     return `
@@ -817,7 +935,7 @@ const renderToday = () => {
           </div>
           <div class="card-actions">
             <button class="swap-btn" onclick="openSwapperModal('${ex.id}')" title="بديل التمرين">🔄</button>
-            <button class="edit-btn" onclick="openModal('${ex.id}')">تمرين</button>
+            <button class="edit-btn" onclick="openModal('${ex.id}')">${lang === 'ar' ? 'تمرين' : 'Log'}</button>
             <button class="remove-btn" onclick="removeExercise('${ex.id}')">✕</button>
           </div>
         </div>
@@ -834,7 +952,7 @@ const updateTimer = () => {
 };
 
 const removeExercise = (exId) => {
-  if (!confirm('حذف التمرين من جلسة اليوم؟')) return;
+  if (!confirm(lang === 'ar' ? 'حذف التمرين من جلسة اليوم؟' : 'Remove exercise from today session?')) return;
   const w = todayWorkout();
   w.exercises = w.exercises.filter(e => e.id !== exId);
   if (w.exercises.length === 0) w.start = null;
@@ -855,7 +973,7 @@ const renderLibrary = () => {
 
   const grid = $('exercise-grid');
   if (list.length === 0) {
-    grid.innerHTML = `<div class="empty-state"><p>لا توجد نتائج مطابقة 🤷</p></div>`;
+    grid.innerHTML = `<div class="empty-state"><p>${lang === 'ar' ? 'لا توجد نتائج مطابقة 🤷' : 'No matching exercises 🤷'}</p></div>`;
     return;
   }
 
@@ -869,7 +987,7 @@ const renderLibrary = () => {
         <h4>${exName}</h4>
         <div class="ex-card-actions">
           <span class="muscle-tag">${ex.category}</span>
-          <button type="button" class="btn-alt-badge" onclick="event.stopPropagation(); openSwapperModal('${ex.id}')">بدائل 🔄</button>
+          <button type="button" class="btn-alt-badge" onclick="event.stopPropagation(); openSwapperModal('${ex.id}')">${lang === 'ar' ? 'بدائل 🔄' : 'Alts 🔄'}</button>
         </div>
       </div>`;
   }).join('');
@@ -881,8 +999,8 @@ const renderPlanView = () => {
     container.innerHTML = `
       <div class="empty-state">
         <div class="empty-icon">🎯</div>
-        <p>لا توجد خطة مخصصة لـ <strong>${currentUser}</strong> بعد.</p>
-        <button type="button" class="btn-save" style="margin-top:14px;" onclick="openPlanQuizModal()">ابدأ مع المدرب الذكي 🚀</button>
+        <p>${lang === 'ar' ? 'لا توجد خطة مخصصة لـ ' : 'No plan yet for '}<strong>${currentUser}</strong>.</p>
+        <button type="button" class="btn-save" style="margin-top:14px;" onclick="openPlanQuizModal()">${lang === 'ar' ? 'ابدأ مع المدرب الذكي 🚀' : 'Start Smart Coach 🚀'}</button>
       </div>`;
     return;
   }
@@ -890,17 +1008,17 @@ const renderPlanView = () => {
   const p = currentData.plan;
   container.innerHTML = `
     <div class="coach-header-card">
-      <span class="coach-badge">${p.goal === 'bulk' ? 'تضخيم وبناء عضل' : (p.goal === 'cut' ? 'تنشيف وحرق دهون' : 'قوة ولياقة')}</span>
+      <span class="coach-badge">${p.goal === 'bulk' ? (lang === 'ar' ? 'تضخيم وبناء عضل' : 'Bulking') : (p.goal === 'cut' ? (lang === 'ar' ? 'تنشيف وحرق دهون' : 'Cutting') : (lang === 'ar' ? 'قوة ولياقة' : 'Strength'))}</span>
       <h3>${p.title}</h3>
-      <p>نظام التكرارات: <strong>${p.repScheme} عدات</strong> | المجموعات: <strong>${p.setsCount} مجاميع</strong></p>
-      <button type="button" class="btn-user-action" style="margin-top:10px;" onclick="openPlanQuizModal()">تعديل الخطة ⚙️</button>
+      <p>${lang === 'ar' ? 'نظام التكرارات:' : 'Reps:'} <strong>${p.repScheme} ${lang === 'ar' ? 'عدات' : 'reps'}</strong> | ${lang === 'ar' ? 'المجموعات:' : 'Sets:'} <strong>${p.setsCount} ${lang === 'ar' ? 'مجاميع' : 'sets'}</strong></p>
+      <button type="button" class="btn-user-action" style="margin-top:10px;" onclick="openPlanQuizModal()">${lang === 'ar' ? 'تعديل الخطة ⚙️' : 'Edit Plan ⚙️'}</button>
     </div>
     <div class="plan-routines-list">
       ${p.routines.map((r, rIdx) => `
         <div class="plan-day-card">
           <div class="plan-day-header">
             <h4>${r.dayName}</h4>
-            <button type="button" class="btn-user-action" onclick="applyPlanDayToToday(${rIdx})">بدء تمرين هذا اليوم ⚡</button>
+            <button type="button" class="btn-user-action" onclick="applyPlanDayToToday(${rIdx})">${lang === 'ar' ? 'بدء تمرين هذا اليوم ⚡' : 'Start Today Workout ⚡'}</button>
           </div>
           <div class="plan-ex-list">
             ${r.exercises.map(exId => {
@@ -941,7 +1059,7 @@ const applyPlanDayToToday = (routineIdx) => {
 
   saveUserData();
   switchView('today-view');
-  toast(`تم تجهيز جدول: ${routine.dayName} ✅`);
+  toast(lang === 'ar' ? `تم تجهيز جدول: ${routine.dayName} ✅` : `Loaded: ${routine.dayName} ✅`);
 
   if (routine.exercises.length > 0) {
     setTimeout(() => {
@@ -957,7 +1075,7 @@ const renderHistory = () => {
     .sort((a, b) => b.date.localeCompare(a.date));
 
   if (past.length === 0) {
-    container.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><p>لا يوجد سجل تمارين بعد لـ <strong>${currentUser}</strong>.</p></div>`;
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><p>${lang === 'ar' ? 'لا يوجد سجل تمارين بعد لـ ' : 'No history yet for '}<strong>${currentUser}</strong>.</p></div>`;
     return;
   }
 
@@ -968,7 +1086,7 @@ const renderHistory = () => {
         <div class="history-header" onclick="toggleHistory('${w.id}')">
           <div>
             <h4>${fmtDate(w.date)}</h4>
-            <span class="meta">${w.exercises.length} تمرين${dur ? ' • ' + dur : ''}</span>
+            <span class="meta">${w.exercises.length} ${I18N[lang].exercises_label}${dur ? ' • ' + dur : ''}</span>
           </div>
           <span class="chevron">▾</span>
         </div>
@@ -976,14 +1094,14 @@ const renderHistory = () => {
           ${w.exercises.map(ex => {
             const def = EXERCISES.find(e => e.id === ex.id);
             const exName = def ? (lang === 'ar' ? def.name_ar : def.name_en) : ex.id;
-            const setsTxt = (ex.sets || []).map((s, i) => `[م${i+1}: ${s.weight}kg × ${s.reps}]`).join(' ');
+            const setsTxt = (ex.sets || []).map((s, i) => `[${lang === 'ar' ? 'م' : 'S'}${i+1}: ${s.weight}kg × ${s.reps}]`).join(' ');
             return `
               <div class="history-ex-row">
                 <div class="ex-title">${exName}</div>
                 <div class="history-sets-view">${setsTxt}</div>
               </div>`;
           }).join('')}
-          <div class="history-delete" onclick="deleteWorkout('${w.id}')">حذف هذا اليوم من السجل</div>
+          <div class="history-delete" onclick="deleteWorkout('${w.id}')">${lang === 'ar' ? 'حذف هذا اليوم من السجل' : 'Delete this day'}</div>
         </div>
       </div>`;
   }).join('');
@@ -995,7 +1113,7 @@ const toggleHistory = (wId) => {
 };
 
 const deleteWorkout = (wId) => {
-  if (!confirm('حذف تمارين هذا اليوم؟')) return;
+  if (!confirm(lang === 'ar' ? 'حذف تمارين هذا اليوم؟' : 'Delete this day workout?')) return;
   currentData.workouts = currentData.workouts.filter(w => w.id !== wId);
   saveUserData();
   renderHistory();
@@ -1006,7 +1124,7 @@ const deleteWorkout = (wId) => {
 const openNotifModal = () => {
   const container = $('notif-content-box');
   if (!currentData.notifications || currentData.notifications.length === 0) {
-    container.innerHTML = `<div class="empty-state" style="padding:20px 0;"><p>لا توجد تنبيهات جديدة 🎉</p></div>`;
+    container.innerHTML = `<div class="empty-state" style="padding:20px 0;"><p>${lang === 'ar' ? 'لا توجد تنبيهات جديدة 🎉' : 'No new notifications 🎉'}</p></div>`;
   } else {
     container.innerHTML = currentData.notifications.map(n => `
       <div class="notif-card">
@@ -1038,7 +1156,7 @@ const clearAllNotifications = () => {
   saveUserData();
   openNotifModal();
   $('notif-badge').classList.remove('active');
-  toast('تم مسح جميع الإشعارات 🗑️');
+  toast(lang === 'ar' ? 'تم مسح جميع الإشعارات 🗑️' : 'All notifications cleared 🗑️');
 };
 
 // ── Users Management ──────────────────────────────────────────────
@@ -1053,8 +1171,8 @@ const openUsersModal = () => {
     <div class="user-item-row">
       <span class="user-item-name">${u} ${u === currentUser ? '⭐' : ''}</span>
       <div class="user-item-actions">
-        <button type="button" class="btn-user-action" onclick="editUserName(${idx})">تعديل</button>
-        ${users.length > 1 ? `<button type="button" class="btn-user-action delete" onclick="deleteUser(${idx})">حذف</button>` : ''}
+        <button type="button" class="btn-user-action" onclick="editUserName(${idx})">${I18N[lang].edit_name}</button>
+        ${users.length > 1 ? `<button type="button" class="btn-user-action delete" onclick="deleteUser(${idx})">${I18N[lang].delete_user}</button>` : ''}
       </div>
     </div>
   `).join('');
@@ -1069,7 +1187,7 @@ const closeUsersModal = () => {
 
 window.editUserName = (idx) => {
   const oldName = users[idx];
-  const newName = prompt('تعديل اسم المتدرب:', oldName);
+  const newName = prompt(lang === 'ar' ? 'تعديل اسم المتدرب:' : 'Edit athlete name:', oldName);
   if (!newName || !newName.trim() || newName.trim() === oldName) return;
   const cleanName = newName.trim();
 
@@ -1092,7 +1210,7 @@ window.editUserName = (idx) => {
 
 window.deleteUser = (idx) => {
   const target = users[idx];
-  if (!confirm(`حذف المتدرب ${target} وجميع سجلاته؟`)) return;
+  if (!confirm(lang === 'ar' ? `حذف المتدرب ${target} وجميع سجلاته؟` : `Delete athlete ${target}?`)) return;
 
   localStorage.removeItem(STORAGE_KEY_PREFIX + target);
   users.splice(idx, 1);
@@ -1160,13 +1278,10 @@ document.addEventListener('DOMContentLoaded', () => {
   loadUsers();
   loadUserData();
   applyTheme();
-
-  const dateEl = $('current-date');
-  if (dateEl) dateEl.textContent = fmtDate(todayISO());
-
-  renderUserSelect();
+  applyLanguage();
 
   $('btn-theme-toggle').addEventListener('click', toggleTheme);
+  $('btn-lang-toggle').addEventListener('click', toggleLanguage);
   $('user-select').addEventListener('change', handleUserSelectChange);
   $('btn-manage-users').addEventListener('click', openUsersModal);
   $('btn-close-users').addEventListener('click', closeUsersModal);
@@ -1222,7 +1337,7 @@ document.addEventListener('DOMContentLoaded', () => {
     $$('.chip-rest').forEach(c => c.classList.remove('active'));
     chip.classList.add('active');
     selectedRestSec = parseInt(chip.dataset.sec, 10);
-    toast(`تم ضبط الراحة: ${chip.textContent}`);
+    toast(`${lang === 'ar' ? 'تم ضبط الراحة:' : 'Rest set to:'} ${chip.textContent}`);
   }));
 
   $('btn-export-pdf').addEventListener('click', exportPDFReport);
