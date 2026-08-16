@@ -31,6 +31,18 @@
             </div>
             <div class="header-left">
                 <div class="header-top-actions">
+                    <!-- Social Links -->
+                    <div class="social-links-box">
+                        <a href="https://www.facebook.com/share/1ErA2onGqh/?mibextid=wwXIfr" target="_blank" rel="noopener" class="social-btn fb" title="Facebook">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        </a>
+                        <a href="https://www.facebook.com/share/1ErA2onGqh/?mibextid=wwXIfr" target="_blank" rel="noopener" class="social-btn ig" title="Instagram">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                        </a>
+                        <a href="https://www.linkedin.com/in/mostafa-mohamed-assem-69509823b?utm_source=share_via&utm_content=profile&utm_medium=member_ios" target="_blank" rel="noopener" class="social-btn in" title="LinkedIn">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                        </a>
+                    </div>
                     <button id="btn-theme-toggle" class="btn-icon-head" title="تبديل المظهر">☀️</button>
                     <button id="btn-notifications" class="btn-icon-head" title="الإشعارات والمتابعة">
                         🔔
@@ -51,9 +63,9 @@
             <div id="plan-banner" class="plan-banner" style="display:none">
                 <div class="plan-banner-text">
                     <span class="plan-banner-tag" id="plan-banner-title">خطة مخصصة</span>
-                    <p id="plan-banner-sub">اضغط لتحميل تمارين خطة اليوم تلقائياً</p>
+                    <p id="plan-banner-sub">اضغط لبدء تمارين خطة اليوم بالتسلسل</p>
                 </div>
-                <button type="button" id="btn-load-plan-day" class="btn-banner-action">تحميل التمارين ⚡</button>
+                <button type="button" id="btn-load-plan-day" class="btn-banner-action">بدء التدريب ⚡</button>
             </div>
 
             <!-- Summary Card -->
@@ -128,7 +140,7 @@
         <!-- === VIEW: History === -->
         <section id="history-view" class="view">
             <div class="history-actions-bar">
-                <button class="btn-backup" id="btn-export-pdf">📄 تصدير تقرير PDF</button>
+                <button class="btn-backup" id="btn-export-pdf">📄 تقرير PDF</button>
                 <button class="btn-backup" id="btn-export-json">📥 نسخ احتياطي</button>
                 <label class="btn-backup" for="import-file-input">📤 استرجاع</label>
                 <input type="file" id="import-file-input" accept=".json" style="display:none">
@@ -185,17 +197,17 @@
                     <div id="last-session-text"></div>
                 </div>
 
-                <!-- Live Set Tracker Bar -->
+                <!-- Live Status & Rest Bar -->
                 <div class="live-set-bar">
-                    <span class="live-set-badge" id="live-set-status">المجموعة 1 من 3</span>
+                    <span class="live-set-badge" id="live-set-status">المجموعة 1 من 4</span>
                     <span class="live-rest-inline" id="live-rest-counter" style="display:none;">⏱️ 01:00</span>
                 </div>
 
-                <!-- Active Set Inputs Form -->
+                <!-- Active Set Inputs Form with Big Steppers -->
                 <div class="active-set-card">
                     <div class="active-set-row">
                         <div class="active-set-field">
-                            <label>الوزن المسحوب (كجم)</label>
+                            <label>الوزن (كجم)</label>
                             <div class="stepper-box">
                                 <button type="button" class="stepper-btn-inline" onclick="stepActiveWeight(-2.5)">−</button>
                                 <input type="number" step="0.5" id="active-set-weight" class="active-input" value="20">
@@ -203,7 +215,7 @@
                             </div>
                         </div>
                         <div class="active-set-field">
-                            <label>عدد التكرارات (العدات)</label>
+                            <label>العدات (التكرار)</label>
                             <div class="stepper-box">
                                 <button type="button" class="stepper-btn-inline" onclick="stepActiveReps(-1)">−</button>
                                 <input type="number" id="active-set-reps" class="active-input" value="10">
@@ -217,31 +229,34 @@
                     </button>
                 </div>
 
-                <!-- Quick Rest & Water Bar During Exercise -->
+                <!-- Rest Options & Quick Water Tracker -->
                 <div class="intra-workout-bar">
                     <div class="intra-water">
-                        <span>شربت مياه؟ 💧</span>
-                        <button type="button" class="btn-water-quick" onclick="addWater(1)">+ كوب 250ml</button>
+                        <span>ماء؟ 💧</span>
+                        <button type="button" class="btn-water-quick" onclick="addWater(1)">+250ml</button>
                     </div>
                     <div class="intra-rest-chips">
                         <span>الراحة:</span>
-                        <button type="button" class="chip-time active" data-sec="60">60s</button>
-                        <button type="button" class="chip-time" data-sec="90">90s</button>
-                        <button type="button" class="chip-time" data-sec="120">2m</button>
+                        <button type="button" class="chip-rest" data-sec="30">30s</button>
+                        <button type="button" class="chip-rest active" data-sec="60">60s</button>
+                        <button type="button" class="chip-rest" data-sec="90">90s</button>
+                        <button type="button" class="chip-rest" data-sec="120">2m</button>
+                        <button type="button" class="chip-rest" data-sec="0">بدون</button>
                     </div>
                 </div>
 
                 <!-- Logged Sets Overview List -->
-                <div class="sets-header" style="margin-top:12px;">
-                    <span>المجموعات المسجلة</span>
-                    <span>الوزن × العدات</span>
-                    <span>تعديل</span>
+                <div class="sets-header">
+                    <span>المجموعة</span>
+                    <span>الوزن (كجم)</span>
+                    <span>العدات</span>
+                    <span>حذف</span>
                 </div>
                 <div id="sets-container" class="sets-container"></div>
 
                 <div class="notes-row">
                     <label for="notes-input">ملاحظات التمرين</label>
-                    <textarea id="notes-input" rows="2" placeholder="فورم ممتاز، زيادة في الوزن..."></textarea>
+                    <textarea id="notes-input" rows="2" placeholder="ملاحظاتك..."></textarea>
                 </div>
 
                 <div class="modal-actions">
@@ -263,7 +278,7 @@
             </div>
         </div>
 
-        <!-- === MODAL: Smart Plan Quiz (Comprehensive) === -->
+        <!-- === MODAL: Smart Plan Quiz === -->
         <div id="plan-modal" class="modal">
             <div class="modal-backdrop" id="plan-modal-backdrop"></div>
             <div class="modal-sheet">
@@ -273,11 +288,11 @@
                     <div class="quiz-row-2">
                         <div class="quiz-group">
                             <label>الوزن الحالي (كجم):</label>
-                            <input type="number" id="quiz-weight" class="quiz-select" placeholder="مثال: 75" required>
+                            <input type="number" id="quiz-weight" class="quiz-input" placeholder="مثال: 75" required>
                         </div>
                         <div class="quiz-group">
                             <label>الطول (سم):</label>
-                            <input type="number" id="quiz-height" class="quiz-select" placeholder="مثال: 178" required>
+                            <input type="number" id="quiz-height" class="quiz-input" placeholder="مثال: 178" required>
                         </div>
                     </div>
 
@@ -336,6 +351,20 @@
                         <button type="submit" class="btn-save">توليد الخطة الذكية 🚀</button>
                     </div>
                 </form>
+            </div>
+        </div>
+
+        <!-- === MODAL: Plan Approval & Preview === -->
+        <div id="approval-modal" class="modal">
+            <div class="modal-backdrop" id="approval-modal-backdrop"></div>
+            <div class="modal-sheet">
+                <div class="modal-handle"></div>
+                <h2 class="modal-title">🎉 تم تجهيز برنامجك التدريبي!</h2>
+                <div id="approval-plan-content" class="approval-content"></div>
+                <div class="modal-actions" style="margin-top:16px;">
+                    <button type="button" class="btn-cancel" id="btn-reject-plan">تعديل</button>
+                    <button type="button" class="btn-save" id="btn-accept-plan">اعتماد وبدء تمرين اليوم ⚡</button>
+                </div>
             </div>
         </div>
 
