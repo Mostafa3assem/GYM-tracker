@@ -326,6 +326,26 @@ body.light-theme .coach-header-card { background: linear-gradient(135deg, #e8f0f
 
 /* Interactive Live Set Modal */
 .modal-header-actions{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.modal-actions-top-row{display:flex;align-items:center;gap:6px}
+
+.btn-video-modal {
+  font-size: .78rem;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(255, 0, 0, 0.12);
+  border: 1px solid #ff0000;
+  color: #ff4d4d;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all .2s ease;
+}
+.btn-video-modal:active {
+  transform: scale(0.94);
+  background: rgba(255, 0, 0, 0.25);
+}
+
 .btn-alt-modal{font-size:.78rem;padding:6px 12px;border-radius:8px;background:rgba(255,107,53,.12);border:1px solid var(--orange);color:var(--orange);font-weight:800}
 
 .live-set-bar{
