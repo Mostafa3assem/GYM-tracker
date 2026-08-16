@@ -1,61 +1,183 @@
 /**
- * تمريني – Multi-User & Set-by-Set Workout Tracker Pro
+ * تمريني – Gym Tracker Ultimate (Multi-User, Multilingual, 50+ Exercises, Repeat Alert)
  */
 
+const I18N = {
+  ar: {
+    app_title: 'تمريني',
+    exercises_label: 'تمرين',
+    sets_label: 'مجموعة',
+    time_label: 'الوقت',
+    rest_title: '⏱️ وقت الراحة المتبقي',
+    stop_btn: 'إنهاء',
+    cat_all: 'الكل',
+    cat_chest: 'صدر',
+    cat_back: 'ظهر',
+    cat_shoulders: 'أكتاف',
+    cat_arms: 'ذراع',
+    cat_legs: 'أرجل',
+    cat_core: 'بطن',
+    cat_cardio: 'كارديو',
+    export_btn: '📥 نسخ احتياطي',
+    import_btn: '📤 استرجاع',
+    nav_today: 'اليوم',
+    nav_exercises: 'التمارين',
+    nav_history: 'السجل',
+    tbl_set: 'المجموعة',
+    tbl_wt: 'الوزن (كجم)',
+    tbl_reps: 'العدات',
+    tbl_del: 'حذف',
+    add_set_btn: '+ إضافة مجموعة',
+    rest_after_label: '⏱️ راحة بعد الحفظ:',
+    chip_none: 'بدون',
+    notes_label: 'ملاحظات',
+    cancel_btn: 'إلغاء',
+    save_btn: 'حفظ وبدء الراحة ⏱️',
+    manage_users_title: 'إدارة المتدربين',
+    add_user_btn: 'إضافة',
+    close_btn: 'إغلاق',
+    edit_name: 'تعديل',
+    delete_user: 'حذف',
+    rest_done_alert: '🔔 انتهى وقت الراحة! ابدأ مجموعتك التالية 💪',
+    welcome_empty: 'مرحباً {user}! لم تسجل تمارين اليوم بعد.<br>اضغط على <strong>+</strong> وابدأ تمرينك الآن!',
+    first_time_ex: 'أول مرة تلعب هذا التمرين! 💪',
+    last_time_ex: 'آخر تمرين ({date}):<br><strong>{sets}</strong>',
+    search_placeholder: 'ابحث عن تمرين...'
+  },
+  en: {
+    app_title: 'Tamriny',
+    exercises_label: 'Exercises',
+    sets_label: 'Sets',
+    time_label: 'Time',
+    rest_title: '⏱️ Rest Time Remaining',
+    stop_btn: 'Stop',
+    cat_all: 'All',
+    cat_chest: 'Chest',
+    cat_back: 'Back',
+    cat_shoulders: 'Shoulders',
+    cat_arms: 'Arms',
+    cat_legs: 'Legs',
+    cat_core: 'Core',
+    cat_cardio: 'Cardio',
+    export_btn: '📥 Backup',
+    import_btn: '📤 Restore',
+    nav_today: 'Today',
+    nav_exercises: 'Exercises',
+    nav_history: 'History',
+    tbl_set: 'Set',
+    tbl_wt: 'Weight (kg)',
+    tbl_reps: 'Reps',
+    tbl_del: 'Del',
+    add_set_btn: '+ Add Set',
+    rest_after_label: '⏱️ Rest after saving:',
+    chip_none: 'None',
+    notes_label: 'Notes',
+    cancel_btn: 'Cancel',
+    save_btn: 'Save & Start Rest ⏱️',
+    manage_users_title: 'Manage Athletes',
+    add_user_btn: 'Add',
+    close_btn: 'Close',
+    edit_name: 'Edit',
+    delete_user: 'Delete',
+    rest_done_alert: '🔔 Rest Time Over! Start your next set 💪',
+    welcome_empty: 'Welcome {user}! No workouts logged today.<br>Tap <strong>+</strong> to start lifting!',
+    first_time_ex: 'First time doing this exercise! 💪',
+    last_time_ex: 'Last Session ({date}):<br><strong>{sets}</strong>',
+    search_placeholder: 'Search exercise...'
+  }
+};
+
 const EXERCISES = [
-  // صدر
-  { id:'bench-press',         name:'بنش بريس مستوي',   category:'chest',     muscle:'صدر',    icon:'🏋️' },
-  { id:'incline-bench',       name:'بنش مائل عالي',    category:'chest',     muscle:'صدر',    icon:'🏋️' },
-  { id:'decline-bench',       name:'بنش مائل هابط',    category:'chest',     muscle:'صدر',    icon:'🏋️' },
-  { id:'chest-fly',           name:'تفتيح دامبلز (فلاي)', category:'chest',  muscle:'صدر',    icon:'🦋' },
-  { id:'cable-crossover',     name:'كروس أوفر كيبل',   category:'chest',     muscle:'صدر',    icon:'💪' },
-  { id:'chest-press-machine', name:'جهاز ضغط الصدر',   category:'chest',     muscle:'صدر',    icon:'🤖' },
-  { id:'pec-deck',            name:'بيك ديك (فراشة)',  category:'chest',     muscle:'صدر',    icon:'🦋' },
-  // ظهر
-  { id:'lat-pulldown',   name:'سحب ظهر عريض',      category:'back', muscle:'ظهر', icon:'🔽' },
-  { id:'seated-row',     name:'سحب أرضي ضيق',      category:'back', muscle:'ظهر', icon:'🚣' },
-  { id:'barbell-row',    name:'تجديف بالبار (رو)', category:'back', muscle:'ظهر', icon:'🏋️' },
-  { id:'t-bar-row',      name:'تي بار رو',         category:'back', muscle:'ظهر', icon:'🏋️' },
-  { id:'cable-row',      name:'سحب كيبل فردي',     category:'back', muscle:'ظهر', icon:'💪' },
-  { id:'back-extension', name:'قطنية (فيبر)',      category:'back', muscle:'ظهر', icon:'🔙' },
-  { id:'pullup',         name:'عقلة',              category:'back', muscle:'ظهر', icon:'🧗' },
-  // أكتاف
-  { id:'shoulder-press',         name:'ضغط كتف دامبلز',   category:'shoulders', muscle:'أكتاف', icon:'🏋️' },
-  { id:'lateral-raise',          name:'رفرفة جانبي',      category:'shoulders', muscle:'أكتاف', icon:'🦅' },
-  { id:'front-raise',            name:'رفرفة أمامي',      category:'shoulders', muscle:'أكتاف', icon:'💪' },
-  { id:'rear-delt-fly',          name:'رفرفة خلفي',       category:'shoulders', muscle:'أكتاف', icon:'🦋' },
-  { id:'upright-row',            name:'سحب بار للذقن',    category:'shoulders', muscle:'أكتاف', icon:'🏋️' },
-  { id:'shoulder-press-machine', name:'جهاز ضغط أكتاف',   category:'shoulders', muscle:'أكتاف', icon:'🤖' },
-  // ذراع
-  { id:'bicep-curl',      name:'بايسبس كيرل بار',     category:'arms', muscle:'ذراع', icon:'💪' },
-  { id:'hammer-curl',     name:'هامر كيرل',           category:'arms', muscle:'ذراع', icon:'🔨' },
-  { id:'preacher-curl',   name:'بريتشر (لاري سكوت)',  category:'arms', muscle:'ذراع', icon:'💪' },
-  { id:'tricep-pushdown', name:'تراي بوش داون حبل',   category:'arms', muscle:'ذراع', icon:'⬇️' },
-  { id:'overhead-tricep', name:'تراي فوق الرأس',      category:'arms', muscle:'ذراع', icon:'⬆️' },
-  { id:'cable-curl',      name:'كيرل كيبل مزدوج',     category:'arms', muscle:'ذراع', icon:'💪' },
-  { id:'dips',            name:'متوازي (ديبس)',       category:'arms', muscle:'ذراع', icon:'🤸' },
-  // أرجل
-  { id:'squat',         name:'سكوات بار حر',   category:'legs', muscle:'أرجل', icon:'🦵' },
-  { id:'leg-press',     name:'مكبس أرجل (بريس)', category:'legs', muscle:'أرجل', icon:'🦵' },
-  { id:'leg-extension', name:'رفرفة أرجل أمامي', category:'legs', muscle:'أرجل', icon:'🦵' },
-  { id:'leg-curl',      name:'رفرفة أرجل خلفي', category:'legs', muscle:'أرجل', icon:'🦵' },
-  { id:'calf-raise',    name:'سمانة واقف',      category:'legs', muscle:'أرجل', icon:'🦵' },
-  { id:'lunges',        name:'لانجز طعن',      category:'legs', muscle:'أرجل', icon:'🚶' },
-  { id:'hack-squat',    name:'هاك سكوات',      category:'legs', muscle:'أرجل', icon:'🤖' },
-  // بطن
-  { id:'crunch',        name:'كرانش بطن',     category:'core', muscle:'بطن', icon:'🍫' },
-  { id:'plank',         name:'بلانك',          category:'core', muscle:'بطن', icon:'📏' },
-  { id:'cable-crunch',  name:'طحن كيبل بطن',   category:'core', muscle:'بطن', icon:'💪' },
-  { id:'leg-raise',     name:'رفع أرجل للبطن', category:'core', muscle:'بطن', icon:'🦵' },
-  // كارديو
-  { id:'treadmill',       name:'مشاية سير',    category:'cardio', muscle:'كارديو', icon:'🏃' },
-  { id:'stationary-bike', name:'عجلة تمارين',  category:'cardio', muscle:'كارديو', icon:'🚴' },
-  { id:'stairmaster',     name:'درج الكارديو', category:'cardio', muscle:'كارديو', icon:'🧗' }
+  // ───────── صدر (Chest) ─────────
+  { id:'bench-press',         name_ar:'بنش بريس مستوي بالبار',     name_en:'Barbell Flat Bench Press',      category:'chest', icon:'🏋️' },
+  { id:'incline-barbell',     name_ar:'بنش مائل عالي بالبار',       name_en:'Incline Barbell Bench Press',   category:'chest', icon:'🏋️' },
+  { id:'decline-barbell',     name_ar:'بنش مائل هابط بالبار',       name_en:'Decline Barbell Bench Press',   category:'chest', icon:'🏋️' },
+  { id:'db-flat-press',       name_ar:'تجميع بالدامبلز مستوي',     name_en:'Flat Dumbbell Press',           category:'chest', icon:'🏋️' },
+  { id:'db-incline-press',    name_ar:'تجميع بالدامبلز مائل عالي',   name_en:'Incline Dumbbell Press',        category:'chest', icon:'🏋️' },
+  { id:'chest-fly-db',        name_ar:'تفتيح دامبلز مستوي (فلاي)',  name_en:'Flat Dumbbell Fly',             category:'chest', icon:'🦋' },
+  { id:'chest-fly-incline',   name_ar:'تفتيح دامبلز مائل عالي',     name_en:'Incline Dumbbell Fly',          category:'chest', icon:'🦋' },
+  { id:'pec-deck',            name_ar:'فراشة جهاز (بيك ديك)',      name_en:'Pec Deck Machine Fly',          category:'chest', icon:'🦋' },
+  { id:'cable-crossover-high',name_ar:'كروس أوفر كيبل من أعلى',     name_en:'High-to-Low Cable Fly',         category:'chest', icon:'💪' },
+  { id:'cable-crossover-low', name_ar:'كروس أوفر كيبل من أسفل',    name_en:'Low-to-High Cable Fly',         category:'chest', icon:'💪' },
+  { id:'chest-press-machine', name_ar:'جهاز ضغط الصدر جالساً',     name_en:'Seated Machine Chest Press',    category:'chest', icon:'🤖' },
+  { id:'dips-chest',          name_ar:'متوازي بالتركيز على الصدر',  name_en:'Chest Focused Dips',            category:'chest', icon:'🤸' },
+  { id:'pushups',             name_ar:'ضغط أرضي حر (بوش اب)',      name_en:'Standard Push-Ups',             category:'chest', icon:'🤸' },
+
+  // ───────── ظهر (Back) ─────────
+  { id:'deadlift',            name_ar:'ديدليفت بار حر',            name_en:'Conventional Deadlift',         category:'back', icon:'🏋️' },
+  { id:'lat-pulldown-wide',   name_ar:'سحب علوي أمامي عريض',       name_en:'Wide-Grip Lat Pulldown',        category:'back', icon:'🔽' },
+  { id:'lat-pulldown-close',  name_ar:'سحب علوي قبضة ضيقة (V-Bar)',name_en:'Close-Grip V-Bar Pulldown',     category:'back', icon:'🔽' },
+  { id:'barbell-row',         name_ar:'تجديف بالبار (بنت أوفر رو)', name_en:'Bent-Over Barbell Row',         category:'back', icon:'🏋️' },
+  { id:'db-single-row',       name_ar:'سحب دمبل فردي (منشار)',      name_en:'One-Arm Dumbbell Row',          category:'back', icon:'💪' },
+  { id:'seated-cable-row',    name_ar:'سحب أرضي كيبل (سيتد رو)',    name_en:'Seated Cable Row',              category:'back', icon:'🚣' },
+  { id:'t-bar-row',           name_ar:'تي بار رو حر',              name_en:'T-Bar Row',                     category:'back', icon:'🏋️' },
+  { id:'pullup-weighted',     name_ar:'عقلة حرة / بوزن',           name_en:'Pull-Ups / Chin-Ups',           category:'back', icon:'🧗' },
+  { id:'back-extension',      name_ar:'قطنية على الدكة (فيبر)',     name_en:'Hyperextensions (Lower Back)',  category:'back', icon:'🔙' },
+  { id:'straight-arm-pulldown',name_ar:'سحب كيبل ذراع مفرود',      name_en:'Straight-Arm Cable Pulldown',   category:'back', icon:'💪' },
+  { id:'shrugs-barbell',      name_ar:'ترابيس بالبار (شراجز)',     name_en:'Barbell Shrugs',                category:'back', icon:'🏋️' },
+  { id:'shrugs-dumbbell',     name_ar:'ترابيس بالدامبلز',          name_en:'Dumbbell Shrugs',               category:'back', icon:'🏋️' },
+
+  // ───────── أكتاف (Shoulders) ─────────
+  { id:'overhead-press-bar',  name_ar:'ضغط كتف بار واقف (OHP)',    name_en:'Overhead Barbell Press',        category:'shoulders', icon:'🏋️' },
+  { id:'db-shoulder-press',   name_ar:'ضغط كتف بالدامبلز جالساً',   name_en:'Seated Dumbbell Shoulder Press',category:'shoulders', icon:'🏋️' },
+  { id:'arnold-press',        name_ar:'أرنولد بريس دامبلز',        name_en:'Arnold Press',                  category:'shoulders', icon:'🏋️' },
+  { id:'lateral-raise-db',    name_ar:'رفرفة جانبي بالدامبلز',     name_en:'Dumbbell Lateral Raise',        category:'shoulders', icon:'🦅' },
+  { id:'lateral-raise-cable', name_ar:'رفرفة جانبي بالكيبل',       name_en:'Cable Lateral Raise',           category:'shoulders', icon:'🦅' },
+  { id:'front-raise-db',      name_ar:'رفرفة أمامي بالدامبلز',     name_en:'Front Dumbbell Raise',          category:'shoulders', icon:'💪' },
+  { id:'front-raise-barbell', name_ar:'رفرفة أمامي بالبار / الطارة',name_en:'Barbell / Plate Front Raise',   category:'shoulders', icon:'💪' },
+  { id:'rear-delt-fly-db',    name_ar:'رفرفة خلفي بالدامبلز منحني', name_en:'Bent-Over Rear Delt Fly',      category:'shoulders', icon:'🦋' },
+  { id:'face-pull',           name_ar:'فيس بول بالحبل على الكيبل',  name_en:'Cable Face Pulls',              category:'shoulders', icon:'🎯' },
+  { id:'upright-row-ez',      name_ar:'سحب بار زجزاج للذقن',       name_en:'EZ-Bar Upright Row',            category:'shoulders', icon:'🏋️' },
+
+  // ───────── ذراع (Arms: Biceps, Triceps, Forearms) ─────────
+  { id:'barbell-curl',        name_ar:'بايسبس بار مستقيم واقف',    name_en:'Standing Barbell Curl',         category:'arms', icon:'💪' },
+  { id:'ez-bar-curl',         name_ar:'بايسبس بار زجزاج (EZ)',     name_en:'EZ-Bar Bicep Curl',             category:'arms', icon:'💪' },
+  { id:'db-alternate-curl',   name_ar:'بايسبس تبادل بالدامبلز',    name_en:'Incline / Standing DB Curl',    category:'arms', icon:'💪' },
+  { id:'hammer-curl',         name_ar:'هامر كيرل بالدامبلز',       name_en:'Dumbbell Hammer Curl',          category:'arms', icon:'🔨' },
+  { id:'preacher-curl',       name_ar:'لاري سكوت (بريتشر كيرل)',   name_en:'Preacher Curl Bench',           category:'arms', icon:'💪' },
+  { id:'cable-bicep-curl',    name_ar:'كيرل بايسبس بالكيبل مسطرة', name_en:'Straight Bar Cable Curl',       category:'arms', icon:'💪' },
+  { id:'concentration-curl',  name_ar:'تركيز فردي دامبلز (كونسنتريشن)',name_en:'Concentration Curl',        category:'arms', icon:'💪' },
+  { id:'tricep-pushdown-rope',name_ar:'ترايسبس حبل على الكيبل',    name_en:'Tricep Rope Pushdown',          category:'arms', icon:'⬇️' },
+  { id:'tricep-pushdown-bar', name_ar:'ترايسبس مسطرة V-Bar كيبل',  name_en:'Tricep Straight/V-Bar Pushdown',category:'arms', icon:'⬇️' },
+  { id:'skull-crushers',      name_ar:'تكسير جمجمة بار زجزاج (فرنساوي)',name_en:'EZ-Bar Skull Crushers',     category:'arms', icon:'💀' },
+  { id:'overhead-db-tricep',  name_ar:'ترايسبس دامبلز خلف الرأس',  name_en:'Overhead Dumbbell Extension',   category:'arms', icon:'⬆️' },
+  { id:'dips-parallel',       name_ar:'متوازي بالتركيز على التراي',name_en:'Tricep Dips on Parallel Bars', category:'arms', icon:'🤸' },
+  { id:'close-grip-bench',    name_ar:'بنش قبضة ضيقة للتراي',      name_en:'Close-Grip Bench Press',        category:'arms', icon:'🏋️' },
+  { id:'wrist-curls',         name_ar:'سواعد ريست بالبار جالساً',   name_en:'Barbell Wrist Curls (Forearms)',category:'arms', icon:'✊' },
+
+  // ───────── أرجل (Legs & Calves) ─────────
+  { id:'barbell-squat',       name_ar:'سكوات خلفي بار حر',         name_en:'Barbell Back Squat',            category:'legs', icon:'🦵' },
+  { id:'front-squat',         name_ar:'سكوات أمامي بالبار',        name_en:'Barbell Front Squat',           category:'legs', icon:'🦵' },
+  { id:'leg-press',           name_ar:'مكبس أرجل (ليج بريس 45°)',  name_en:'45° Leg Press Machine',         category:'legs', icon:'🦵' },
+  { id:'hack-squat',          name_ar:'هاك سكوات بالجهاز',         name_en:'Hack Squat Machine',            category:'legs', icon:'🤖' },
+  { id:'bulgarian-split-squat',name_ar:'بلغاريان سبليت سكوات دامبلز',name_en:'Bulgarian Split Squat',       category:'legs', icon:'🚶' },
+  { id:'walking-lunges',      name_ar:'طعنات مشي بالدامبلز (لانجز)',name_en:'Walking Dumbbell Lunges',       category:'legs', icon:'🚶' },
+  { id:'leg-extension',       name_ar:'جهاز رفرفة أرجل أمامي',     name_en:'Seated Leg Extension (Quads)',  category:'legs', icon:'🦵' },
+  { id:'lying-leg-curl',      name_ar:'جهاز نوم خلفيات أرجل (ليج كيرل)',name_en:'Lying Leg Curl (Hamstrings)',category:'legs', icon:'🦵' },
+  { id:'seated-leg-curl',     name_ar:'جهاز جلوس خلفيات أرجل',     name_en:'Seated Leg Curl',               category:'legs', icon:'🦵' },
+  { id:'romanian-deadlift',   name_ar:'رومانيان ديدليفت دامبلز/بار',name_en:'Romanian Deadlift (RDL)',       category:'legs', icon:'🏋️' },
+  { id:'standing-calf-raise', name_ar:'سمانة واقف بالجهاز أو البار',name_en:'Standing Calf Raise',          category:'legs', icon:'🦵' },
+  { id:'seated-calf-raise',   name_ar:'سمانة جالس بالجهاز',        name_en:'Seated Calf Raise',             category:'legs', icon:'🦵' },
+
+  // ───────── بطن وكور (Core) ─────────
+  { id:'cable-crunch',        name_ar:'طحن كيبل للبطن بحبل',       name_en:'Kneeling Cable Crunch',         category:'core', icon:'💪' },
+  { id:'hanging-leg-raise',   name_ar:'رفع أرجل متعلق على العقلة', name_en:'Hanging Leg/Knee Raise',        category:'core', icon:'🦵' },
+  { id:'incline-leg-raise',   name_ar:'رفع أرجل على دكة مائلة',    name_en:'Incline Bench Leg Raise',       category:'core', icon:'🍫' },
+  { id:'plank',               name_ar:'بلانك ثبات',                name_en:'Plank Hold',                    category:'core', icon:'📏' },
+  { id:'russian-twists',      name_ar:'رشن تويست بالوزن للجوانب',  name_en:'Weighted Russian Twists',       category:'core', icon:'🔄' },
+  { id:'ab-wheel-rollout',    name_ar:'عجلة البطن (آب رولر)',      name_en:'Ab Wheel Rollout',              category:'core', icon:'🎡' },
+
+  // ───────── كارديو (Cardio) ─────────
+  { id:'treadmill',           name_ar:'مشاية كهربائية (سير)',      name_en:'Treadmill Running / Incline',   category:'cardio', icon:'🏃' },
+  { id:'stationary-bike',     name_ar:'عجلة تمارين ثابتة',         name_en:'Stationary Upright Bike',       category:'cardio', icon:'🚴' },
+  { id:'stairmaster',         name_ar:'سلم الكارديو (ستير ماستر)', name_en:'StairMaster Climber',           category:'cardio', icon:'🧗' },
+  { id:'rowing-machine',      name_ar:'جهاز التجديف الهوائي',      name_en:'Rowing Machine (Ergometer)',    category:'cardio', icon:'🚣' }
 ];
 
-const STORAGE_KEY_PREFIX = 'gymTracker_v2_';
+const STORAGE_KEY_PREFIX = 'gymTracker_v3_';
 
 // ── State ─────────────────────────────────────────────────────────
+let lang           = localStorage.getItem('gymTrackerLang') || 'ar';
 let users          = ['مصطفى', 'أحمد'];
 let currentUser    = 'مصطفى';
 let currentData    = { workouts: [] };
@@ -66,6 +188,45 @@ let modalSets      = [];
 let selectedRestSec= 60;
 let restRef        = null;
 let restRemaining  = 0;
+
+// ── Audio Multi-Beep (iOS Compatible) ─────────────────────────────
+const playMultipleBeeps = (count = 5) => {
+  let beepsPlayed = 0;
+  const playSingle = () => {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(950, ctx.currentTime);
+      gain.gain.setValueAtTime(0.4, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.4);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.4);
+    } catch (e) {}
+
+    if ('vibrate' in navigator) navigator.vibrate([180, 100, 180]);
+
+    beepsPlayed++;
+    if (beepsPlayed < count) {
+      setTimeout(playSingle, 600);
+    }
+  };
+  playSingle();
+};
+
+const sendBackgroundNotification = (title, body) => {
+  if ('Notification' in window && Notification.permission === 'granted') {
+    new Notification(title, {
+      body: body,
+      icon: './icon-512.jpg',
+      badge: './icon-512.jpg',
+      vibrate: [200, 100, 200, 100, 200]
+    });
+  }
+};
 
 // ── Helpers ───────────────────────────────────────────────────────
 const $ = (sel) => document.getElementById(sel) || document.querySelector(sel);
@@ -78,7 +239,8 @@ const todayISO = () => {
 
 const fmtDate = (iso) => {
   const d = new Date(iso + 'T00:00:00');
-  return new Intl.DateTimeFormat('ar-EG', { weekday:'long', day:'numeric', month:'long' }).format(d);
+  const locale = lang === 'ar' ? 'ar-EG' : 'en-US';
+  return new Intl.DateTimeFormat(locale, { weekday:'long', day:'numeric', month:'short' }).format(d);
 };
 
 const fmtTimer = (ms) => {
@@ -89,30 +251,14 @@ const fmtTimer = (ms) => {
 };
 
 const fmtDuration = (ms) => {
-  if (!ms || ms < 0) return '0 دقيقة';
+  if (!ms || ms < 0) return lang === 'ar' ? '0 دقيقة' : '0 min';
   const h = Math.floor(ms / 3600000);
   const m = Math.floor((ms % 3600000) / 60000);
-  return h > 0 ? `${h} ساعة و ${m} دقيقة` : `${m} دقيقة`;
+  if (lang === 'ar') return h > 0 ? `${h} ساعة و ${m} دقيقة` : `${m} دقيقة`;
+  return h > 0 ? `${h}h ${m}m` : `${m} min`;
 };
 
-// ── Audio Beep for iOS ────────────────────────────────────────────
-const playBeep = () => {
-  try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(880, ctx.currentTime); // 880Hz Beep
-    gain.gain.setValueAtTime(0.3, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.5);
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start();
-    osc.stop(ctx.currentTime + 0.5);
-  } catch (e) {}
-};
-
-// ── Storage & User Switching ──────────────────────────────────────
+// ── Storage & User Switch ─────────────────────────────────────────
 const loadUsers = () => {
   try {
     const savedUsers = JSON.parse(localStorage.getItem('gymTrackerUsers'));
@@ -163,12 +309,38 @@ const lastSession = (exId) => {
   return null;
 };
 
-// ── Toast & Haptic ────────────────────────────────────────────────
+// ── Localization ──────────────────────────────────────────────────
+const applyLanguage = () => {
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  $('btn-lang-toggle').textContent = lang === 'ar' ? 'EN' : 'عربي';
+  $('search-input').placeholder = I18N[lang].search_placeholder;
+
+  $$('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (I18N[lang][key]) el.textContent = I18N[lang][key];
+  });
+
+  const dateEl = $('current-date');
+  if (dateEl) dateEl.textContent = fmtDate(todayISO());
+
+  renderUserSelect();
+  renderToday();
+  renderLibrary();
+  renderHistory();
+};
+
+const toggleLanguage = () => {
+  lang = lang === 'ar' ? 'en' : 'ar';
+  localStorage.setItem('gymTrackerLang', lang);
+  applyLanguage();
+};
+
+// ── Toast ─────────────────────────────────────────────────────────
 const toast = (msg, type = 'success') => {
   const el = $('toast');
   el.textContent = msg;
   el.className = `toast ${type} show`;
-  if ('vibrate' in navigator) navigator.vibrate(40);
   setTimeout(() => el.classList.remove('show'), 2600);
 };
 
@@ -178,7 +350,6 @@ const startRestTimer = (seconds) => {
   if (restRef) clearInterval(restRef);
   restRemaining = seconds;
   const box = $('rest-timer-box');
-  const countEl = $('rest-countdown');
 
   box.classList.add('active');
   updateRestDisplay();
@@ -188,9 +359,9 @@ const startRestTimer = (seconds) => {
     if (restRemaining <= 0) {
       clearInterval(restRef);
       box.classList.remove('active');
-      playBeep();
-      if ('vibrate' in navigator) navigator.vibrate([200, 100, 200]);
-      toast('🔔 انتهى وقت الراحة! ابدأ مجموعتك التالية 💪');
+      playMultipleBeeps(5);
+      sendBackgroundNotification(I18N[lang].app_title, I18N[lang].rest_done_alert);
+      toast(I18N[lang].rest_done_alert);
     } else {
       updateRestDisplay();
     }
@@ -208,7 +379,7 @@ const cancelRestTimer = () => {
   $('rest-timer-box').classList.remove('active');
 };
 
-// ── Views ─────────────────────────────────────────────────────────
+// ── Navigation ────────────────────────────────────────────────────
 const switchView = (viewId) => {
   $$('.view').forEach(v => v.classList.remove('active'));
   const target = $(viewId);
@@ -238,7 +409,7 @@ const renderToday = () => {
     list.innerHTML = `
       <div class="empty-state">
         <div class="empty-icon">🏋️</div>
-        <p>مرحباً <strong>${currentUser}</strong>! لم تسجل تمارين اليوم بعد.<br>اضغط على <strong>+</strong> وابدأ تمرينك الآن!</p>
+        <p>${I18N[lang].welcome_empty.replace('{user}', currentUser)}</p>
       </div>`;
     return;
   }
@@ -246,8 +417,9 @@ const renderToday = () => {
   list.innerHTML = w.exercises.map(ex => {
     const def = EXERCISES.find(e => e.id === ex.id);
     if (!def) return '';
+    const exName = lang === 'ar' ? def.name_ar : def.name_en;
     const setsChips = (ex.sets || []).map((s, idx) => `
-      <span class="set-chip">م${idx+1}: <strong>${s.weight}كجم</strong> × ${s.reps}</span>
+      <span class="set-chip">${lang === 'ar' ? 'م' : 'S'}${idx+1}: <strong>${s.weight}kg</strong> × ${s.reps}</span>
     `).join('');
 
     return `
@@ -255,9 +427,9 @@ const renderToday = () => {
         <div class="today-card-top">
           <div class="icon">${def.icon}</div>
           <div class="info">
-            <h4>${def.name}</h4>
+            <h4>${exName}</h4>
           </div>
-          <button class="edit-btn" onclick="openModal('${ex.id}')">تعديل</button>
+          <button class="edit-btn" onclick="openModal('${ex.id}')">${I18N[lang].edit_name}</button>
           <button class="remove-btn" onclick="removeExercise('${ex.id}')">✕</button>
         </div>
         <div class="today-sets-chips">${setsChips}</div>
@@ -273,13 +445,13 @@ const updateTimer = () => {
 };
 
 const removeExercise = (exId) => {
-  if (!confirm('حذف هذا التمرين من تمرين اليوم؟')) return;
+  if (!confirm(lang === 'ar' ? 'حذف التمرين من جلسة اليوم؟' : 'Remove exercise from today?')) return;
   const w = todayWorkout();
   w.exercises = w.exercises.filter(e => e.id !== exId);
   if (w.exercises.length === 0) w.start = null;
   saveUserData();
   renderToday();
-  toast('تم حذف التمرين 🗑️', 'error');
+  toast('🗑️', 'error');
 };
 
 // ── Render: Library ───────────────────────────────────────────────
@@ -290,36 +462,38 @@ const renderLibrary = () => {
   if (category !== 'all') list = list.filter(e => e.category === category);
   if (query.trim()) {
     const q = query.trim().toLowerCase();
-    list = list.filter(e => e.name.toLowerCase().includes(q) || e.id.includes(q));
+    list = list.filter(e => e.name_ar.toLowerCase().includes(q) || e.name_en.toLowerCase().includes(q) || e.id.includes(q));
   }
 
   const todayIds = todayWorkout().exercises.map(e => e.id);
   const grid = $('exercise-grid');
 
   if (list.length === 0) {
-    grid.innerHTML = '<div class="empty-state"><p>لا توجد نتائج مطابقة 🤷</p></div>';
+    grid.innerHTML = `<div class="empty-state"><p>${lang === 'ar' ? 'لا توجد تمارين تطابق البحث 🤷' : 'No exercises found 🤷'}</p></div>`;
     return;
   }
 
   grid.innerHTML = list.map(ex => {
     const last = lastSession(ex.id);
     const done = todayIds.includes(ex.id);
+    const exName = lang === 'ar' ? defName(ex.name_ar) : ex.name_en;
     let lastSummary = '—';
     if (last && last.sets && last.sets.length) {
       const maxWt = Math.max(...last.sets.map(s => s.weight));
-      lastSummary = `آخر مرة: ${maxWt} كجم`;
+      lastSummary = `${lang === 'ar' ? 'آخر مرة' : 'Last'}: ${maxWt} kg`;
     }
 
     return `
       <div class="ex-card" onclick="openModal('${ex.id}')">
         ${done ? '<div class="done-badge">✓</div>' : ''}
         <div class="card-icon">${ex.icon}</div>
-        <h4>${ex.name}</h4>
-        <span class="muscle-tag">${ex.muscle}</span>
+        <h4>${exName}</h4>
         <div class="last-wt">${lastSummary}</div>
       </div>`;
   }).join('');
 };
+
+const defName = (name) => name;
 
 // ── Render: History ───────────────────────────────────────────────
 const renderHistory = () => {
@@ -329,7 +503,7 @@ const renderHistory = () => {
     .sort((a, b) => b.date.localeCompare(a.date));
 
   if (past.length === 0) {
-    container.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><p>لا يوجد سجل تمارين بعد لـ <strong>${currentUser}</strong>.</p></div>`;
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><p>${lang === 'ar' ? 'لا يوجد سجل تمارين بعد لـ ' : 'No history yet for '}<strong>${currentUser}</strong>.</p></div>`;
     return;
   }
 
@@ -340,21 +514,22 @@ const renderHistory = () => {
         <div class="history-header" onclick="toggleHistory('${w.id}')">
           <div>
             <h4>${fmtDate(w.date)}</h4>
-            <span class="meta">${w.exercises.length} تمرين${dur ? ' • ' + dur : ''}</span>
+            <span class="meta">${w.exercises.length} ${I18N[lang].exercises_label}${dur ? ' • ' + dur : ''}</span>
           </div>
           <span class="chevron">▾</span>
         </div>
         <div class="history-details">
           ${w.exercises.map(ex => {
             const def = EXERCISES.find(e => e.id === ex.id);
-            const setsTxt = (ex.sets || []).map((s, i) => `[م${i+1}: ${s.weight}كجم × ${s.reps}]`).join(' ');
+            const exName = def ? (lang === 'ar' ? def.name_ar : def.name_en) : ex.id;
+            const setsTxt = (ex.sets || []).map((s, i) => `[${lang==='ar'?'م':'S'}${i+1}: ${s.weight}kg × ${s.reps}]`).join(' ');
             return `
               <div class="history-ex-row">
-                <div class="ex-title">${def ? def.name : ex.id}</div>
+                <div class="ex-title">${exName}</div>
                 <div class="history-sets-view">${setsTxt}</div>
               </div>`;
           }).join('')}
-          <div class="history-delete" onclick="deleteWorkout('${w.id}')">حذف هذا اليوم من السجل</div>
+          <div class="history-delete" onclick="deleteWorkout('${w.id}')">${lang === 'ar' ? 'حذف هذا اليوم من السجل' : 'Delete this day'}</div>
         </div>
       </div>`;
   }).join('');
@@ -366,11 +541,11 @@ const toggleHistory = (wId) => {
 };
 
 const deleteWorkout = (wId) => {
-  if (!confirm('حذف تمارين هذا اليوم؟')) return;
+  if (!confirm(lang === 'ar' ? 'حذف تمارين هذا اليوم؟' : 'Delete all workouts for this day?')) return;
   currentData.workouts = currentData.workouts.filter(w => w.id !== wId);
   saveUserData();
   renderHistory();
-  toast('تم الحذف', 'error');
+  toast('🗑️', 'error');
 };
 
 // ── Sets Modal Logic ──────────────────────────────────────────────
@@ -382,16 +557,15 @@ const openModal = (exId) => {
   const existing = todayWorkout().exercises.find(e => e.id === exId);
   const last = lastSession(exId);
 
-  $('modal-title').textContent = def.name;
+  $('modal-title').textContent = lang === 'ar' ? def.name_ar : def.name_en;
 
   if (last && last.sets && last.sets.length) {
-    const lastSetsStr = last.sets.map((s, i) => `م${i+1}: ${s.weight}كجم×${s.reps}`).join(' | ');
-    $('last-session-text').innerHTML = `آخر تمرين (${fmtDate(last.date)}):<br><strong>${lastSetsStr}</strong>`;
+    const lastSetsStr = last.sets.map((s, i) => `${lang==='ar'?'م':'S'}${i+1}: ${s.weight}kg×${s.reps}`).join(' | ');
+    $('last-session-text').innerHTML = I18N[lang].last_time_ex.replace('{date}', fmtDate(last.date)).replace('{sets}', lastSetsStr);
   } else {
-    $('last-session-text').textContent = 'أول مرة تلعب هذا التمرين! 💪';
+    $('last-session-text').textContent = I18N[lang].first_time_ex;
   }
 
-  // Populate Sets
   if (existing && existing.sets && existing.sets.length) {
     modalSets = JSON.parse(JSON.stringify(existing.sets));
   } else if (last && last.sets && last.sets.length) {
@@ -414,7 +588,7 @@ const openModal = (exId) => {
 const renderSetsTable = () => {
   const container = $('sets-container');
   container.innerHTML = modalSets.map((s, idx) => `
-    <div class="set-row" data-index="${idx}">
+    <div class="set-row">
       <div class="set-index">${idx + 1}</div>
       <div class="set-input-box">
         <button type="button" class="btn-step" onclick="stepSet(${idx}, 'weight', -2.5)">−</button>
@@ -477,7 +651,7 @@ const saveExerciseModal = () => {
   w.end = Date.now();
   saveUserData();
   closeModal();
-  toast('تم حفظ التمرين ✅');
+  toast(lang === 'ar' ? 'تم حفظ التمرين ✅' : 'Workout Saved ✅');
 
   if ($('today-view').classList.contains('active'))   renderToday();
   if ($('library-view').classList.contains('active')) renderLibrary();
@@ -485,42 +659,104 @@ const saveExerciseModal = () => {
   startRestTimer(selectedRestSec);
 };
 
-// ── Multi-User Management ─────────────────────────────────────────
+// ── Multi-User Management Modal ───────────────────────────────────
 const renderUserSelect = () => {
   const sel = $('user-select');
   sel.innerHTML = users.map(u => `<option value="${u}" ${u === currentUser ? 'selected' : ''}>${u}</option>`).join('');
 };
 
-const handleUserChange = (e) => {
+const openUsersModal = () => {
+  renderUsersListModal();
+  $('users-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+};
+
+const closeUsersModal = () => {
+  $('users-modal').classList.remove('open');
+  document.body.style.overflow = '';
+};
+
+const renderUsersListModal = () => {
+  const container = $('users-list-container');
+  container.innerHTML = users.map((u, idx) => `
+    <div class="user-item-row">
+      <span class="user-item-name">${u} ${u === currentUser ? '⭐' : ''}</span>
+      <div class="user-item-actions">
+        <button type="button" class="btn-user-action" onclick="editUserName(${idx})">${I18N[lang].edit_name}</button>
+        ${users.length > 1 ? `<button type="button" class="btn-user-action delete" onclick="deleteUser(${idx})">${I18N[lang].delete_user}</button>` : ''}
+      </div>
+    </div>
+  `).join('');
+};
+
+window.editUserName = (idx) => {
+  const oldName = users[idx];
+  const newName = prompt(lang === 'ar' ? 'تعديل اسم المتدرب:' : 'Edit athlete name:', oldName);
+  if (!newName || !newName.trim() || newName.trim() === oldName) return;
+  const cleanName = newName.trim();
+
+  // Rename data
+  const oldData = localStorage.getItem(STORAGE_KEY_PREFIX + oldName);
+  if (oldData) {
+    localStorage.setItem(STORAGE_KEY_PREFIX + cleanName, oldData);
+    localStorage.removeItem(STORAGE_KEY_PREFIX + oldName);
+  }
+
+  users[idx] = cleanName;
+  if (currentUser === oldName) currentUser = cleanName;
+
+  saveUsers();
+  loadUserData();
+  renderUserSelect();
+  renderUsersListModal();
+  renderToday();
+  toast('✅');
+};
+
+window.deleteUser = (idx) => {
+  const target = users[idx];
+  if (!confirm(lang === 'ar' ? `حذف المتدرب ${target} وجميع سجلاته؟` : `Delete ${target} and all data?`)) return;
+
+  localStorage.removeItem(STORAGE_KEY_PREFIX + target);
+  users.splice(idx, 1);
+  if (currentUser === target) currentUser = users[0];
+
+  saveUsers();
+  loadUserData();
+  renderUserSelect();
+  renderUsersListModal();
+  renderToday();
+  toast('🗑️', 'error');
+};
+
+const createNewUser = () => {
+  const input = $('new-user-name-input');
+  const name = input.value.trim();
+  if (!name) return;
+  if (!users.includes(name)) {
+    users.push(name);
+    currentUser = name;
+    saveUsers();
+    loadUserData();
+    renderUserSelect();
+    renderUsersListModal();
+    renderToday();
+    input.value = '';
+    toast('🎉');
+  }
+};
+
+const handleUserSelectChange = (e) => {
   currentUser = e.target.value;
   saveUsers();
   loadUserData();
   renderToday();
-  toast(`تم التبديل إلى المتدرب: ${currentUser} 👤`);
+  toast(`👤 ${currentUser}`);
 };
 
-const handleAddUser = () => {
-  const name = prompt('أدخل اسم المتدرب الجديد:');
-  if (!name || !name.trim()) return;
-  const cleanName = name.trim();
-  if (!users.includes(cleanName)) {
-    users.push(cleanName);
-    currentUser = cleanName;
-    saveUsers();
-    loadUserData();
-    renderUserSelect();
-    renderToday();
-    toast(`تمت إضافة ${cleanName} بنجاح 🎉`);
-  }
-};
-
-// ── Backup / Restore ──────────────────────────────────────────────
+// ── Export / Import ───────────────────────────────────────────────
 const exportData = () => {
-  const allBackup = {
-    users: users,
-    activeUser: currentUser,
-    data: {}
-  };
+  const allBackup = { users, activeUser: currentUser, data: {} };
   users.forEach(u => {
     allBackup.data[u] = JSON.parse(localStorage.getItem(STORAGE_KEY_PREFIX + u)) || { workouts: [] };
   });
@@ -529,10 +765,10 @@ const exportData = () => {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `tamriny-all-users-${todayISO()}.json`;
+  a.download = `tamriny-pro-backup-${todayISO()}.json`;
   a.click();
   URL.revokeObjectURL(url);
-  toast('تم تصدير نسخة احتياطية لجميع المتدربين 📥');
+  toast('📥');
 };
 
 const importData = (e) => {
@@ -553,12 +789,12 @@ const importData = (e) => {
         renderUserSelect();
         renderHistory();
         renderToday();
-        toast('تم استرجاع بيانات جميع المتدربين بنجاح ✅');
+        toast('✅');
       } else {
-        alert('ملف غير صالح');
+        alert('Invalid file');
       }
     } catch {
-      alert('خطأ أثناء قراءة الملف');
+      alert('Error parsing file');
     }
   };
   reader.readAsText(file);
@@ -566,15 +802,20 @@ const importData = (e) => {
 
 // ── Init ──────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
+  if ('Notification' in window && Notification.permission !== 'granted') {
+    Notification.requestPermission();
+  }
+
   loadUsers();
   loadUserData();
+  applyLanguage();
 
-  const dateEl = $('current-date');
-  if (dateEl) dateEl.textContent = fmtDate(todayISO());
-
-  renderUserSelect();
-  $('user-select').addEventListener('change', handleUserChange);
-  $('btn-add-user').addEventListener('click', handleAddUser);
+  $('btn-lang-toggle').addEventListener('click', toggleLanguage);
+  $('user-select').addEventListener('change', handleUserSelectChange);
+  $('btn-manage-users').addEventListener('click', openUsersModal);
+  $('btn-close-users').addEventListener('click', closeUsersModal);
+  $('users-modal-backdrop').addEventListener('click', closeUsersModal);
+  $('btn-create-user').addEventListener('click', createNewUser);
 
   $$('.nav-btn').forEach(b => b.addEventListener('click', () => switchView(b.dataset.view)));
   $('fab-btn').addEventListener('click', () => switchView('library-view'));
@@ -586,7 +827,6 @@ document.addEventListener('DOMContentLoaded', () => {
   $('btn-cancel').addEventListener('click', closeModal);
   $('modal-backdrop').addEventListener('click', closeModal);
 
-  // Rest Timer selection
   $$('.chip-time').forEach(chip => chip.addEventListener('click', () => {
     $$('.chip-time').forEach(c => c.classList.remove('active'));
     chip.classList.add('active');
@@ -602,7 +842,12 @@ document.addEventListener('DOMContentLoaded', () => {
   $('btn-export').addEventListener('click', exportData);
   $('import-file-input').addEventListener('change', importData);
 
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      closeModal();
+      closeUsersModal();
+    }
+  });
 
   switchView('today-view');
   setInterval(updateTimer, 1000);
