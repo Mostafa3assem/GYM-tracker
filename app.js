@@ -424,7 +424,16 @@ const openModal = (exId) => {
   const existing = todayWorkout().exercises.find(e => e.id === exId);
   const last = lastSession(exId);
 
-  $('modal-title').textContent = lang === 'ar' ? def.name_ar : def.name_en;
+  const exName = lang === 'ar' ? def.name_ar : def.name_en;
+  $('modal-title').textContent = exName;
+
+  // رابط يوتيوب المباشر لشرح تكنيك التمرين
+  const ytQuery = encodeURIComponent(`how to do ${def.name_en} proper form execution`);
+  const ytUrl = `https://www.youtube.com/results?search_query=${ytQuery}`;
+  const videoBtn = $('btn-modal-video');
+  if (videoBtn) {
+    videoBtn.onclick = () => window.open(ytUrl, '_blank');
+  }
 
   if (last && last.sets && last.sets.length) {
     const lastSetsStr = last.sets.map((s, i) => `${lang === 'ar' ? 'م' : 'S'}${i+1}: ${s.weight}kg×${s.reps}`).join(' | ');
