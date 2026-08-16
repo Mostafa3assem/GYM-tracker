@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tamriny-v2';
+const CACHE_NAME = 'tamriny-v4';
 const ASSETS = [
   './',
   './index.html',
