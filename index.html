@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>تمريني - Gym Tracker Ultimate</title>
+    <title>تمريني - Smart Gym Tracker</title>
     <meta name="theme-color" content="#0a0a0f">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="تمريني">
     <link rel="manifest" href="./manifest.json">
-    <link rel="apple-touch-icon" href="./icon-512.png?v=2">
+    <link rel="apple-touch-icon" href="./icon-512.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -31,6 +31,10 @@
             </div>
             <div class="header-left">
                 <div class="header-top-actions">
+                    <button id="btn-notifications" class="btn-icon-head" title="الإشعارات والمتابعة">
+                        🔔
+                        <span id="notif-badge" class="notif-badge"></span>
+                    </button>
                     <button id="btn-lang-toggle" class="btn-lang">EN</button>
                     <div class="brand-badge">
                         <span class="brand-text">SEC ASSEM</span>
@@ -42,6 +46,15 @@
 
         <!-- === VIEW: Today === -->
         <section id="today-view" class="view active">
+            <!-- Smart Plan Banner -->
+            <div id="plan-banner" class="plan-banner" style="display:none">
+                <div class="plan-banner-text">
+                    <span class="plan-banner-tag" id="plan-banner-title">خطة مخصصة</span>
+                    <p id="plan-banner-sub">اضغط لتحميل تمارين خطة اليوم تلقائياً</p>
+                </div>
+                <button type="button" id="btn-load-plan-day" class="btn-banner-action">تحميل التمارين ⚡</button>
+            </div>
+
             <div class="summary-card">
                 <div class="summary-item">
                     <span class="summary-value" id="summary-exercises">0</span>
@@ -62,7 +75,7 @@
             <!-- Floating Rest Timer -->
             <div id="rest-timer-box" class="rest-timer-box">
                 <div class="rest-timer-info">
-                    <span class="rest-title" data-i18n="rest_title">⏱️ وقت الراحة</span>
+                    <span class="rest-title" data-i18n="rest_title">⏱️ وقت الراحة المتبقي</span>
                     <span class="rest-countdown" id="rest-countdown">01:00</span>
                 </div>
                 <div class="rest-controls">
@@ -105,6 +118,11 @@
             <div id="exercise-grid" class="exercise-grid"></div>
         </section>
 
+        <!-- === VIEW: Smart Plan / Coach === -->
+        <section id="plan-view" class="view">
+            <div id="plan-display-container"></div>
+        </section>
+
         <!-- === VIEW: History === -->
         <section id="history-view" class="view">
             <div class="history-actions-bar">
@@ -125,6 +143,12 @@
                     <circle cx="3" cy="17.5" r="1.5" fill="currentColor"></circle>
                 </svg>
                 <span data-i18n="nav_today">اليوم</span>
+            </button>
+            <button class="nav-btn" data-view="plan-view">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+                <span data-i18n="nav_plan">المدرب الذكي</span>
             </button>
             <button class="nav-btn" data-view="library-view">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -169,6 +193,7 @@
                 <div class="rest-picker-box">
                     <span class="rest-picker-label" data-i18n="rest_after_label">⏱️ راحة بعد الحفظ:</span>
                     <div class="rest-chips">
+                        <button type="button" class="chip-time" data-sec="30">30s</button>
                         <button type="button" class="chip-time active" data-sec="60">60s</button>
                         <button type="button" class="chip-time" data-sec="90">90s</button>
                         <button type="button" class="chip-time" data-sec="120">2m</button>
@@ -183,8 +208,74 @@
 
                 <div class="modal-actions">
                     <button type="button" class="btn-cancel" id="btn-cancel" data-i18n="cancel_btn">إلغاء</button>
-                    <button type="button" class="btn-save" id="btn-save" data-i18n="save_btn">حفظ التمرين</button>
+                    <button type="button" class="btn-save" id="btn-save" data-i18n="save_btn">حفظ وبدء الراحة ⏱️</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- === MODAL: Plan Creator Quiz === -->
+        <div id="plan-modal" class="modal">
+            <div class="modal-backdrop" id="plan-modal-backdrop"></div>
+            <div class="modal-sheet">
+                <div class="modal-handle"></div>
+                <h2 class="modal-title" data-i18n="quiz_title">🎯 إعداد خطتك التدريبية الذكية</h2>
+                <form id="quiz-form">
+                    <div class="quiz-group">
+                        <label data-i18n="quiz_goal">1. ما هو هدفك الأساسي؟</label>
+                        <select id="quiz-goal" class="quiz-select">
+                            <option value="bulk">تضخيم وبناء عضلات صافية (Hypertrophy / Bulking)</option>
+                            <option value="cut">تنشيف وحرق دهون مع نحت العضل (Cutting / Fat Loss)</option>
+                            <option value="strength">زيادة القوة البدنية واللياقة الشاملة (Strength)</option>
+                        </select>
+                    </div>
+
+                    <div class="quiz-group">
+                        <label data-i18n="quiz_level">2. مستواك التدريبي في الجيم:</label>
+                        <select id="quiz-level" class="quiz-select">
+                            <option value="beginner">مبتدئ (أقل من 6 شهور)</option>
+                            <option value="intermediate">متوسط (من 6 شهور إلى سنتين)</option>
+                            <option value="advanced">متقدم (أكثر من سنتين)</option>
+                        </select>
+                    </div>
+
+                    <div class="quiz-group">
+                        <label data-i18n="quiz_days">3. كم يوماً تستطيع التمرين أسبوعياً؟</label>
+                        <select id="quiz-days" class="quiz-select">
+                            <option value="3">3 أيام أسبوعياً (Full Body Split)</option>
+                            <option value="4" selected>4 أيام أسبوعياً (Upper / Lower Split)</option>
+                            <option value="5">5 أيام أسبوعياً (Push / Pull / Legs + Upper)</option>
+                            <option value="6">6 أيام أسبوعياً (Push / Pull / Legs Classic)</option>
+                        </select>
+                    </div>
+
+                    <div class="quiz-group">
+                        <label data-i18n="quiz_focus">4. عضلة ترغب في التركيز عليها كنقطة ضعف:</label>
+                        <select id="quiz-focus" class="quiz-select">
+                            <option value="balanced">توزيع متوازن لكامل الجسم</option>
+                            <option value="chest">عضلات الصدر (Chest Focus)</option>
+                            <option value="back">عضلات الظهر والعرض (Back V-Taper)</option>
+                            <option value="arms">الذراعين (Arms: Biceps & Triceps)</option>
+                            <option value="legs">الأرجل والسمانة (Legs & Calves)</option>
+                            <option value="shoulders">الأكتاف (3D Shoulders)</option>
+                        </select>
+                    </div>
+
+                    <div class="modal-actions" style="margin-top:18px;">
+                        <button type="button" class="btn-cancel" id="btn-cancel-quiz" data-i18n="cancel_btn">إلغاء</button>
+                        <button type="submit" class="btn-save" data-i18n="generate_plan_btn">توليد الخطة الذكية 🚀</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- === MODAL: Notifications & Check-in === -->
+        <div id="notif-modal" class="modal">
+            <div class="modal-backdrop" id="notif-modal-backdrop"></div>
+            <div class="modal-sheet">
+                <div class="modal-handle"></div>
+                <h2 class="modal-title">🔔 مركز المتابعة والتنبيهات</h2>
+                <div id="notif-content-box" class="notif-content-box"></div>
+                <button type="button" class="btn-cancel" id="btn-close-notif" style="width:100%;margin-top:12px;" data-i18n="close_btn">إغلاق</button>
             </div>
         </div>
 
