@@ -1,14 +1,13 @@
-const CACHE_NAME = 'tamriny-v1';
+const CACHE_NAME = 'tamriny-v2';
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/styles.css',
-  '/app.js',
-  '/icon-512.jpg',
-  '/manifest.json'
+  './',
+  './index.html',
+  './styles.css',
+  './app.js',
+  './icon-512.jpg',
+  './manifest.json'
 ];
 
-// Install — cache all assets
 self.addEventListener('install', (e) => {
   e.waitUntil(
     caches.open(CACHE_NAME)
@@ -17,7 +16,6 @@ self.addEventListener('install', (e) => {
   );
 });
 
-// Activate — clean old caches
 self.addEventListener('activate', (e) => {
   e.waitUntil(
     caches.keys().then(keys =>
@@ -26,9 +24,15 @@ self.addEventListener('activate', (e) => {
   );
 });
 
-// Fetch — cache-first strategy
+// Network First strategy (Fetch latest from GitHub, fallback to Cache offline)
 self.addEventListener('fetch', (e) => {
   e.respondWith(
-    caches.match(e.request).then(cached => cached || fetch(e.request))
+    fetch(e.request)
+      .then(response => {
+        const resClone = response.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(e.request, resClone));
+        return response;
+      })
+      .catch(() => caches.match(e.request))
   );
 });
