@@ -1,80 +1,73 @@
 /**
- * تمريني – Gym Workout Tracker
- * Mobile-first, localStorage-backed, Arabic UI
+ * تمريني – Gym Workout Tracker (PWA Edition)
  */
 
-// ── Exercise Library ──────────────────────────────────────────────
 const EXERCISES = [
-  // صدر (Chest)
-  { id:'bench-press',          name:'بنش بريس',         category:'chest',     muscle:'صدر',    icon:'🏋️' },
-  { id:'incline-bench',        name:'بنش مائل',         category:'chest',     muscle:'صدر',    icon:'🏋️' },
-  { id:'decline-bench',        name:'بنش منحدر',        category:'chest',     muscle:'صدر',    icon:'🏋️' },
-  { id:'chest-fly',            name:'فلاي صدر',         category:'chest',     muscle:'صدر',    icon:'🦋' },
-  { id:'cable-crossover',      name:'كروس أوفر',        category:'chest',     muscle:'صدر',    icon:'💪' },
-  { id:'chest-press-machine',  name:'جهاز ضغط صدر',     category:'chest',     muscle:'صدر',    icon:'🤖' },
-  { id:'pec-deck',             name:'بيك ديك',          category:'chest',     muscle:'صدر',    icon:'🦋' },
-  // ظهر (Back)
-  { id:'lat-pulldown',   name:'سحب علوي',        category:'back', muscle:'ظهر', icon:'🔽' },
-  { id:'seated-row',     name:'سحب أفقي',        category:'back', muscle:'ظهر', icon:'🚣' },
-  { id:'barbell-row',    name:'تجديف بالبار',     category:'back', muscle:'ظهر', icon:'🏋️' },
-  { id:'t-bar-row',      name:'تي بار رو',       category:'back', muscle:'ظهر', icon:'🏋️' },
-  { id:'cable-row',      name:'سحب كيبل',        category:'back', muscle:'ظهر', icon:'💪' },
-  { id:'back-extension', name:'ظهر خلفي',        category:'back', muscle:'ظهر', icon:'🔙' },
-  { id:'pullup',         name:'عقلة',            category:'back', muscle:'ظهر', icon:'🧗' },
-  // أكتاف (Shoulders)
-  { id:'shoulder-press',         name:'ضغط أكتاف',        category:'shoulders', muscle:'أكتاف', icon:'🏋️' },
-  { id:'lateral-raise',          name:'رفع جانبي',        category:'shoulders', muscle:'أكتاف', icon:'🦅' },
-  { id:'front-raise',            name:'رفع أمامي',        category:'shoulders', muscle:'أكتاف', icon:'💪' },
-  { id:'rear-delt-fly',          name:'خلفي أكتاف',       category:'shoulders', muscle:'أكتاف', icon:'🦋' },
-  { id:'upright-row',            name:'سحب عالي',         category:'shoulders', muscle:'أكتاف', icon:'🏋️' },
+  // صدر
+  { id:'bench-press',         name:'بنش بريس مستوي',   category:'chest',     muscle:'صدر',    icon:'🏋️' },
+  { id:'incline-bench',       name:'بنش مائل عالي',    category:'chest',     muscle:'صدر',    icon:'🏋️' },
+  { id:'decline-bench',       name:'بنش مائل هابط',    category:'chest',     muscle:'صدر',    icon:'🏋️' },
+  { id:'chest-fly',           name:'تفتيح دامبلز (فلاي)', category:'chest',  muscle:'صدر',    icon:'🦋' },
+  { id:'cable-crossover',     name:'كروس أوفر كيبل',   category:'chest',     muscle:'صدر',    icon:'💪' },
+  { id:'chest-press-machine', name:'جهاز ضغط الصدر',   category:'chest',     muscle:'صدر',    icon:'🤖' },
+  { id:'pec-deck',            name:'بيك ديك (فراشة)',  category:'chest',     muscle:'صدر',    icon:'🦋' },
+  // ظهر
+  { id:'lat-pulldown',   name:'سحب ظهر عريض',      category:'back', muscle:'ظهر', icon:'🔽' },
+  { id:'seated-row',     name:'سحب أرضي ضيق',      category:'back', muscle:'ظهر', icon:'🚣' },
+  { id:'barbell-row',    name:'تجديف بالبار (رو)', category:'back', muscle:'ظهر', icon:'🏋️' },
+  { id:'t-bar-row',      name:'تي بار رو',         category:'back', muscle:'ظهر', icon:'🏋️' },
+  { id:'cable-row',      name:'سحب كيبل فردي',     category:'back', muscle:'ظهر', icon:'💪' },
+  { id:'back-extension', name:'قطنية (فيبر)',      category:'back', muscle:'ظهر', icon:'🔙' },
+  { id:'pullup',         name:'عقلة',              category:'back', muscle:'ظهر', icon:'🧗' },
+  // أكتاف
+  { id:'shoulder-press',         name:'ضغط كتف دامبلز',   category:'shoulders', muscle:'أكتاف', icon:'🏋️' },
+  { id:'lateral-raise',          name:'رفرفة جانبي',      category:'shoulders', muscle:'أكتاف', icon:'🦅' },
+  { id:'front-raise',            name:'رفرفة أمامي',      category:'shoulders', muscle:'أكتاف', icon:'💪' },
+  { id:'rear-delt-fly',          name:'رفرفة خلفي',       category:'shoulders', muscle:'أكتاف', icon:'🦋' },
+  { id:'upright-row',            name:'سحب بار للذقن',    category:'shoulders', muscle:'أكتاف', icon:'🏋️' },
   { id:'shoulder-press-machine', name:'جهاز ضغط أكتاف',   category:'shoulders', muscle:'أكتاف', icon:'🤖' },
-  // ذراع (Arms)
-  { id:'bicep-curl',       name:'بايسبس كيرل',      category:'arms', muscle:'ذراع', icon:'💪' },
-  { id:'hammer-curl',      name:'هامر كيرل',        category:'arms', muscle:'ذراع', icon:'🔨' },
-  { id:'preacher-curl',    name:'بريتشر كيرل',      category:'arms', muscle:'ذراع', icon:'💪' },
-  { id:'tricep-pushdown',  name:'تراي بوش داون',    category:'arms', muscle:'ذراع', icon:'⬇️' },
-  { id:'overhead-tricep',  name:'تراي فوق الرأس',   category:'arms', muscle:'ذراع', icon:'⬆️' },
-  { id:'cable-curl',       name:'كيرل كيبل',        category:'arms', muscle:'ذراع', icon:'💪' },
-  { id:'dips',             name:'ديبس',             category:'arms', muscle:'ذراع', icon:'🤸' },
-  // أرجل (Legs)
-  { id:'squat',          name:'سكوات',           category:'legs', muscle:'أرجل', icon:'🦵' },
-  { id:'leg-press',      name:'ليج بريس',        category:'legs', muscle:'أرجل', icon:'🦵' },
-  { id:'leg-extension',  name:'ليج اكستنشن',     category:'legs', muscle:'أرجل', icon:'🦵' },
-  { id:'leg-curl',       name:'ليج كيرل',        category:'legs', muscle:'أرجل', icon:'🦵' },
-  { id:'calf-raise',     name:'سمانة',           category:'legs', muscle:'أرجل', icon:'🦵' },
-  { id:'lunges',         name:'لانجز',           category:'legs', muscle:'أرجل', icon:'🚶' },
-  { id:'hack-squat',     name:'هاك سكوات',       category:'legs', muscle:'أرجل', icon:'🤖' },
-  // بطن (Core)
-  { id:'crunch',         name:'كرانش',       category:'core', muscle:'بطن', icon:'🍫' },
-  { id:'plank',          name:'بلانك',       category:'core', muscle:'بطن', icon:'📏' },
-  { id:'cable-crunch',   name:'كرانش كيبل',  category:'core', muscle:'بطن', icon:'💪' },
-  { id:'leg-raise',      name:'رفع أرجل',    category:'core', muscle:'بطن', icon:'🦵' },
-  { id:'russian-twist',  name:'رشن تويست',   category:'core', muscle:'بطن', icon:'🔄' },
-  // كارديو (Cardio)
-  { id:'treadmill',       name:'مشاية',        category:'cardio', muscle:'كارديو', icon:'🏃' },
-  { id:'elliptical',      name:'اليبتيكال',    category:'cardio', muscle:'كارديو', icon:'⛷️' },
-  { id:'stationary-bike', name:'عجلة ثابتة',   category:'cardio', muscle:'كارديو', icon:'🚴' },
-  { id:'stairmaster',     name:'درج',          category:'cardio', muscle:'كارديو', icon:'🧗' },
+  // ذراع
+  { id:'bicep-curl',      name:'بايسبس كيرل بار',     category:'arms', muscle:'ذراع', icon:'💪' },
+  { id:'hammer-curl',     name:'هامر كيرل',           category:'arms', muscle:'ذراع', icon:'🔨' },
+  { id:'preacher-curl',   name:'بريتشر (لاري سكوت)',  category:'arms', muscle:'ذراع', icon:'💪' },
+  { id:'tricep-pushdown', name:'تراي بوش داون حبل',   category:'arms', muscle:'ذراع', icon:'⬇️' },
+  { id:'overhead-tricep', name:'تراي فوق الرأس',      category:'arms', muscle:'ذراع', icon:'⬆️' },
+  { id:'cable-curl',      name:'كيرل كيبل مزدوج',     category:'arms', muscle:'ذراع', icon:'💪' },
+  { id:'dips',            name:'متوازي (ديبس)',       category:'arms', muscle:'ذراع', icon:'🤸' },
+  // أرجل
+  { id:'squat',         name:'سكوات بار حر',   category:'legs', muscle:'أرجل', icon:'🦵' },
+  { id:'leg-press',     name:'مكبس أرجل (بريس)', category:'legs', muscle:'أرجل', icon:'🦵' },
+  { id:'leg-extension', name:'رفرفة أرجل أمامي', category:'legs', muscle:'أرجل', icon:'🦵' },
+  { id:'leg-curl',      name:'رفرفة أرجل خلفي', category:'legs', muscle:'أرجل', icon:'🦵' },
+  { id:'calf-raise',    name:'سمانة واقف',      category:'legs', muscle:'أرجل', icon:'🦵' },
+  { id:'lunges',        name:'لانجز طعن',      category:'legs', muscle:'أرجل', icon:'🚶' },
+  { id:'hack-squat',    name:'هاك سكوات',      category:'legs', muscle:'أرجل', icon:'🤖' },
+  // بطن
+  { id:'crunch',        name:'كرانش بطن',     category:'core', muscle:'بطن', icon:'🍫' },
+  { id:'plank',         name:'بلانك',          category:'core', muscle:'بطن', icon:'📏' },
+  { id:'cable-crunch',  name:'طحن كيبل بطن',   category:'core', muscle:'بطن', icon:'💪' },
+  { id:'leg-raise',     name:'رفع أرجل للبطن', category:'core', muscle:'بطن', icon:'🦵' },
+  // كارديو
+  { id:'treadmill',       name:'مشاية سير',    category:'cardio', muscle:'كارديو', icon:'🏃' },
+  { id:'stationary-bike', name:'عجلة تمارين',  category:'cardio', muscle:'كارديو', icon:'🚴' },
+  { id:'stairmaster',     name:'درج الكارديو', category:'cardio', muscle:'كارديو', icon:'🧗' }
 ];
 
 const STORAGE_KEY = 'gymTrackerData';
 
 // ── State ─────────────────────────────────────────────────────────
-let data     = { workouts: [] };
-let category = 'all';
-let query    = '';
-let modalExId = null;
-let modal     = { weight: 0, sets: 3, reps: 10, notes: '' };
-let timerRef  = null;
+let data       = { workouts: [] };
+let category   = 'all';
+let query      = '';
+let modalExId  = null;
+let modal      = { weight: 0, sets: 3, reps: 10, notes: '' };
+let timerRef   = null;
+let restRef    = null;
+let restTimeRemaining = 0;
 
 // ── Helpers ───────────────────────────────────────────────────────
 const $ = (sel) => document.getElementById(sel) || document.querySelector(sel);
 const $$ = (sel) => document.querySelectorAll(sel);
-
-const ar = (n) => {
-  const d = '٠١٢٣٤٥٦٧٨٩';
-  return String(n).replace(/\d/g, c => d[+c]);
-};
 
 const todayISO = () => {
   const t = new Date();
@@ -83,25 +76,24 @@ const todayISO = () => {
 
 const fmtDate = (iso) => {
   const d = new Date(iso + 'T00:00:00');
-  return new Intl.DateTimeFormat('ar-EG',{weekday:'long',day:'numeric',month:'long'}).format(d);
+  return new Intl.DateTimeFormat('ar-EG', { weekday:'long', day:'numeric', month:'long' }).format(d);
 };
 
 const fmtTimer = (ms) => {
-  if (!ms || ms < 0) return '٠٠:٠٠';
+  if (!ms || ms < 0) return '00:00';
   const m = Math.floor(ms / 60000);
   const s = Math.floor((ms % 60000) / 1000);
-  return ar(String(m).padStart(2,'0')) + ':' + ar(String(s).padStart(2,'0'));
+  return String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
 };
 
 const fmtDuration = (ms) => {
-  if (!ms || ms < 0) return '٠ دقيقة';
+  if (!ms || ms < 0) return '0 دقيقة';
   const h = Math.floor(ms / 3600000);
   const m = Math.floor((ms % 3600000) / 60000);
-  if (h > 0) return `${ar(h)} ساعة و ${ar(m)} دقيقة`;
-  return `${ar(m)} دقيقة`;
+  return h > 0 ? `${h} ساعة و ${m} دقيقة` : `${m} دقيقة`;
 };
 
-// ── Data ──────────────────────────────────────────────────────────
+// ── Storage ───────────────────────────────────────────────────────
 const load = () => {
   try { data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { workouts: [] }; }
   catch { data = { workouts: [] }; }
@@ -119,7 +111,6 @@ const todayWorkout = () => {
   return w;
 };
 
-/** Get the last session for an exercise (before today) */
 const lastSession = (exId) => {
   const iso = todayISO();
   for (let i = data.workouts.length - 1; i >= 0; i--) {
@@ -131,28 +122,52 @@ const lastSession = (exId) => {
   return null;
 };
 
-// ── Toast ─────────────────────────────────────────────────────────
+// ── Toast & Haptic ────────────────────────────────────────────────
 const toast = (msg, type = 'success') => {
   const el = $('toast');
   el.textContent = msg;
   el.className = `toast ${type} show`;
-  setTimeout(() => el.classList.remove('show'), 2800);
+  if ('vibrate' in navigator) navigator.vibrate(40);
+  setTimeout(() => el.classList.remove('show'), 2600);
 };
 
-// ── Navigation ────────────────────────────────────────────────────
+// ── Rest Timer ────────────────────────────────────────────────────
+const startRestTimer = (seconds = 60) => {
+  if (restRef) clearInterval(restRef);
+  restTimeRemaining = seconds;
+  const box = $('rest-timer-box');
+  const countEl = $('rest-countdown');
+  
+  box.classList.add('active');
+  countEl.textContent = `00:${String(restTimeRemaining).padStart(2,'0')}`;
+
+  restRef = setInterval(() => {
+    restTimeRemaining--;
+    if (restTimeRemaining <= 0) {
+      clearInterval(restRef);
+      box.classList.remove('active');
+      if ('vibrate' in navigator) navigator.vibrate([150, 80, 150]);
+      toast('انتهى وقت الراحة! ابدأ المجموعة القادمة 💪');
+    } else {
+      const m = Math.floor(restTimeRemaining / 60);
+      const s = restTimeRemaining % 60;
+      countEl.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    }
+  }, 1000);
+};
+
+const cancelRestTimer = () => {
+  if (restRef) clearInterval(restRef);
+  $('rest-timer-box').classList.remove('active');
+};
+
+// ── Views ─────────────────────────────────────────────────────────
 const switchView = (viewId) => {
   $$('.view').forEach(v => v.classList.remove('active'));
   const target = $(viewId);
-  if (target) {
-    target.classList.remove('active');
-    // Force reflow for animation
-    void target.offsetWidth;
-    target.classList.add('active');
-  }
+  if (target) target.classList.add('active');
 
   $$('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view === viewId));
-
-  // Show/hide FAB only on today view
   const fab = $('fab-btn');
   if (fab) fab.style.display = viewId === 'today-view' ? 'flex' : 'none';
 
@@ -161,14 +176,14 @@ const switchView = (viewId) => {
   if (viewId === 'history-view') renderHistory();
 };
 
-// ── Render: Today ─────────────────────────────────────────────────
+// ── Render Views ──────────────────────────────────────────────────
 const renderToday = () => {
   const w = todayWorkout();
   const exCount = w.exercises.length;
   const setCount = w.exercises.reduce((s, e) => s + (e.sets || 0), 0);
 
-  $('summary-exercises').textContent = ar(exCount);
-  $('summary-sets').textContent = ar(setCount);
+  $('summary-exercises').textContent = exCount;
+  $('summary-sets').textContent = setCount;
   updateTimer();
 
   const list = $('today-list');
@@ -176,7 +191,7 @@ const renderToday = () => {
     list.innerHTML = `
       <div class="empty-state">
         <div class="empty-icon">🏋️</div>
-        <p>لسه مضفتش تمارين النهارده.<br>اضغط <strong>+</strong> وابدأ تمرينك!</p>
+        <p>لم تُضف أي تمارين اليوم.<br>اضغط على <strong>+</strong> وابدأ تمرينك!</p>
       </div>`;
     return;
   }
@@ -189,7 +204,7 @@ const renderToday = () => {
         <div class="icon">${def.icon}</div>
         <div class="info">
           <h4>${def.name}</h4>
-          <p><strong>${ar(ex.weight)} كجم</strong> × ${ar(ex.sets)} مجموعات × ${ar(ex.reps)} تكرار</p>
+          <p><strong>${ex.weight} كجم</strong> × ${ex.sets} مجموعات × ${ex.reps} تكرار</p>
         </div>
         <button class="remove-btn" onclick="removeExercise('${ex.id}')" aria-label="حذف">✕</button>
       </div>`;
@@ -199,42 +214,35 @@ const renderToday = () => {
 const updateTimer = () => {
   const w = todayWorkout();
   const el = $('summary-timer');
-  if (!w.start) { el.textContent = '٠٠:٠٠'; return; }
+  if (!w.start) { el.textContent = '00:00'; return; }
   el.textContent = fmtTimer(Date.now() - w.start);
 };
 
-const startTimerLoop = () => {
-  if (timerRef) clearInterval(timerRef);
-  timerRef = setInterval(updateTimer, 1000);
-};
-
 const removeExercise = (exId) => {
-  if (!confirm('حذف التمرين ده؟')) return;
+  if (!confirm('حذف هذا التمرين من تمرين اليوم؟')) return;
   const w = todayWorkout();
   w.exercises = w.exercises.filter(e => e.id !== exId);
   if (w.exercises.length === 0) w.start = null;
   save();
   renderToday();
-  toast('تم الحذف 🗑️', 'error');
+  toast('تم حذف التمرين 🗑️', 'error');
 };
 
-// ── Render: Library ───────────────────────────────────────────────
 const renderLibrary = () => {
-  // pills
   $$('.pill').forEach(p => p.classList.toggle('active', p.dataset.category === category));
 
   let list = EXERCISES;
   if (category !== 'all') list = list.filter(e => e.category === category);
   if (query.trim()) {
     const q = query.trim().toLowerCase();
-    list = list.filter(e => e.name.includes(q) || e.id.includes(q));
+    list = list.filter(e => e.name.toLowerCase().includes(q) || e.id.includes(q));
   }
 
   const todayIds = todayWorkout().exercises.map(e => e.id);
   const grid = $('exercise-grid');
 
   if (list.length === 0) {
-    grid.innerHTML = '<div class="empty-state"><p>مفيش تمارين بالبحث ده 🤷</p></div>';
+    grid.innerHTML = '<div class="empty-state"><p>لا توجد نتائج مطابقة للبحث 🤷</p></div>';
     return;
   }
 
@@ -247,12 +255,11 @@ const renderLibrary = () => {
         <div class="card-icon">${ex.icon}</div>
         <h4>${ex.name}</h4>
         <span class="muscle-tag">${ex.muscle}</span>
-        ${last ? `<div class="last-wt">${ar(last.weight)} <small>كجم</small></div>` : '<div class="last-wt" style="color:var(--text3);font-size:.75rem">—</div>'}
+        ${last ? `<div class="last-wt">${last.weight} <small>كجم</small></div>` : '<div class="last-wt" style="color:var(--text3);font-size:.8rem">—</div>'}
       </div>`;
   }).join('');
 };
 
-// ── Render: History ───────────────────────────────────────────────
 const renderHistory = () => {
   const container = $('history-list');
   const past = [...data.workouts]
@@ -260,7 +267,7 @@ const renderHistory = () => {
     .sort((a, b) => b.date.localeCompare(a.date));
 
   if (past.length === 0) {
-    container.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><p>مفيش سجل تمارين لسه.<br>ابدأ سجّل وراقب تقدمك!</p></div>';
+    container.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><p>لا يوجد سجل تمارين بعد.<br>ابدأ وسجل بياناتك الآن!</p></div>';
     return;
   }
 
@@ -271,7 +278,7 @@ const renderHistory = () => {
         <div class="history-header" onclick="toggleHistory('${w.id}')">
           <div>
             <h4>${fmtDate(w.date)}</h4>
-            <span class="meta">${ar(w.exercises.length)} تمرين${dur ? ' • ' + dur : ''}</span>
+            <span class="meta">${w.exercises.length} تمرين${dur ? ' • ' + dur : ''}</span>
           </div>
           <span class="chevron">▾</span>
         </div>
@@ -280,10 +287,10 @@ const renderHistory = () => {
             const def = EXERCISES.find(e => e.id === ex.id);
             return `<div class="history-ex-row">
               <span class="name">${def ? def.name : ex.id}</span>
-              <span class="stats"><strong>${ar(ex.weight)}</strong> كجم × ${ar(ex.sets)}×${ar(ex.reps)}</span>
+              <span class="stats"><strong>${ex.weight}</strong> كجم × ${ex.sets} × ${ex.reps}</span>
             </div>`;
           }).join('')}
-          <div class="history-delete" onclick="deleteWorkout('${w.id}')">حذف هذا اليوم</div>
+          <div class="history-delete" onclick="deleteWorkout('${w.id}')">حذف هذا اليوم من السجل</div>
         </div>
       </div>`;
   }).join('');
@@ -295,7 +302,7 @@ const toggleHistory = (wId) => {
 };
 
 const deleteWorkout = (wId) => {
-  if (!confirm('حذف تمارين اليوم ده بالكامل؟')) return;
+  if (!confirm('هل أنت متأكد من حذف تمارين هذا اليوم؟')) return;
   data.workouts = data.workouts.filter(w => w.id !== wId);
   save();
   renderHistory();
@@ -311,19 +318,16 @@ const openModal = (exId) => {
   const last = lastSession(exId);
   const existing = todayWorkout().exercises.find(e => e.id === exId);
 
-  // Populate modal state
   modal.weight = existing?.weight ?? last?.weight ?? 0;
   modal.sets   = existing?.sets   ?? last?.sets   ?? 3;
   modal.reps   = existing?.reps   ?? last?.reps   ?? 10;
   modal.notes  = existing?.notes  ?? '';
 
-  // Update UI
   $('modal-title').textContent = def.name;
-
   const box = $('last-session-box');
   const txt = $('last-session-text');
   if (last) {
-    txt.innerHTML = `آخر مرة: <strong>${ar(last.weight)} كجم</strong> × ${ar(last.reps)} تكرار — ${fmtDate(last.date)}`;
+    txt.innerHTML = `آخر مرة: <strong>${last.weight} كجم</strong> × ${last.reps} تكرار (${fmtDate(last.date)})`;
     box.classList.remove('first-time');
   } else {
     txt.textContent = 'أول مرة تلعب التمرين ده! 💪';
@@ -344,18 +348,17 @@ const closeModal = () => {
 };
 
 const syncModalValues = () => {
-  $('val-weight').textContent = ar(modal.weight);
-  $('val-sets').textContent   = ar(modal.sets);
-  $('val-reps').textContent   = ar(modal.reps);
+  $('val-weight').textContent = modal.weight;
+  $('val-sets').textContent   = modal.sets;
+  $('val-reps').textContent   = modal.reps;
 
-  // Weight diff indicator
   const diffEl = $('weight-diff');
   if (!diffEl) return;
   const last = modalExId ? lastSession(modalExId) : null;
   if (last) {
     const diff = modal.weight - last.weight;
-    if (diff > 0)      { diffEl.textContent = `↑ +${ar(diff)}`; diffEl.className = 'weight-diff up'; }
-    else if (diff < 0) { diffEl.textContent = `↓ ${ar(diff)}`; diffEl.className = 'weight-diff down'; }
+    if (diff > 0)      { diffEl.textContent = `↑ +${diff}`; diffEl.className = 'weight-diff up'; }
+    else if (diff < 0) { diffEl.textContent = `↓ ${diff}`; diffEl.className = 'weight-diff down'; }
     else               { diffEl.textContent = ''; diffEl.className = 'weight-diff'; }
   } else {
     diffEl.textContent = ''; diffEl.className = 'weight-diff';
@@ -370,7 +373,6 @@ const adjust = (field, delta) => {
 const saveExercise = () => {
   if (!modalExId) return;
   const w = todayWorkout();
-
   if (!w.start) w.start = Date.now();
 
   const entry = { id: modalExId, weight: modal.weight, sets: modal.sets, reps: modal.reps, notes: $('notes-input').value.trim(), time: Date.now() };
@@ -382,46 +384,80 @@ const saveExercise = () => {
   save();
   closeModal();
   toast('تم حفظ التمرين ✅');
-
-  // Refresh whichever view is visible
+  
   if ($('today-view').classList.contains('active'))   renderToday();
   if ($('library-view').classList.contains('active')) renderLibrary();
+
+  startRestTimer(60);
 };
 
-// ── Init ──────────────────────────────────────────────────────────
+// ── Export / Import ───────────────────────────────────────────────
+const exportData = () => {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `tamriny-backup-${todayISO()}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('تم تنزيل النسخة الاحتياطية 📥');
+};
+
+const importData = (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    try {
+      const imported = JSON.parse(event.target.result);
+      if (imported && Array.isArray(imported.workouts)) {
+        data = imported;
+        save();
+        renderHistory();
+        renderToday();
+        toast('تم استرجاع البيانات بنجاح ✅');
+      } else {
+        alert('ملف غير صالح');
+      }
+    } catch {
+      alert('خطأ أثناء قراءة الملف');
+    }
+  };
+  reader.readAsText(file);
+};
+
+// ── Initialization ────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   load();
 
-  // Set current date
   const dateEl = $('current-date');
   if (dateEl) dateEl.textContent = fmtDate(todayISO());
 
-  // Nav
   $$('.nav-btn').forEach(b => b.addEventListener('click', () => switchView(b.dataset.view)));
-
-  // FAB
   $('fab-btn').addEventListener('click', () => switchView('library-view'));
-
-  // Category pills
   $$('.pill').forEach(p => p.addEventListener('click', () => { category = p.dataset.category; renderLibrary(); }));
-
-  // Search
   $('search-input').addEventListener('input', e => { query = e.target.value; renderLibrary(); });
 
-  // Modal stepper buttons
   $$('.stepper-btn').forEach(btn => btn.addEventListener('click', () => {
     adjust(btn.dataset.field, parseFloat(btn.dataset.delta));
   }));
 
-  // Modal save / cancel / backdrop
   $('btn-save').addEventListener('click', saveExercise);
   $('btn-cancel').addEventListener('click', closeModal);
   $('modal-backdrop').addEventListener('click', closeModal);
 
-  // Keyboard escape
+  // Rest Timer Controls
+  $$('.rest-btn:not(.cancel)').forEach(btn => btn.addEventListener('click', () => {
+    startRestTimer(parseInt(btn.dataset.time, 10));
+  }));
+  $('rest-cancel-btn').addEventListener('click', cancelRestTimer);
+
+  // Backup Controls
+  $('btn-export').addEventListener('click', exportData);
+  $('import-file-input').addEventListener('change', importData);
+
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-  // Start
   switchView('today-view');
-  startTimerLoop();
+  setInterval(updateTimer, 1000);
 });
