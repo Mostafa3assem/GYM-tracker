@@ -1,5 +1,5 @@
 /**
- * تمريني – Gym Tracker Ultimate (Multi-User, Multilingual, 50+ Exercises, Repeat Alert)
+ * تمريني – Smart Gym Tracker & Coach (Offline-Ready PWA)
  */
 
 const I18N = {
@@ -21,6 +21,7 @@ const I18N = {
     export_btn: '📥 نسخ احتياطي',
     import_btn: '📤 استرجاع',
     nav_today: 'اليوم',
+    nav_plan: 'المدرب الذكي',
     nav_exercises: 'التمارين',
     nav_history: 'السجل',
     tbl_set: 'المجموعة',
@@ -38,8 +39,14 @@ const I18N = {
     close_btn: 'إغلاق',
     edit_name: 'تعديل',
     delete_user: 'حذف',
+    quiz_title: '🎯 إعداد خطتك التدريبية الذكية',
+    quiz_goal: '1. ما هو هدفك الأساسي؟',
+    quiz_level: '2. مستواك التدريبي في الجيم:',
+    quiz_days: '3. كم يوماً تستطيع التمرين أسبوعياً؟',
+    quiz_focus: '4. عضلة ترغب في التركيز عليها:',
+    generate_plan_btn: 'توليد الخطة الذكية 🚀',
     rest_done_alert: '🔔 انتهى وقت الراحة! ابدأ مجموعتك التالية 💪',
-    welcome_empty: 'مرحباً {user}! لم تسجل تمارين اليوم بعد.<br>اضغط على <strong>+</strong> وابدأ تمرينك الآن!',
+    welcome_empty: 'مرحباً {user}! لم تسجل تمارين اليوم بعد.<br>اضغط على <strong>+</strong> أو افتح تبويب <strong>المدرب الذكي</strong> لتحميل جدولك!',
     first_time_ex: 'أول مرة تلعب هذا التمرين! 💪',
     last_time_ex: 'آخر تمرين ({date}):<br><strong>{sets}</strong>',
     search_placeholder: 'ابحث عن تمرين...'
@@ -62,6 +69,7 @@ const I18N = {
     export_btn: '📥 Backup',
     import_btn: '📤 Restore',
     nav_today: 'Today',
+    nav_plan: 'Smart Coach',
     nav_exercises: 'Exercises',
     nav_history: 'History',
     tbl_set: 'Set',
@@ -79,8 +87,14 @@ const I18N = {
     close_btn: 'Close',
     edit_name: 'Edit',
     delete_user: 'Delete',
+    quiz_title: '🎯 Smart Workout Coach Setup',
+    quiz_goal: '1. What is your primary goal?',
+    quiz_level: '2. Your training experience:',
+    quiz_days: '3. Workout days per week:',
+    quiz_focus: '4. Weak point focus muscle:',
+    generate_plan_btn: 'Generate Smart Plan 🚀',
     rest_done_alert: '🔔 Rest Time Over! Start your next set 💪',
-    welcome_empty: 'Welcome {user}! No workouts logged today.<br>Tap <strong>+</strong> to start lifting!',
+    welcome_empty: 'Welcome {user}! No workouts logged today.<br>Tap <strong>+</strong> or open <strong>Smart Coach</strong> to load your plan!',
     first_time_ex: 'First time doing this exercise! 💪',
     last_time_ex: 'Last Session ({date}):<br><strong>{sets}</strong>',
     search_placeholder: 'Search exercise...'
@@ -88,7 +102,7 @@ const I18N = {
 };
 
 const EXERCISES = [
-  // ───────── صدر (Chest) ─────────
+  // صدر
   { id:'bench-press',         name_ar:'بنش بريس مستوي بالبار',     name_en:'Barbell Flat Bench Press',      category:'chest', icon:'🏋️' },
   { id:'incline-barbell',     name_ar:'بنش مائل عالي بالبار',       name_en:'Incline Barbell Bench Press',   category:'chest', icon:'🏋️' },
   { id:'decline-barbell',     name_ar:'بنش مائل هابط بالبار',       name_en:'Decline Barbell Bench Press',   category:'chest', icon:'🏋️' },
@@ -101,9 +115,7 @@ const EXERCISES = [
   { id:'cable-crossover-low', name_ar:'كروس أوفر كيبل من أسفل',    name_en:'Low-to-High Cable Fly',         category:'chest', icon:'💪' },
   { id:'chest-press-machine', name_ar:'جهاز ضغط الصدر جالساً',     name_en:'Seated Machine Chest Press',    category:'chest', icon:'🤖' },
   { id:'dips-chest',          name_ar:'متوازي بالتركيز على الصدر',  name_en:'Chest Focused Dips',            category:'chest', icon:'🤸' },
-  { id:'pushups',             name_ar:'ضغط أرضي حر (بوش اب)',      name_en:'Standard Push-Ups',             category:'chest', icon:'🤸' },
-
-  // ───────── ظهر (Back) ─────────
+  // ظهر
   { id:'deadlift',            name_ar:'ديدليفت بار حر',            name_en:'Conventional Deadlift',         category:'back', icon:'🏋️' },
   { id:'lat-pulldown-wide',   name_ar:'سحب علوي أمامي عريض',       name_en:'Wide-Grip Lat Pulldown',        category:'back', icon:'🔽' },
   { id:'lat-pulldown-close',  name_ar:'سحب علوي قبضة ضيقة (V-Bar)',name_en:'Close-Grip V-Bar Pulldown',     category:'back', icon:'🔽' },
@@ -113,74 +125,41 @@ const EXERCISES = [
   { id:'t-bar-row',           name_ar:'تي بار رو حر',              name_en:'T-Bar Row',                     category:'back', icon:'🏋️' },
   { id:'pullup-weighted',     name_ar:'عقلة حرة / بوزن',           name_en:'Pull-Ups / Chin-Ups',           category:'back', icon:'🧗' },
   { id:'back-extension',      name_ar:'قطنية على الدكة (فيبر)',     name_en:'Hyperextensions (Lower Back)',  category:'back', icon:'🔙' },
-  { id:'straight-arm-pulldown',name_ar:'سحب كيبل ذراع مفرود',      name_en:'Straight-Arm Cable Pulldown',   category:'back', icon:'💪' },
   { id:'shrugs-barbell',      name_ar:'ترابيس بالبار (شراجز)',     name_en:'Barbell Shrugs',                category:'back', icon:'🏋️' },
-  { id:'shrugs-dumbbell',     name_ar:'ترابيس بالدامبلز',          name_en:'Dumbbell Shrugs',               category:'back', icon:'🏋️' },
-
-  // ───────── أكتاف (Shoulders) ─────────
+  // أكتاف
   { id:'overhead-press-bar',  name_ar:'ضغط كتف بار واقف (OHP)',    name_en:'Overhead Barbell Press',        category:'shoulders', icon:'🏋️' },
   { id:'db-shoulder-press',   name_ar:'ضغط كتف بالدامبلز جالساً',   name_en:'Seated Dumbbell Shoulder Press',category:'shoulders', icon:'🏋️' },
-  { id:'arnold-press',        name_ar:'أرنولد بريس دامبلز',        name_en:'Arnold Press',                  category:'shoulders', icon:'🏋️' },
   { id:'lateral-raise-db',    name_ar:'رفرفة جانبي بالدامبلز',     name_en:'Dumbbell Lateral Raise',        category:'shoulders', icon:'🦅' },
-  { id:'lateral-raise-cable', name_ar:'رفرفة جانبي بالكيبل',       name_en:'Cable Lateral Raise',           category:'shoulders', icon:'🦅' },
   { id:'front-raise-db',      name_ar:'رفرفة أمامي بالدامبلز',     name_en:'Front Dumbbell Raise',          category:'shoulders', icon:'💪' },
-  { id:'front-raise-barbell', name_ar:'رفرفة أمامي بالبار / الطارة',name_en:'Barbell / Plate Front Raise',   category:'shoulders', icon:'💪' },
   { id:'rear-delt-fly-db',    name_ar:'رفرفة خلفي بالدامبلز منحني', name_en:'Bent-Over Rear Delt Fly',      category:'shoulders', icon:'🦋' },
   { id:'face-pull',           name_ar:'فيس بول بالحبل على الكيبل',  name_en:'Cable Face Pulls',              category:'shoulders', icon:'🎯' },
-  { id:'upright-row-ez',      name_ar:'سحب بار زجزاج للذقن',       name_en:'EZ-Bar Upright Row',            category:'shoulders', icon:'🏋️' },
-
-  // ───────── ذراع (Arms: Biceps, Triceps, Forearms) ─────────
+  // ذراع
   { id:'barbell-curl',        name_ar:'بايسبس بار مستقيم واقف',    name_en:'Standing Barbell Curl',         category:'arms', icon:'💪' },
-  { id:'ez-bar-curl',         name_ar:'بايسبس بار زجزاج (EZ)',     name_en:'EZ-Bar Bicep Curl',             category:'arms', icon:'💪' },
-  { id:'db-alternate-curl',   name_ar:'بايسبس تبادل بالدامبلز',    name_en:'Incline / Standing DB Curl',    category:'arms', icon:'💪' },
   { id:'hammer-curl',         name_ar:'هامر كيرل بالدامبلز',       name_en:'Dumbbell Hammer Curl',          category:'arms', icon:'🔨' },
   { id:'preacher-curl',       name_ar:'لاري سكوت (بريتشر كيرل)',   name_en:'Preacher Curl Bench',           category:'arms', icon:'💪' },
-  { id:'cable-bicep-curl',    name_ar:'كيرل بايسبس بالكيبل مسطرة', name_en:'Straight Bar Cable Curl',       category:'arms', icon:'💪' },
-  { id:'concentration-curl',  name_ar:'تركيز فردي دامبلز (كونسنتريشن)',name_en:'Concentration Curl',        category:'arms', icon:'💪' },
   { id:'tricep-pushdown-rope',name_ar:'ترايسبس حبل على الكيبل',    name_en:'Tricep Rope Pushdown',          category:'arms', icon:'⬇️' },
-  { id:'tricep-pushdown-bar', name_ar:'ترايسبس مسطرة V-Bar كيبل',  name_en:'Tricep Straight/V-Bar Pushdown',category:'arms', icon:'⬇️' },
-  { id:'skull-crushers',      name_ar:'تكسير جمجمة بار زجزاج (فرنساوي)',name_en:'EZ-Bar Skull Crushers',     category:'arms', icon:'💀' },
+  { id:'skull-crushers',      name_ar:'تكسير جمجمة بار زجزاج',     name_en:'EZ-Bar Skull Crushers',         category:'arms', icon:'💀' },
   { id:'overhead-db-tricep',  name_ar:'ترايسبس دامبلز خلف الرأس',  name_en:'Overhead Dumbbell Extension',   category:'arms', icon:'⬆️' },
-  { id:'dips-parallel',       name_ar:'متوازي بالتركيز على التراي',name_en:'Tricep Dips on Parallel Bars', category:'arms', icon:'🤸' },
-  { id:'close-grip-bench',    name_ar:'بنش قبضة ضيقة للتراي',      name_en:'Close-Grip Bench Press',        category:'arms', icon:'🏋️' },
-  { id:'wrist-curls',         name_ar:'سواعد ريست بالبار جالساً',   name_en:'Barbell Wrist Curls (Forearms)',category:'arms', icon:'✊' },
-
-  // ───────── أرجل (Legs & Calves) ─────────
+  // أرجل
   { id:'barbell-squat',       name_ar:'سكوات خلفي بار حر',         name_en:'Barbell Back Squat',            category:'legs', icon:'🦵' },
-  { id:'front-squat',         name_ar:'سكوات أمامي بالبار',        name_en:'Barbell Front Squat',           category:'legs', icon:'🦵' },
   { id:'leg-press',           name_ar:'مكبس أرجل (ليج بريس 45°)',  name_en:'45° Leg Press Machine',         category:'legs', icon:'🦵' },
-  { id:'hack-squat',          name_ar:'هاك سكوات بالجهاز',         name_en:'Hack Squat Machine',            category:'legs', icon:'🤖' },
-  { id:'bulgarian-split-squat',name_ar:'بلغاريان سبليت سكوات دامبلز',name_en:'Bulgarian Split Squat',       category:'legs', icon:'🚶' },
-  { id:'walking-lunges',      name_ar:'طعنات مشي بالدامبلز (لانجز)',name_en:'Walking Dumbbell Lunges',       category:'legs', icon:'🚶' },
   { id:'leg-extension',       name_ar:'جهاز رفرفة أرجل أمامي',     name_en:'Seated Leg Extension (Quads)',  category:'legs', icon:'🦵' },
-  { id:'lying-leg-curl',      name_ar:'جهاز نوم خلفيات أرجل (ليج كيرل)',name_en:'Lying Leg Curl (Hamstrings)',category:'legs', icon:'🦵' },
-  { id:'seated-leg-curl',     name_ar:'جهاز جلوس خلفيات أرجل',     name_en:'Seated Leg Curl',               category:'legs', icon:'🦵' },
-  { id:'romanian-deadlift',   name_ar:'رومانيان ديدليفت دامبلز/بار',name_en:'Romanian Deadlift (RDL)',       category:'legs', icon:'🏋️' },
+  { id:'lying-leg-curl',      name_ar:'جهاز نوم خلفيات أرجل',      name_en:'Lying Leg Curl (Hamstrings)',   category:'legs', icon:'🦵' },
   { id:'standing-calf-raise', name_ar:'سمانة واقف بالجهاز أو البار',name_en:'Standing Calf Raise',          category:'legs', icon:'🦵' },
-  { id:'seated-calf-raise',   name_ar:'سمانة جالس بالجهاز',        name_en:'Seated Calf Raise',             category:'legs', icon:'🦵' },
-
-  // ───────── بطن وكور (Core) ─────────
+  // بطن وكارديو
   { id:'cable-crunch',        name_ar:'طحن كيبل للبطن بحبل',       name_en:'Kneeling Cable Crunch',         category:'core', icon:'💪' },
   { id:'hanging-leg-raise',   name_ar:'رفع أرجل متعلق على العقلة', name_en:'Hanging Leg/Knee Raise',        category:'core', icon:'🦵' },
-  { id:'incline-leg-raise',   name_ar:'رفع أرجل على دكة مائلة',    name_en:'Incline Bench Leg Raise',       category:'core', icon:'🍫' },
   { id:'plank',               name_ar:'بلانك ثبات',                name_en:'Plank Hold',                    category:'core', icon:'📏' },
-  { id:'russian-twists',      name_ar:'رشن تويست بالوزن للجوانب',  name_en:'Weighted Russian Twists',       category:'core', icon:'🔄' },
-  { id:'ab-wheel-rollout',    name_ar:'عجلة البطن (آب رولر)',      name_en:'Ab Wheel Rollout',              category:'core', icon:'🎡' },
-
-  // ───────── كارديو (Cardio) ─────────
-  { id:'treadmill',           name_ar:'مشاية كهربائية (سير)',      name_en:'Treadmill Running / Incline',   category:'cardio', icon:'🏃' },
-  { id:'stationary-bike',     name_ar:'عجلة تمارين ثابتة',         name_en:'Stationary Upright Bike',       category:'cardio', icon:'🚴' },
-  { id:'stairmaster',         name_ar:'سلم الكارديو (ستير ماستر)', name_en:'StairMaster Climber',           category:'cardio', icon:'🧗' },
-  { id:'rowing-machine',      name_ar:'جهاز التجديف الهوائي',      name_en:'Rowing Machine (Ergometer)',    category:'cardio', icon:'🚣' }
+  { id:'treadmill',           name_ar:'مشاية كهربائية (سير)',      name_en:'Treadmill Running / Incline',   category:'cardio', icon:'🏃' }
 ];
 
-const STORAGE_KEY_PREFIX = 'gymTracker_v3_';
+const STORAGE_KEY_PREFIX = 'gymTracker_v4_';
 
 // ── State ─────────────────────────────────────────────────────────
 let lang           = localStorage.getItem('gymTrackerLang') || 'ar';
 let users          = ['مصطفى', 'أحمد'];
 let currentUser    = 'مصطفى';
-let currentData    = { workouts: [] };
+let currentData    = { workouts: [], plan: null, lastCheckIn: Date.now() };
 let category       = 'all';
 let query          = '';
 let modalExId      = null;
@@ -189,7 +168,7 @@ let selectedRestSec= 60;
 let restRef        = null;
 let restRemaining  = 0;
 
-// ── Audio Multi-Beep (iOS Compatible) ─────────────────────────────
+// ── Audio Beep ────────────────────────────────────────────────────
 const playMultipleBeeps = (count = 5) => {
   let beepsPlayed = 0;
   const playSingle = () => {
@@ -208,23 +187,15 @@ const playMultipleBeeps = (count = 5) => {
     } catch (e) {}
 
     if ('vibrate' in navigator) navigator.vibrate([180, 100, 180]);
-
     beepsPlayed++;
-    if (beepsPlayed < count) {
-      setTimeout(playSingle, 600);
-    }
+    if (beepsPlayed < count) setTimeout(playSingle, 600);
   };
   playSingle();
 };
 
 const sendBackgroundNotification = (title, body) => {
   if ('Notification' in window && Notification.permission === 'granted') {
-    new Notification(title, {
-      body: body,
-      icon: './icon-512.jpg',
-      badge: './icon-512.jpg',
-      vibrate: [200, 100, 200, 100, 200]
-    });
+    new Notification(title, { body, icon: './icon-512.png', badge: './icon-512.png' });
   }
 };
 
@@ -258,7 +229,7 @@ const fmtDuration = (ms) => {
   return h > 0 ? `${h}h ${m}m` : `${m} min`;
 };
 
-// ── Storage & User Switch ─────────────────────────────────────────
+// ── Storage ───────────────────────────────────────────────────────
 const loadUsers = () => {
   try {
     const savedUsers = JSON.parse(localStorage.getItem('gymTrackerUsers'));
@@ -277,9 +248,9 @@ const saveUsers = () => {
 
 const loadUserData = () => {
   try {
-    currentData = JSON.parse(localStorage.getItem(STORAGE_KEY_PREFIX + currentUser)) || { workouts: [] };
+    currentData = JSON.parse(localStorage.getItem(STORAGE_KEY_PREFIX + currentUser)) || { workouts: [], plan: null, lastCheckIn: Date.now() };
   } catch {
-    currentData = { workouts: [] };
+    currentData = { workouts: [], plan: null, lastCheckIn: Date.now() };
   }
 };
 
@@ -309,7 +280,213 @@ const lastSession = (exId) => {
   return null;
 };
 
-// ── Localization ──────────────────────────────────────────────────
+// ── Plan Algorithm (Smart Coach) ──────────────────────────────────
+const generateSmartPlan = (goal, level, days, focus) => {
+  let planTitle = '';
+  let daysRoutines = [];
+  const repScheme = goal === 'bulk' ? '8-12' : (goal === 'cut' ? '12-15' : '5-8');
+  const setsCount = level === 'beginner' ? 3 : 4;
+
+  if (days === '3') {
+    planTitle = 'Full Body 3x (شامل الجسم 3 أيام)';
+    daysRoutines = [
+      {
+        dayName: 'يوم 1: شامل أ (Full Body A)',
+        exercises: ['barbell-squat', 'bench-press', 'lat-pulldown-wide', 'overhead-press-bar', 'barbell-curl', 'cable-crunch']
+      },
+      {
+        dayName: 'يوم 2: شامل ب (Full Body B)',
+        exercises: ['deadlift', 'db-incline-press', 'seated-cable-row', 'lateral-raise-db', 'tricep-pushdown-rope', 'plank']
+      },
+      {
+        dayName: 'يوم 3: شامل ج (Full Body C)',
+        exercises: ['leg-press', 'chest-fly-db', 'pullup-weighted', 'face-pull', 'hammer-curl', 'treadmill']
+      }
+    ];
+  } else if (days === '4') {
+    planTitle = 'Upper / Lower 4x (علوي / سفلي 4 أيام)';
+    daysRoutines = [
+      {
+        dayName: 'يوم 1: جزء علوي أ (Upper A)',
+        exercises: ['bench-press', 'barbell-row', 'overhead-press-bar', 'lat-pulldown-close', 'barbell-curl', 'tricep-pushdown-rope']
+      },
+      {
+        dayName: 'يوم 2: جزء سفلي أ (Lower A)',
+        exercises: ['barbell-squat', 'lying-leg-curl', 'leg-extension', 'standing-calf-raise', 'hanging-leg-raise']
+      },
+      {
+        dayName: 'يوم 3: جزء علوي ب (Upper B)',
+        exercises: ['incline-barbell', 'pullup-weighted', 'db-shoulder-press', 'seated-cable-row', 'preacher-curl', 'skull-crushers']
+      },
+      {
+        dayName: 'يوم 4: جزء سفلي ب (Lower B)',
+        exercises: ['leg-press', 'deadlift', 'leg-extension', 'standing-calf-raise', 'cable-crunch']
+      }
+    ];
+  } else {
+    planTitle = 'Push / Pull / Legs (PPL Split)';
+    daysRoutines = [
+      {
+        dayName: 'يوم 1: دفع (Push - صدر وأكتاف وتراي)',
+        exercises: ['bench-press', 'incline-barbell', 'lateral-raise-db', 'chest-fly-db', 'tricep-pushdown-rope', 'overhead-db-tricep']
+      },
+      {
+        dayName: 'يوم 2: سحب (Pull - ظهر وبايسبس وترابيس)',
+        exercises: ['lat-pulldown-wide', 'barbell-row', 'seated-cable-row', 'shrugs-barbell', 'barbell-curl', 'hammer-curl']
+      },
+      {
+        dayName: 'يوم 3: أرجل وبطن (Legs & Abs)',
+        exercises: ['barbell-squat', 'leg-press', 'lying-leg-curl', 'leg-extension', 'standing-calf-raise', 'cable-crunch']
+      },
+      {
+        dayName: 'يوم 4: علوي / تركيز ضعف (Upper Focus)',
+        exercises: ['db-incline-press', 'pullup-weighted', 'db-shoulder-press', 'face-pull', 'preacher-curl', 'skull-crushers']
+      }
+    ];
+  }
+
+  // Adjust for weak point focus
+  if (focus === 'arms') {
+    daysRoutines.forEach(d => { if (!d.exercises.includes('hammer-curl')) d.exercises.push('hammer-curl'); });
+  } else if (focus === 'chest') {
+    daysRoutines.forEach(d => { if (!d.exercises.includes('pec-deck')) d.exercises.push('pec-deck'); });
+  }
+
+  return {
+    createdAt: Date.now(),
+    goal,
+    level,
+    days,
+    focus,
+    title: planTitle,
+    repScheme,
+    setsCount,
+    routines: daysRoutines
+  };
+};
+
+// ── Check-in & Notifications ──────────────────────────────────────
+const checkPlanNotifications = () => {
+  const badge = $('notif-badge');
+  const now = Date.now();
+  const daysSinceCheckIn = (now - (currentData.lastCheckIn || 0)) / (1000 * 60 * 60 * 24);
+
+  if (!currentData.plan || daysSinceCheckIn >= 14) {
+    badge.classList.add('active');
+  } else {
+    badge.classList.remove('active');
+  }
+};
+
+const openNotifModal = () => {
+  const container = $('notif-content-box');
+  const now = Date.now();
+  const daysSinceCheckIn = Math.floor((now - (currentData.lastCheckIn || 0)) / (1000 * 60 * 60 * 24));
+
+  if (!currentData.plan) {
+    container.innerHTML = `
+      <div class="notif-card">
+        <h4>🚀 ابدأ مع المدرب الذكي!</h4>
+        <p>لم تقم بإعداد خطتك التدريبية بعد. أجب عن 4 أسئلة وسيقوم النظام بتصميم جدول متكامل يناسب هدفك وجسمك.</p>
+        <button type="button" class="btn-notif-act" onclick="openPlanQuizModal()">إعداد الخطة الآن</button>
+      </div>`;
+  } else {
+    container.innerHTML = `
+      <div class="notif-card">
+        <h4>📊 متابعة الخطة والأداء (Check-in)</h4>
+        <p>لقد مر <strong>${daysSinceCheckIn}</strong> يوماً على خطتك الحالية (${currentData.plan.title}). هل تشعر أن الأوزان أصبحت خفيفة أم تحتاج لتعديل الجدول؟</p>
+        <button type="button" class="btn-notif-act" onclick="openPlanQuizModal()">تحديث وتعديل الخطة</button>
+      </div>
+      <div class="notif-card">
+        <h4>⚡ نصيحة المدرب لهذا الأسبوع</h4>
+        <p>${currentData.plan.goal === 'bulk' ? 'ركز على زيادة نصف كجم إلى كجم في مجموعاتك الأساسية هذا الأسبوع (Progressive Overload) مع تناول بروتين كافٍ.' : 'حافظ على وتيرة راحة قصيرة (45-60 ثانية) لزيادة حرق السعرات أثناء التمرين.'}</p>
+      </div>`;
+  }
+
+  currentData.lastCheckIn = Date.now();
+  saveUserData();
+  checkPlanNotifications();
+
+  $('notif-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+};
+
+const closeNotifModal = () => {
+  $('notif-modal').classList.remove('open');
+  document.body.style.overflow = '';
+};
+
+// ── Render: Plan View ─────────────────────────────────────────────
+const renderPlanView = () => {
+  const container = $('plan-display-container');
+  if (!currentData.plan) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🎯</div>
+        <p>لا توجد خطة تدريبية مخصصة لـ <strong>${currentUser}</strong> بعد.</p>
+        <button type="button" class="btn-save" style="margin-top:14px;" onclick="openPlanQuizModal()">ابدأ مع المدرب الذكي 🚀</button>
+      </div>`;
+    return;
+  }
+
+  const p = currentData.plan;
+  container.innerHTML = `
+    <div class="coach-header-card">
+      <span class="coach-badge">${p.goal === 'bulk' ? 'تضخيم وبناء عضل' : (p.goal === 'cut' ? 'تنشيف وحرق دهون' : 'قوة ولياقة')}</span>
+      <h3>${p.title}</h3>
+      <p>نظام التكرارات: <strong>${p.repScheme} عدات</strong> لكل مجموعة | المجموعات: <strong>${p.setsCount} مجاميع</strong></p>
+      <button type="button" class="btn-user-action" style="margin-top:10px;" onclick="openPlanQuizModal()">تعديل الخطة ⚙️</button>
+    </div>
+    <div class="plan-routines-list">
+      ${p.routines.map((r, rIdx) => `
+        <div class="plan-day-card">
+          <div class="plan-day-header">
+            <h4>${r.dayName}</h4>
+            <button type="button" class="btn-user-action" onclick="applyPlanDayToToday(${rIdx})">تمرّن هذا اليوم ⚡</button>
+          </div>
+          <div class="plan-ex-list">
+            ${r.exercises.map(exId => {
+              const def = EXERCISES.find(e => e.id === exId);
+              const exName = def ? (lang === 'ar' ? def.name_ar : def.name_en) : exId;
+              return `
+                <div class="plan-ex-item">
+                  <span class="plan-ex-name">${def ? def.icon : '🏋️'} ${exName}</span>
+                  <span class="plan-ex-meta">${p.setsCount}×${p.repScheme}</span>
+                </div>`;
+            }).join('')}
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+};
+
+const applyPlanDayToToday = (routineIdx) => {
+  const p = currentData.plan;
+  if (!p || !p.routines[routineIdx]) return;
+  const routine = p.routines[routineIdx];
+  const w = todayWorkout();
+
+  routine.exercises.forEach(exId => {
+    if (!w.exercises.some(e => e.id === exId)) {
+      const last = lastSession(exId);
+      const defaultSets = [];
+      for (let i = 0; i < p.setsCount; i++) {
+        defaultSets.push({
+          weight: last?.sets?.[i]?.weight || last?.sets?.[0]?.weight || 20,
+          reps: parseInt(p.repScheme.split('-')[0], 10) || 10
+        });
+      }
+      w.exercises.push({ id: exId, sets: defaultSets, notes: '', time: Date.now() });
+    }
+  });
+
+  saveUserData();
+  switchView('today-view');
+  toast(`تم تجهيز تمارين: ${routine.dayName} ✅`);
+};
+
+// ── Views & Localization ──────────────────────────────────────────
 const applyLanguage = () => {
   document.documentElement.lang = lang;
   document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
@@ -328,6 +505,7 @@ const applyLanguage = () => {
   renderToday();
   renderLibrary();
   renderHistory();
+  renderPlanView();
 };
 
 const toggleLanguage = () => {
@@ -336,50 +514,6 @@ const toggleLanguage = () => {
   applyLanguage();
 };
 
-// ── Toast ─────────────────────────────────────────────────────────
-const toast = (msg, type = 'success') => {
-  const el = $('toast');
-  el.textContent = msg;
-  el.className = `toast ${type} show`;
-  setTimeout(() => el.classList.remove('show'), 2600);
-};
-
-// ── Rest Timer ────────────────────────────────────────────────────
-const startRestTimer = (seconds) => {
-  if (seconds <= 0) return;
-  if (restRef) clearInterval(restRef);
-  restRemaining = seconds;
-  const box = $('rest-timer-box');
-
-  box.classList.add('active');
-  updateRestDisplay();
-
-  restRef = setInterval(() => {
-    restRemaining--;
-    if (restRemaining <= 0) {
-      clearInterval(restRef);
-      box.classList.remove('active');
-      playMultipleBeeps(5);
-      sendBackgroundNotification(I18N[lang].app_title, I18N[lang].rest_done_alert);
-      toast(I18N[lang].rest_done_alert);
-    } else {
-      updateRestDisplay();
-    }
-  }, 1000);
-};
-
-const updateRestDisplay = () => {
-  const m = Math.floor(restRemaining / 60);
-  const s = restRemaining % 60;
-  $('rest-countdown').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-};
-
-const cancelRestTimer = () => {
-  if (restRef) clearInterval(restRef);
-  $('rest-timer-box').classList.remove('active');
-};
-
-// ── Navigation ────────────────────────────────────────────────────
 const switchView = (viewId) => {
   $$('.view').forEach(v => v.classList.remove('active'));
   const target = $(viewId);
@@ -392,6 +526,7 @@ const switchView = (viewId) => {
   if (viewId === 'today-view')   renderToday();
   if (viewId === 'library-view') renderLibrary();
   if (viewId === 'history-view') renderHistory();
+  if (viewId === 'plan-view')    renderPlanView();
 };
 
 // ── Render: Today ─────────────────────────────────────────────────
@@ -403,6 +538,14 @@ const renderToday = () => {
   $('summary-exercises').textContent = exCount;
   $('summary-sets').textContent = setCount;
   updateTimer();
+
+  const banner = $('plan-banner');
+  if (currentData.plan && exCount === 0) {
+    banner.style.display = 'flex';
+    $('plan-banner-title').textContent = currentData.plan.title;
+  } else {
+    banner.style.display = 'none';
+  }
 
   const list = $('today-list');
   if (exCount === 0) {
@@ -476,7 +619,7 @@ const renderLibrary = () => {
   grid.innerHTML = list.map(ex => {
     const last = lastSession(ex.id);
     const done = todayIds.includes(ex.id);
-    const exName = lang === 'ar' ? defName(ex.name_ar) : ex.name_en;
+    const exName = lang === 'ar' ? ex.name_ar : ex.name_en;
     let lastSummary = '—';
     if (last && last.sets && last.sets.length) {
       const maxWt = Math.max(...last.sets.map(s => s.weight));
@@ -492,8 +635,6 @@ const renderLibrary = () => {
       </div>`;
   }).join('');
 };
-
-const defName = (name) => name;
 
 // ── Render: History ───────────────────────────────────────────────
 const renderHistory = () => {
@@ -548,7 +689,7 @@ const deleteWorkout = (wId) => {
   toast('🗑️', 'error');
 };
 
-// ── Sets Modal Logic ──────────────────────────────────────────────
+// ── Modal Exercise Logger ─────────────────────────────────────────
 const openModal = (exId) => {
   const def = EXERCISES.find(e => e.id === exId);
   if (!def) return;
@@ -659,7 +800,71 @@ const saveExerciseModal = () => {
   startRestTimer(selectedRestSec);
 };
 
-// ── Multi-User Management Modal ───────────────────────────────────
+// ── Rest Timer ────────────────────────────────────────────────────
+const startRestTimer = (seconds) => {
+  if (seconds <= 0) return;
+  if (restRef) clearInterval(restRef);
+  restRemaining = seconds;
+  const box = $('rest-timer-box');
+
+  box.classList.add('active');
+  updateRestDisplay();
+
+  restRef = setInterval(() => {
+    restRemaining--;
+    if (restRemaining <= 0) {
+      clearInterval(restRef);
+      box.classList.remove('active');
+      playMultipleBeeps(5);
+      sendBackgroundNotification(I18N[lang].app_title, I18N[lang].rest_done_alert);
+      toast(I18N[lang].rest_done_alert);
+    } else {
+      updateRestDisplay();
+    }
+  }, 1000);
+};
+
+const updateRestDisplay = () => {
+  const m = Math.floor(restRemaining / 60);
+  const s = restRemaining % 60;
+  $('rest-countdown').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+};
+
+const cancelRestTimer = () => {
+  if (restRef) clearInterval(restRef);
+  $('rest-timer-box').classList.remove('active');
+};
+
+// ── Plan Quiz Modal ───────────────────────────────────────────────
+const openPlanQuizModal = () => {
+  closeNotifModal();
+  $('plan-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+};
+
+const closePlanQuizModal = () => {
+  $('plan-modal').classList.remove('open');
+  document.body.style.overflow = '';
+};
+
+const handleQuizSubmit = (e) => {
+  e.preventDefault();
+  const goal  = $('quiz-goal').value;
+  const level = $('quiz-level').value;
+  const days  = $('quiz-days').value;
+  const focus = $('quiz-focus').value;
+
+  currentData.plan = generateSmartPlan(goal, level, days, focus);
+  currentData.lastCheckIn = Date.now();
+  saveUserData();
+
+  closePlanQuizModal();
+  checkPlanNotifications();
+  switchView('plan-view');
+  toast('تم توليد الخطة التدريبية بنجاح 🎯');
+};
+
+// ── User Management Modal ─────────────────────────────────────────
 const renderUserSelect = () => {
   const sel = $('user-select');
   sel.innerHTML = users.map(u => `<option value="${u}" ${u === currentUser ? 'selected' : ''}>${u}</option>`).join('');
@@ -695,7 +900,6 @@ window.editUserName = (idx) => {
   if (!newName || !newName.trim() || newName.trim() === oldName) return;
   const cleanName = newName.trim();
 
-  // Rename data
   const oldData = localStorage.getItem(STORAGE_KEY_PREFIX + oldName);
   if (oldData) {
     localStorage.setItem(STORAGE_KEY_PREFIX + cleanName, oldData);
@@ -710,6 +914,7 @@ window.editUserName = (idx) => {
   renderUserSelect();
   renderUsersListModal();
   renderToday();
+  renderPlanView();
   toast('✅');
 };
 
@@ -726,6 +931,7 @@ window.deleteUser = (idx) => {
   renderUserSelect();
   renderUsersListModal();
   renderToday();
+  renderPlanView();
   toast('🗑️', 'error');
 };
 
@@ -741,6 +947,7 @@ const createNewUser = () => {
     renderUserSelect();
     renderUsersListModal();
     renderToday();
+    renderPlanView();
     input.value = '';
     toast('🎉');
   }
@@ -751,6 +958,8 @@ const handleUserSelectChange = (e) => {
   saveUsers();
   loadUserData();
   renderToday();
+  renderPlanView();
+  checkPlanNotifications();
   toast(`👤 ${currentUser}`);
 };
 
@@ -758,14 +967,14 @@ const handleUserSelectChange = (e) => {
 const exportData = () => {
   const allBackup = { users, activeUser: currentUser, data: {} };
   users.forEach(u => {
-    allBackup.data[u] = JSON.parse(localStorage.getItem(STORAGE_KEY_PREFIX + u)) || { workouts: [] };
+    allBackup.data[u] = JSON.parse(localStorage.getItem(STORAGE_KEY_PREFIX + u)) || { workouts: [], plan: null };
   });
 
   const blob = new Blob([JSON.stringify(allBackup, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `tamriny-pro-backup-${todayISO()}.json`;
+  a.download = `tamriny-backup-${todayISO()}.json`;
   a.click();
   URL.revokeObjectURL(url);
   toast('📥');
@@ -783,12 +992,13 @@ const importData = (e) => {
         currentUser = imported.activeUser || users[0];
         saveUsers();
         users.forEach(u => {
-          localStorage.setItem(STORAGE_KEY_PREFIX + u, JSON.stringify(imported.data[u] || { workouts: [] }));
+          localStorage.setItem(STORAGE_KEY_PREFIX + u, JSON.stringify(imported.data[u] || { workouts: [], plan: null }));
         });
         loadUserData();
         renderUserSelect();
         renderHistory();
         renderToday();
+        renderPlanView();
         toast('✅');
       } else {
         alert('Invalid file');
@@ -800,6 +1010,13 @@ const importData = (e) => {
   reader.readAsText(file);
 };
 
+const toast = (msg, type = 'success') => {
+  const el = $('toast');
+  el.textContent = msg;
+  el.className = `toast ${type} show`;
+  setTimeout(() => el.classList.remove('show'), 2600);
+};
+
 // ── Init ──────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   if ('Notification' in window && Notification.permission !== 'granted') {
@@ -809,6 +1026,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadUsers();
   loadUserData();
   applyLanguage();
+  checkPlanNotifications();
 
   $('btn-lang-toggle').addEventListener('click', toggleLanguage);
   $('user-select').addEventListener('change', handleUserSelectChange);
@@ -816,6 +1034,17 @@ document.addEventListener('DOMContentLoaded', () => {
   $('btn-close-users').addEventListener('click', closeUsersModal);
   $('users-modal-backdrop').addEventListener('click', closeUsersModal);
   $('btn-create-user').addEventListener('click', createNewUser);
+
+  $('btn-notifications').addEventListener('click', openNotifModal);
+  $('btn-close-notif').addEventListener('click', closeNotifModal);
+  $('notif-modal-backdrop').addEventListener('click', closeNotifModal);
+
+  $('quiz-form').addEventListener('submit', handleQuizSubmit);
+  $('btn-cancel-quiz').addEventListener('click', closePlanQuizModal);
+  $('plan-modal-backdrop').addEventListener('click', closePlanQuizModal);
+
+  const bannerBtn = $('btn-load-plan-day');
+  if (bannerBtn) bannerBtn.addEventListener('click', () => applyPlanDayToToday(0));
 
   $$('.nav-btn').forEach(b => b.addEventListener('click', () => switchView(b.dataset.view)));
   $('fab-btn').addEventListener('click', () => switchView('library-view'));
@@ -846,6 +1075,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Escape') {
       closeModal();
       closeUsersModal();
+      closePlanQuizModal();
+      closeNotifModal();
     }
   });
 
