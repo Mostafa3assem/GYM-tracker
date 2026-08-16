@@ -262,7 +262,7 @@ const toggleLanguage = () => {
   lang = lang === 'ar' ? 'en' : 'ar';
   localStorage.setItem('gymTrackerLang', lang);
   applyLanguage();
-  toast(lang === 'ar' ? 'تم تحويل اللغة إلى العربية 🇸🇦' : 'Language switched to English 🇺🇸');
+  toast(lang === 'ar' ? 'تم تحويل اللغة إلى العربية 🇪🇬' : 'Language switched to English 🇺🇸');
 };
 
 // ── Storage & User Switch ─────────────────────────────────────────
