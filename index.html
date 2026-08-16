@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>تمريني - Smart Gym Tracker</title>
-    <meta name="theme-color" content="#0a0a0f">
+    <title>تمريني - Smart Gym Tracker Pro</title>
+    <meta name="theme-color" content="#09090e">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="تمريني">
@@ -31,6 +31,7 @@
             </div>
             <div class="header-left">
                 <div class="header-top-actions">
+                    <button id="btn-theme-toggle" class="btn-icon-head" title="تبديل المظهر">☀️</button>
                     <button id="btn-notifications" class="btn-icon-head" title="الإشعارات والمتابعة">
                         🔔
                         <span id="notif-badge" class="notif-badge"></span>
@@ -55,6 +56,7 @@
                 <button type="button" id="btn-load-plan-day" class="btn-banner-action">تحميل التمارين ⚡</button>
             </div>
 
+            <!-- Summary Card -->
             <div class="summary-card">
                 <div class="summary-item">
                     <span class="summary-value" id="summary-exercises">0</span>
@@ -69,6 +71,18 @@
                 <div class="summary-item">
                     <span class="summary-value" id="summary-timer">00:00</span>
                     <span class="summary-label" data-i18n="time_label">الوقت</span>
+                </div>
+            </div>
+
+            <!-- Water Hydration Card -->
+            <div class="water-card">
+                <div class="water-info">
+                    <span class="water-title">💧 استهلاك الماء في التمرين</span>
+                    <span class="water-count" id="water-count-display">0 لتر (0 أكواب)</span>
+                </div>
+                <div class="water-controls">
+                    <button type="button" class="btn-water" id="btn-water-minus">−</button>
+                    <button type="button" class="btn-water plus" id="btn-water-plus">+250ml</button>
                 </div>
             </div>
 
@@ -213,6 +227,18 @@
             </div>
         </div>
 
+        <!-- === MODAL: Exercise Swapper (Busy Machine Alternative) === -->
+        <div id="swap-modal" class="modal">
+            <div class="modal-backdrop" id="swap-modal-backdrop"></div>
+            <div class="modal-sheet">
+                <div class="modal-handle"></div>
+                <h2 class="modal-title">🔄 بديل الجهاز المشغول</h2>
+                <p class="swap-subtitle" id="swap-current-name">الجهاز مشغول؟ اختر أحد البدائل لنفس الزاوية العضلية:</p>
+                <div id="swap-alternatives-list" class="swap-list"></div>
+                <button type="button" class="btn-cancel" id="btn-close-swap" style="width:100%;margin-top:12px;" data-i18n="close_btn">إلغاء</button>
+            </div>
+        </div>
+
         <!-- === MODAL: Plan Creator Quiz === -->
         <div id="plan-modal" class="modal">
             <div class="modal-backdrop" id="plan-modal-backdrop"></div>
@@ -273,7 +299,10 @@
             <div class="modal-backdrop" id="notif-modal-backdrop"></div>
             <div class="modal-sheet">
                 <div class="modal-handle"></div>
-                <h2 class="modal-title">🔔 مركز المتابعة والتنبيهات</h2>
+                <div class="notif-modal-header">
+                    <h2 class="modal-title" style="margin-bottom:0;">🔔 التنبيهات والمتابعة</h2>
+                    <button type="button" class="btn-clear-notifs" id="btn-clear-all-notifs">مسح الكل</button>
+                </div>
                 <div id="notif-content-box" class="notif-content-box"></div>
                 <button type="button" class="btn-cancel" id="btn-close-notif" style="width:100%;margin-top:12px;" data-i18n="close_btn">إغلاق</button>
             </div>
