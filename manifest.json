@@ -1,8 +1,9 @@
 {
-  "name": "تمريني - Gym Tracker",
-  "short_name": "تمريني",
+  "name": "تتمرني - Gym Tracker",
+  "short_name": "تتمرني",
   "description": "تطبيق لتتبع تمارينك الرياضية والأوزان في الجيم",
-  "start_url": "/",
+  "start_url": "/GYM-tracker/",
+  "scope": "/GYM-tracker/",
   "display": "standalone",
   "background_color": "#0a0a0f",
   "theme_color": "#0a0a0f",
