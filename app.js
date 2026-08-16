@@ -1,13 +1,10 @@
 /**
- * تمريني – Smart Gym Tracker Pro (Live Set Tracking, 5/6 Days Coach & PDF Export)
+ * تمريني – Smart Gym Tracker Pro (Guided Flow, Rest Controls & Form Contrast)
  */
 
 const I18N = {
   ar: {
-    app_title: 'تمريني',
-    exercises_label: 'تمرين',
-    sets_label: 'مجموعة',
-    time_label: 'الوقت',
+    app_title: 'تمريني', exercises_label: 'تمرين', sets_label: 'مجموعة', time_label: 'الوقت',
     cat_all: 'الكل', cat_chest: 'صدر', cat_back: 'ظهر', cat_shoulders: 'أكتاف', cat_arms: 'ذراع', cat_legs: 'أرجل', cat_core: 'بطن', cat_cardio: 'كارديو',
     nav_today: 'اليوم', nav_plan: 'المدرب الذكي', nav_exercises: 'التمارين', nav_history: 'السجل',
     edit_name: 'تعديل', delete_user: 'حذف',
@@ -15,10 +12,7 @@ const I18N = {
     search_placeholder: 'ابحث عن تمرين...'
   },
   en: {
-    app_title: 'Tamriny',
-    exercises_label: 'Exercises',
-    sets_label: 'Sets',
-    time_label: 'Time',
+    app_title: 'Tamriny', exercises_label: 'Exercises', sets_label: 'Sets', time_label: 'Time',
     cat_all: 'All', cat_chest: 'Chest', cat_back: 'Back', cat_shoulders: 'Shoulders', cat_arms: 'Arms', cat_legs: 'Legs', cat_core: 'Core', cat_cardio: 'Cardio',
     nav_today: 'Today', nav_plan: 'Smart Coach', nav_exercises: 'Exercises', nav_history: 'History',
     edit_name: 'Edit', delete_user: 'Delete',
@@ -79,7 +73,7 @@ const EXERCISES = [
   { id:'treadmill',           name_ar:'مشاية كهربائية (سير)',      name_en:'Treadmill Running / Incline',   category:'cardio', icon:'🏃', alts:['stationary-bike'] }
 ];
 
-const STORAGE_KEY_PREFIX = 'gymTracker_v6_';
+const STORAGE_KEY_PREFIX = 'gymTracker_v7_';
 
 // ── State ─────────────────────────────────────────────────────────
 let lang           = localStorage.getItem('gymTrackerLang') || 'ar';
@@ -99,31 +93,7 @@ let selectedRestSec = 60;
 let restRef         = null;
 let restRemaining   = 0;
 let swapTargetExId  = null;
-
-// ── Audio Multi-Beep ──────────────────────────────────────────────
-const playMultipleBeeps = (count = 5) => {
-  let beepsPlayed = 0;
-  const playSingle = () => {
-    try {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(950, ctx.currentTime);
-      gain.gain.setValueAtTime(0.4, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.4);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.4);
-    } catch (e) {}
-
-    if ('vibrate' in navigator) navigator.vibrate([180, 100, 180]);
-    beepsPlayed++;
-    if (beepsPlayed < count) setTimeout(playSingle, 600);
-  };
-  playSingle();
-};
+let pendingPlan     = null;
 
 // ── Helpers ───────────────────────────────────────────────────────
 const $ = (sel) => document.getElementById(sel) || document.querySelector(sel);
@@ -148,11 +118,35 @@ const fmtTimer = (ms) => {
 };
 
 const fmtDuration = (ms) => {
-  if (!ms || ms < 0) return lang === 'ar' ? '0 دقيقة' : '0 min';
+  if (!ms || ms < 0) return '0 دقيقة';
   const h = Math.floor(ms / 3600000);
   const m = Math.floor((ms % 3600000) / 60000);
-  if (lang === 'ar') return h > 0 ? `${h} ساعة و ${m} دقيقة` : `${m} دقيقة`;
-  return h > 0 ? `${h}h ${m}m` : `${m} min`;
+  return h > 0 ? `${h} ساعة و ${m} دقيقة` : `${m} دقيقة`;
+};
+
+// ── Audio Beep ────────────────────────────────────────────────────
+const playMultipleBeeps = (count = 5) => {
+  let beepsPlayed = 0;
+  const playSingle = () => {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(950, ctx.currentTime);
+      gain.gain.setValueAtTime(0.4, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.4);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.4);
+    } catch (e) {}
+
+    if ('vibrate' in navigator) navigator.vibrate([180, 100, 180]);
+    beepsPlayed++;
+    if (beepsPlayed < count) setTimeout(playSingle, 600);
+  };
+  playSingle();
 };
 
 // ── Storage & User Switch ─────────────────────────────────────────
@@ -230,7 +224,7 @@ const toggleTheme = () => {
 const renderWaterDisplay = () => {
   const w = currentData.water || 0;
   const liters = (w * 0.25).toFixed(2);
-  $('water-count-display').textContent = `${liters} ${lang === 'ar' ? 'لتر' : 'L'} (${w} ${lang === 'ar' ? 'أكواب' : 'cups'})`;
+  $('water-count-display').textContent = `${liters} لتر (${w} أكواب)`;
 };
 
 const addWater = (delta) => {
@@ -283,7 +277,6 @@ const generateSmartPlan = (weight, height, goal, level, days, injury, focus) => 
     ];
   }
 
-  // Filter out unsafe exercises based on injury
   daysRoutines.forEach(routine => {
     if (injury === 'lower_back') {
       routine.exercises = routine.exercises.map(e => e === 'deadlift' ? 'back-extension' : (e === 'barbell-squat' ? 'leg-press' : e));
@@ -316,7 +309,7 @@ const openModal = (exId) => {
   $('modal-title').textContent = lang === 'ar' ? def.name_ar : def.name_en;
 
   if (last && last.sets && last.sets.length) {
-    const lastSetsStr = last.sets.map((s, i) => `${lang==='ar'?'م':'S'}${i+1}: ${s.weight}kg×${s.reps}`).join(' | ');
+    const lastSetsStr = last.sets.map((s, i) => `م${i+1}: ${s.weight}kg×${s.reps}`).join(' | ');
     $('last-session-text').innerHTML = `آخر تمرين (${fmtDate(last.date)}):<br><strong>${lastSetsStr}</strong>`;
   } else {
     $('last-session-text').textContent = 'أول مرة تلعب هذا التمرين! 💪';
@@ -327,11 +320,12 @@ const openModal = (exId) => {
   } else if (last && last.sets && last.sets.length) {
     modalSets = JSON.parse(JSON.stringify(last.sets));
   } else {
-    modalSets = [
-      { weight: 20, reps: 10 },
-      { weight: 20, reps: 10 },
-      { weight: 20, reps: 10 }
-    ];
+    const defaultReps = currentData.plan ? parseInt(currentData.plan.repScheme.split('-')[0], 10) || 10 : 10;
+    const defaultSetsCount = currentData.plan ? currentData.plan.setsCount : 4;
+    modalSets = [];
+    for (let i = 0; i < defaultSetsCount; i++) {
+      modalSets.push({ weight: 20, reps: defaultReps });
+    }
   }
 
   currentSetIdx = 0;
@@ -373,7 +367,7 @@ const handleFinishSetClick = () => {
   }
   renderSetsTable();
 
-  // If in rest mode and user clicks "Start Next Set"
+  // If user clicked "Start Next Set" during rest
   if (isResting) {
     cancelLiveRestTimer();
     currentSetIdx++;
@@ -388,7 +382,18 @@ const handleFinishSetClick = () => {
     return;
   }
 
-  // Start Rest
+  // If selected rest is 0 (None)
+  if (selectedRestSec === 0) {
+    currentSetIdx++;
+    if (currentSetIdx >= modalSets.length) {
+      modalSets.push({ weight: wt, reps: rp });
+    }
+    populateActiveSetInputs();
+    toast('تم تسجيل المجموعة والانتقال للمجموعة التالية ⚡');
+    return;
+  }
+
+  // Start Rest Timer
   startLiveRestTimer(selectedRestSec);
 };
 
@@ -400,7 +405,7 @@ const startLiveRestTimer = (seconds) => {
 
   const counterEl = $('live-rest-counter');
   counterEl.style.display = 'inline-block';
-  counterEl.textContent = `⏱️ 00:${String(restRemaining).padStart(2,'0')}`;
+  counterEl.textContent = `⏱️ ${String(Math.floor(restRemaining / 60)).padStart(2,'0')}:${String(restRemaining % 60).padStart(2,'0')}`;
 
   const btn = $('btn-finish-set');
   btn.textContent = '⚡ ابدأ المجموعة التالية';
@@ -424,6 +429,10 @@ const startLiveRestTimer = (seconds) => {
 const cancelLiveRestTimer = () => {
   if (restRef) clearInterval(restRef);
   $('live-rest-counter').style.display = 'none';
+  const btn = $('btn-finish-set');
+  btn.textContent = '✅ أنهيت المجموعة وبدء الراحة ⏱️';
+  btn.classList.remove('start-next');
+  isResting = false;
 };
 
 const renderSetsTable = () => {
@@ -472,11 +481,35 @@ const saveExerciseModal = () => {
 
   w.end = Date.now();
   saveUserData();
+  const finishedExId = modalExId;
   closeModal();
   toast('تم حفظ التمرين ✅');
 
   if ($('today-view').classList.contains('active')) renderToday();
   if ($('library-view').classList.contains('active')) renderLibrary();
+
+  // Check for Next Exercise in Flow
+  promptNextExerciseFlow(finishedExId);
+};
+
+const promptNextExerciseFlow = (currentFinishedId) => {
+  const w = todayWorkout();
+  const currentIndex = w.exercises.findIndex(e => e.id === currentFinishedId);
+  if (currentIndex >= 0 && currentIndex < w.exercises.length - 1) {
+    const nextEx = w.exercises[currentIndex + 1];
+    const nextDef = EXERCISES.find(e => e.id === nextEx.id);
+    if (nextDef) {
+      setTimeout(() => {
+        if (confirm(`عاش يا بطل! هل ترغب في بدء التمرين التالي مباشرة (${nextDef.name_ar})؟`)) {
+          openModal(nextEx.id);
+        }
+      }, 500);
+    }
+  } else if (currentIndex === w.exercises.length - 1 && w.exercises.length > 1) {
+    setTimeout(() => {
+      toast('🎉 عاش جداً! أنهيت جميع تمارين جدول اليوم بنجاح!');
+    }, 500);
+  }
 };
 
 const closeModal = () => {
@@ -607,7 +640,7 @@ window.confirmExerciseSwap = (newExId) => {
   }
 };
 
-// ── Plan Quiz Modal ───────────────────────────────────────────────
+// ── Smart Plan Quiz & Approval ────────────────────────────────────
 const openPlanQuizModal = () => {
   closeNotifModal();
   $('plan-modal').classList.add('open');
@@ -629,13 +662,49 @@ const handleQuizSubmit = (e) => {
   const injury  = $('quiz-injury').value;
   const focus   = $('quiz-focus').value;
 
-  currentData.userProfile = { weight, height, goal, level, days, injury, focus };
-  currentData.plan = generateSmartPlan(weight, height, goal, level, days, injury, focus);
-  saveUserData();
+  pendingPlan = {
+    profile: { weight, height, goal, level, days, injury, focus },
+    plan: generateSmartPlan(weight, height, goal, level, days, injury, focus)
+  };
 
   closePlanQuizModal();
-  switchView('plan-view');
-  toast('تم توليد الخطة البدنية الذكية بنجاح 🚀');
+  showPlanApprovalModal();
+};
+
+const showPlanApprovalModal = () => {
+  if (!pendingPlan) return;
+  const p = pendingPlan.plan;
+  const container = $('approval-plan-content');
+  container.innerHTML = `
+    <h3 style="color:var(--accent);margin-bottom:6px;">${p.title}</h3>
+    <p style="margin-bottom:10px;color:var(--text2);">النظام: <strong>${p.setsCount} مجموعات × ${p.repScheme} عدات</strong> لكل تمرين.</p>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      ${p.routines.map(r => `
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:8px 12px;">
+          <strong style="color:var(--text);font-size:.9rem;">${r.dayName}</strong>
+          <div style="color:var(--text2);font-size:.78rem;margin-top:4px;">${r.exercises.length} تمارين مخصصة</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  $('approval-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+};
+
+const acceptGeneratedPlan = () => {
+  if (!pendingPlan) return;
+  currentData.userProfile = pendingPlan.profile;
+  currentData.plan = pendingPlan.plan;
+  saveUserData();
+
+  $('approval-modal').classList.remove('open');
+  document.body.style.overflow = '';
+  pendingPlan = null;
+
+  // Apply Day 1 automatically and start today's workout flow
+  applyPlanDayToToday(0);
+  toast('تم اعتماد الخطة وبدء تمرين اليوم 🚀');
 };
 
 // ── Render Views ──────────────────────────────────────────────────
@@ -672,7 +741,7 @@ const renderToday = () => {
     if (!def) return '';
     const exName = lang === 'ar' ? def.name_ar : def.name_en;
     const setsChips = (ex.sets || []).map((s, idx) => `
-      <span class="set-chip">${lang === 'ar' ? 'م' : 'S'}${idx+1}: <strong>${s.weight}kg</strong> × ${s.reps}</span>
+      <span class="set-chip">م${idx+1}: <strong>${s.weight}kg</strong> × ${s.reps}</span>
     `).join('');
 
     return `
@@ -765,7 +834,7 @@ const renderPlanView = () => {
         <div class="plan-day-card">
           <div class="plan-day-header">
             <h4>${r.dayName}</h4>
-            <button type="button" class="btn-user-action" onclick="applyPlanDayToToday(${rIdx})">تمرّن هذا اليوم ⚡</button>
+            <button type="button" class="btn-user-action" onclick="applyPlanDayToToday(${rIdx})">بدء تمرين هذا اليوم ⚡</button>
           </div>
           <div class="plan-ex-list">
             ${r.exercises.map(exId => {
@@ -806,7 +875,13 @@ const applyPlanDayToToday = (routineIdx) => {
 
   saveUserData();
   switchView('today-view');
-  toast(`تم تجهيز تمارين: ${routine.dayName} ✅`);
+  toast(`تم تجهيز جدول: ${routine.dayName} ✅`);
+
+  if (routine.exercises.length > 0) {
+    setTimeout(() => {
+      openModal(routine.exercises[0]);
+    }, 400);
+  }
 };
 
 const renderHistory = () => {
@@ -1052,6 +1127,15 @@ document.addEventListener('DOMContentLoaded', () => {
   $('btn-cancel-quiz').addEventListener('click', closePlanQuizModal);
   $('plan-modal-backdrop').addEventListener('click', closePlanQuizModal);
 
+  $('btn-accept-plan').addEventListener('click', acceptGeneratedPlan);
+  $('btn-reject-plan').addEventListener('click', () => {
+    $('approval-modal').classList.remove('open');
+    openPlanQuizModal();
+  });
+  $('approval-modal-backdrop').addEventListener('click', () => {
+    $('approval-modal').classList.remove('open');
+  });
+
   const bannerBtn = $('btn-load-plan-day');
   if (bannerBtn) bannerBtn.addEventListener('click', () => applyPlanDayToToday(0));
 
@@ -1065,10 +1149,11 @@ document.addEventListener('DOMContentLoaded', () => {
   $('btn-cancel').addEventListener('click', closeModal);
   $('modal-backdrop').addEventListener('click', closeModal);
 
-  $$('.chip-time').forEach(chip => chip.addEventListener('click', () => {
-    $$('.chip-time').forEach(c => c.classList.remove('active'));
+  $$('.chip-rest').forEach(chip => chip.addEventListener('click', () => {
+    $$('.chip-rest').forEach(c => c.classList.remove('active'));
     chip.classList.add('active');
     selectedRestSec = parseInt(chip.dataset.sec, 10);
+    toast(`تم ضبط الراحة: ${chip.textContent}`);
   }));
 
   $('btn-export-pdf').addEventListener('click', exportPDFReport);
@@ -1088,6 +1173,7 @@ document.addEventListener('DOMContentLoaded', () => {
       closePlanQuizModal();
       closeNotifModal();
       closeSwapperModal();
+      $('approval-modal').classList.remove('open');
     }
   });
 
