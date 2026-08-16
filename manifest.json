@@ -1,0 +1,20 @@
+{
+  "name": "تمريني - Gym Tracker",
+  "short_name": "تمريني",
+  "description": "تطبيق لتتبع تمارينك الرياضية والأوزان في الجيم",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#0a0a0f",
+  "dir": "rtl",
+  "lang": "ar",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-512.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}
