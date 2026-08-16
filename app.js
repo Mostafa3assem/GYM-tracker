@@ -1,5 +1,5 @@
 /**
- * تمريني – Smart Gym Tracker Pro (Guided Flow, Rest Controls & Form Contrast)
+ * تمريني – Smart Gym Tracker Pro (Multi-Select Flow, Social Footer & Guided Sets)
  */
 
 const I18N = {
@@ -8,7 +8,7 @@ const I18N = {
     cat_all: 'الكل', cat_chest: 'صدر', cat_back: 'ظهر', cat_shoulders: 'أكتاف', cat_arms: 'ذراع', cat_legs: 'أرجل', cat_core: 'بطن', cat_cardio: 'كارديو',
     nav_today: 'اليوم', nav_plan: 'المدرب الذكي', nav_exercises: 'التمارين', nav_history: 'السجل',
     edit_name: 'تعديل', delete_user: 'حذف',
-    welcome_empty: 'مرحباً {user}! لم تسجل تمارين اليوم بعد.<br>اضغط على <strong>+</strong> أو افتح <strong>المدرب الذكي</strong> لتحميل جدولك!',
+    welcome_empty: 'مرحباً {user}! لم تسجل تمارين اليوم بعد.<br>اضغط على <strong>+</strong> لاختيار تمارينك أو افتح <strong>المدرب الذكي</strong> لتحميل جدولك!',
     search_placeholder: 'ابحث عن تمرين...'
   },
   en: {
@@ -16,7 +16,7 @@ const I18N = {
     cat_all: 'All', cat_chest: 'Chest', cat_back: 'Back', cat_shoulders: 'Shoulders', cat_arms: 'Arms', cat_legs: 'Legs', cat_core: 'Core', cat_cardio: 'Cardio',
     nav_today: 'Today', nav_plan: 'Smart Coach', nav_exercises: 'Exercises', nav_history: 'History',
     edit_name: 'Edit', delete_user: 'Delete',
-    welcome_empty: 'Welcome {user}! No workouts logged today.<br>Tap <strong>+</strong> or open <strong>Smart Coach</strong> to load your plan!',
+    welcome_empty: 'Welcome {user}! No workouts logged today.<br>Tap <strong>+</strong> to pick your workout or open <strong>Smart Coach</strong>!',
     search_placeholder: 'Search exercise...'
   }
 };
@@ -73,7 +73,7 @@ const EXERCISES = [
   { id:'treadmill',           name_ar:'مشاية كهربائية (سير)',      name_en:'Treadmill Running / Incline',   category:'cardio', icon:'🏃', alts:['stationary-bike'] }
 ];
 
-const STORAGE_KEY_PREFIX = 'gymTracker_v7_';
+const STORAGE_KEY_PREFIX = 'gymTracker_v8_';
 
 // ── State ─────────────────────────────────────────────────────────
 let lang           = localStorage.getItem('gymTrackerLang') || 'ar';
@@ -83,6 +83,9 @@ let currentUser    = 'مصطفى';
 let currentData    = { workouts: [], plan: null, userProfile: {}, notifications: [], water: 0 };
 let category       = 'all';
 let query          = '';
+
+// Multi-select state
+let selectedExIds  = [];
 
 // Interactive Session Modal State
 let modalExId       = null;
@@ -94,6 +97,31 @@ let restRef         = null;
 let restRemaining   = 0;
 let swapTargetExId  = null;
 let pendingPlan     = null;
+
+// ── Audio Beep ────────────────────────────────────────────────────
+const playMultipleBeeps = (count = 5) => {
+  let beepsPlayed = 0;
+  const playSingle = () => {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(950, ctx.currentTime);
+      gain.gain.setValueAtTime(0.4, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.4);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.4);
+    } catch (e) {}
+
+    if ('vibrate' in navigator) navigator.vibrate([180, 100, 180]);
+    beepsPlayed++;
+    if (beepsPlayed < count) setTimeout(playSingle, 600);
+  };
+  playSingle();
+};
 
 // ── Helpers ───────────────────────────────────────────────────────
 const $ = (sel) => document.getElementById(sel) || document.querySelector(sel);
@@ -122,31 +150,6 @@ const fmtDuration = (ms) => {
   const h = Math.floor(ms / 3600000);
   const m = Math.floor((ms % 3600000) / 60000);
   return h > 0 ? `${h} ساعة و ${m} دقيقة` : `${m} دقيقة`;
-};
-
-// ── Audio Beep ────────────────────────────────────────────────────
-const playMultipleBeeps = (count = 5) => {
-  let beepsPlayed = 0;
-  const playSingle = () => {
-    try {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(950, ctx.currentTime);
-      gain.gain.setValueAtTime(0.4, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.4);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.4);
-    } catch (e) {}
-
-    if ('vibrate' in navigator) navigator.vibrate([180, 100, 180]);
-    beepsPlayed++;
-    if (beepsPlayed < count) setTimeout(playSingle, 600);
-  };
-  playSingle();
 };
 
 // ── Storage & User Switch ─────────────────────────────────────────
@@ -367,7 +370,6 @@ const handleFinishSetClick = () => {
   }
   renderSetsTable();
 
-  // If user clicked "Start Next Set" during rest
   if (isResting) {
     cancelLiveRestTimer();
     currentSetIdx++;
@@ -382,7 +384,6 @@ const handleFinishSetClick = () => {
     return;
   }
 
-  // If selected rest is 0 (None)
   if (selectedRestSec === 0) {
     currentSetIdx++;
     if (currentSetIdx >= modalSets.length) {
@@ -393,7 +394,6 @@ const handleFinishSetClick = () => {
     return;
   }
 
-  // Start Rest Timer
   startLiveRestTimer(selectedRestSec);
 };
 
@@ -488,7 +488,6 @@ const saveExerciseModal = () => {
   if ($('today-view').classList.contains('active')) renderToday();
   if ($('library-view').classList.contains('active')) renderLibrary();
 
-  // Check for Next Exercise in Flow
   promptNextExerciseFlow(finishedExId);
 };
 
@@ -517,6 +516,72 @@ const closeModal = () => {
   $('exercise-modal').classList.remove('open');
   document.body.style.overflow = '';
   modalExId = null;
+};
+
+// ── Multi-Exercise Selection Flow ─────────────────────────────────
+const toggleExerciseSelection = (exId, e) => {
+  e.stopPropagation();
+  const idx = selectedExIds.indexOf(exId);
+  if (idx >= 0) selectedExIds.splice(idx, 1);
+  else selectedExIds.push(exId);
+
+  updateMultiSelectUI();
+};
+
+const updateMultiSelectUI = () => {
+  $$('.ex-card').forEach(card => {
+    const exId = card.dataset.exid;
+    card.classList.toggle('selected', selectedExIds.includes(exId));
+  });
+
+  const bar = $('multi-start-bar');
+  const countEl = $('multi-selected-count');
+  const clearBtn = $('btn-clear-selected-ex');
+
+  if (selectedExIds.length > 0) {
+    bar.style.display = 'flex';
+    clearBtn.style.display = 'inline-block';
+    countEl.textContent = `${selectedExIds.length} تمارين محددة`;
+  } else {
+    bar.style.display = 'none';
+    clearBtn.style.display = 'none';
+  }
+};
+
+const clearExerciseSelection = () => {
+  selectedExIds = [];
+  updateMultiSelectUI();
+};
+
+const startSelectedExercisesRoutine = () => {
+  if (selectedExIds.length === 0) return;
+  const w = todayWorkout();
+  const defaultSetsCount = currentData.plan ? currentData.plan.setsCount : 4;
+  const defaultReps = currentData.plan ? parseInt(currentData.plan.repScheme.split('-')[0], 10) || 10 : 10;
+
+  selectedExIds.forEach(exId => {
+    if (!w.exercises.some(e => e.id === exId)) {
+      const last = lastSession(exId);
+      const defaultSets = [];
+      for (let i = 0; i < defaultSetsCount; i++) {
+        defaultSets.push({
+          weight: last?.sets?.[i]?.weight || last?.sets?.[0]?.weight || 20,
+          reps: defaultReps
+        });
+      }
+      w.exercises.push({ id: exId, sets: defaultSets, notes: '', time: Date.now() });
+    }
+  });
+
+  saveUserData();
+  const firstExId = selectedExIds[0];
+  clearExerciseSelection();
+  switchView('today-view');
+  toast('تمت إضافة التمارين إلى جدول اليوم 🚀');
+
+  setTimeout(() => {
+    openModal(firstExId);
+  }, 400);
 };
 
 // ── PDF Export Report ─────────────────────────────────────────────
@@ -702,7 +767,6 @@ const acceptGeneratedPlan = () => {
   document.body.style.overflow = '';
   pendingPlan = null;
 
-  // Apply Day 1 automatically and start today's workout flow
   applyPlanDayToToday(0);
   toast('تم اعتماد الخطة وبدء تمرين اليوم 🚀');
 };
@@ -797,8 +861,10 @@ const renderLibrary = () => {
 
   grid.innerHTML = list.map(ex => {
     const exName = lang === 'ar' ? ex.name_ar : ex.name_en;
+    const isSelected = selectedExIds.includes(ex.id);
     return `
-      <div class="ex-card" onclick="openModal('${ex.id}')">
+      <div class="ex-card ${isSelected ? 'selected' : ''}" data-exid="${ex.id}" onclick="openModal('${ex.id}')">
+        <div class="ex-select-checkbox" onclick="toggleExerciseSelection('${ex.id}', event)">✓</div>
         <div class="card-icon">${ex.icon}</div>
         <h4>${exName}</h4>
         <div class="ex-card-actions">
@@ -1143,6 +1209,9 @@ document.addEventListener('DOMContentLoaded', () => {
   $('fab-btn').addEventListener('click', () => switchView('library-view'));
   $$('.pill').forEach(p => p.addEventListener('click', () => { category = p.dataset.category; renderLibrary(); }));
   $('search-input').addEventListener('input', e => { query = e.target.value; renderLibrary(); });
+
+  $('btn-clear-selected-ex').addEventListener('click', clearExerciseSelection);
+  $('btn-start-selected-routine').addEventListener('click', startSelectedExercisesRoutine);
 
   $('btn-finish-set').addEventListener('click', handleFinishSetClick);
   $('btn-save').addEventListener('click', saveExerciseModal);
