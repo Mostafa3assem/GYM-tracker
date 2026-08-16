@@ -22,7 +22,7 @@
             <div class="header-right">
                 <span class="logo-icon">💪</span>
                 <div class="header-title-box">
-                    <h1 class="logo-text" data-i18n="app_title">تمريني</h1>
+                    <h1 class="logo-text" id="header-app-title" data-i18n="app_title">تمريني</h1>
                     <div class="user-selector-wrap">
                         <select id="user-select" class="user-select"></select>
                         <button id="btn-manage-users" class="btn-icon-user" title="إدارة المتدربين">⚙️</button>
@@ -45,131 +45,134 @@
             </div>
         </header>
 
-        <!-- === VIEW: Today === -->
-        <section id="today-view" class="view active">
-            <!-- Smart Plan Banner -->
-            <div id="plan-banner" class="plan-banner" style="display:none">
-                <div class="plan-banner-text">
-                    <span class="plan-banner-tag" id="plan-banner-title">خطة مخصصة</span>
-                    <p id="plan-banner-sub">اضغط لبدء تمارين خطة اليوم بالتسلسل</p>
+        <!-- Main Content Area -->
+        <main class="app-main-content">
+            <!-- === VIEW: Today === -->
+            <section id="today-view" class="view active">
+                <!-- Smart Plan Banner -->
+                <div id="plan-banner" class="plan-banner" style="display:none">
+                    <div class="plan-banner-text">
+                        <span class="plan-banner-tag" id="plan-banner-title">خطة مخصصة</span>
+                        <p id="plan-banner-sub" data-i18n="plan_banner_sub">اضغط لبدء تمارين خطة اليوم بالتسلسل</p>
+                    </div>
+                    <button type="button" id="btn-load-plan-day" class="btn-banner-action" data-i18n="btn_start_plan">بدء التدريب ⚡</button>
                 </div>
-                <button type="button" id="btn-load-plan-day" class="btn-banner-action">بدء التدريب ⚡</button>
-            </div>
 
-            <!-- Summary Card -->
-            <div class="summary-card">
-                <div class="summary-item">
-                    <span class="summary-value" id="summary-exercises">0</span>
-                    <span class="summary-label" data-i18n="exercises_label">تمرين</span>
+                <!-- Summary Card -->
+                <div class="summary-card">
+                    <div class="summary-item">
+                        <span class="summary-value" id="summary-exercises">0</span>
+                        <span class="summary-label" data-i18n="exercises_label">تمرين</span>
+                    </div>
+                    <div class="summary-divider"></div>
+                    <div class="summary-item">
+                        <span class="summary-value" id="summary-sets">0</span>
+                        <span class="summary-label" data-i18n="sets_label">مجموعة</span>
+                    </div>
+                    <div class="summary-divider"></div>
+                    <div class="summary-item">
+                        <span class="summary-value" id="summary-timer">00:00</span>
+                        <span class="summary-label" data-i18n="time_label">الوقت</span>
+                    </div>
                 </div>
-                <div class="summary-divider"></div>
-                <div class="summary-item">
-                    <span class="summary-value" id="summary-sets">0</span>
-                    <span class="summary-label" data-i18n="sets_label">مجموعة</span>
-                </div>
-                <div class="summary-divider"></div>
-                <div class="summary-item">
-                    <span class="summary-value" id="summary-timer">00:00</span>
-                    <span class="summary-label" data-i18n="time_label">الوقت</span>
-                </div>
-            </div>
 
-            <!-- Water Hydration Card -->
-            <div class="water-card">
-                <div class="water-info">
-                    <span class="water-title">💧 استهلاك الماء في التمرين</span>
-                    <span class="water-count" id="water-count-display">0 لتر (0 أكواب)</span>
+                <!-- Water Hydration Card -->
+                <div class="water-card">
+                    <div class="water-info">
+                        <span class="water-title" data-i18n="water_title">💧 استهلاك الماء في التمرين</span>
+                        <span class="water-count" id="water-count-display">0 لتر (0 أكواب)</span>
+                    </div>
+                    <div class="water-controls">
+                        <button type="button" class="btn-water" id="btn-water-minus">−</button>
+                        <button type="button" class="btn-water plus" id="btn-water-plus">+250ml</button>
+                    </div>
                 </div>
-                <div class="water-controls">
-                    <button type="button" class="btn-water" id="btn-water-minus">−</button>
-                    <button type="button" class="btn-water plus" id="btn-water-plus">+250ml</button>
-                </div>
-            </div>
 
-            <div id="today-list" class="today-list"></div>
+                <div id="today-list" class="today-list"></div>
 
-            <button class="fab" id="fab-btn" aria-label="إضافة تمرين">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-            </button>
-        </section>
-
-        <!-- === VIEW: Library (With Multi-select Flow) === -->
-        <section id="library-view" class="view">
-            <div class="library-top-bar">
-                <div class="search-box">
-                    <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                <button class="fab" id="fab-btn" aria-label="إضافة تمرين">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
                     </svg>
-                    <input type="text" id="search-input" placeholder="ابحث عن تمرين..." autocomplete="off">
+                </button>
+            </section>
+
+            <!-- === VIEW: Library (With Multi-select Flow) === -->
+            <section id="library-view" class="view">
+                <div class="library-top-bar">
+                    <div class="search-box">
+                        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <input type="text" id="search-input" placeholder="ابحث عن تمرين..." autocomplete="off">
+                    </div>
                 </div>
-            </div>
 
-            <div class="category-pills" id="category-pills">
-                <button class="pill active" data-category="all" data-i18n="cat_all">الكل</button>
-                <button class="pill" data-category="chest" data-i18n="cat_chest">صدر</button>
-                <button class="pill" data-category="back" data-i18n="cat_back">ظهر</button>
-                <button class="pill" data-category="shoulders" data-i18n="cat_shoulders">أكتاف</button>
-                <button class="pill" data-category="arms" data-i18n="cat_arms">ذراع</button>
-                <button class="pill" data-category="legs" data-i18n="cat_legs">أرجل</button>
-                <button class="pill" data-category="core" data-i18n="cat_core">بطن</button>
-                <button class="pill" data-category="cardio" data-i18n="cat_cardio">كارديو</button>
-            </div>
-
-            <div class="multi-select-hint">
-                <span>💡 اضغط على الدائرة لاختيار عدة تمارين ولعبها بالتسلسل:</span>
-                <button type="button" class="btn-clear-selection" id="btn-clear-selected-ex" style="display:none;">إلغاء التحديد</button>
-            </div>
-
-            <div id="exercise-grid" class="exercise-grid"></div>
-
-            <!-- Floating Multi-select Start Bar -->
-            <div id="multi-start-bar" class="multi-start-bar" style="display:none;">
-                <div class="multi-start-info">
-                    <span id="multi-selected-count">0 تمارين محددة</span>
-                    <small>جاهزة للإضافة وبدء الجلسة</small>
+                <div class="category-pills" id="category-pills">
+                    <button class="pill active" data-category="all" data-i18n="cat_all">الكل</button>
+                    <button class="pill" data-category="chest" data-i18n="cat_chest">صدر</button>
+                    <button class="pill" data-category="back" data-i18n="cat_back">ظهر</button>
+                    <button class="pill" data-category="shoulders" data-i18n="cat_shoulders">أكتاف</button>
+                    <button class="pill" data-category="arms" data-i18n="cat_arms">ذراع</button>
+                    <button class="pill" data-category="legs" data-i18n="cat_legs">أرجل</button>
+                    <button class="pill" data-category="core" data-i18n="cat_core">بطن</button>
+                    <button class="pill" data-category="cardio" data-i18n="cat_cardio">كارديو</button>
                 </div>
-                <button type="button" id="btn-start-selected-routine" class="btn-multi-start">بدء التمارين الآن 🚀</button>
-            </div>
-        </section>
 
-        <!-- === VIEW: Smart Plan / Coach === -->
-        <section id="plan-view" class="view">
-            <div id="plan-display-container"></div>
-        </section>
+                <div class="multi-select-hint">
+                    <span data-i18n="multi_hint">💡 اضغط على الدائرة لاختيار عدة تمارين ولعبها بالتسلسل:</span>
+                    <button type="button" class="btn-clear-selection" id="btn-clear-selected-ex" style="display:none;" data-i18n="clear_sel">إلغاء التحديد</button>
+                </div>
 
-        <!-- === VIEW: History === -->
-        <section id="history-view" class="view">
-            <div class="history-actions-bar">
-                <button class="btn-backup" id="btn-export-pdf">📄 تقرير PDF</button>
-                <button class="btn-backup" id="btn-export-json">📥 نسخ احتياطي</button>
-                <label class="btn-backup" for="import-file-input">📤 استرجاع</label>
-                <input type="file" id="import-file-input" accept=".json" style="display:none">
-            </div>
-            <div id="history-list" class="history-list"></div>
-        </section>
+                <div id="exercise-grid" class="exercise-grid"></div>
 
-        <!-- === Elegant Social Footer === -->
-        <footer class="app-social-footer">
-            <div class="footer-brand-title">SEC ASSEM • مطور ومصمم تمريني</div>
-            <div class="social-footer-links">
-                <a href="https://www.facebook.com/share/1ErA2onGqh/?mibextid=wwXIfr" target="_blank" rel="noopener" class="footer-social-pill fb">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                    <span>فيسبوك</span>
-                </a>
-                <a href="https://www.facebook.com/share/1ErA2onGqh/?mibextid=wwXIfr" target="_blank" rel="noopener" class="footer-social-pill ig">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-                    <span>انستجرام</span>
-                </a>
-                <a href="https://www.linkedin.com/in/mostafa-mohamed-assem-69509823b?utm_source=share_via&utm_content=profile&utm_medium=member_ios" target="_blank" rel="noopener" class="footer-social-pill in">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                    <span>LinkedIn</span>
-                </a>
-            </div>
-        </footer>
+                <!-- Floating Multi-start Action Bar -->
+                <div id="multi-start-bar" class="multi-start-bar" style="display:none;">
+                    <div class="multi-start-info">
+                        <span id="multi-selected-count">0 تمارين محددة</span>
+                        <small data-i18n="multi_ready">جاهزة للإضافة وبدء الجلسة</small>
+                    </div>
+                    <button type="button" id="btn-start-selected-routine" class="btn-multi-start" data-i18n="btn_start_multi">بدء التمارين الآن 🚀</button>
+                </div>
+            </section>
+
+            <!-- === VIEW: Smart Plan / Coach === -->
+            <section id="plan-view" class="view">
+                <div id="plan-display-container"></div>
+            </section>
+
+            <!-- === VIEW: History === -->
+            <section id="history-view" class="view">
+                <div class="history-actions-bar">
+                    <button class="btn-backup" id="btn-export-pdf" data-i18n="export_pdf_btn">📄 تقرير PDF</button>
+                    <button class="btn-backup" id="btn-export-json" data-i18n="export_btn">📥 نسخ احتياطي</button>
+                    <label class="btn-backup" for="import-file-input" data-i18n="import_btn">📤 استرجاع</label>
+                    <input type="file" id="import-file-input" accept=".json" style="display:none">
+                </div>
+                <div id="history-list" class="history-list"></div>
+            </section>
+
+            <!-- === Compact Footer at Bottom === -->
+            <footer class="app-social-footer">
+                <div class="footer-brand-title">SEC ASSEM • Tamriny App</div>
+                <div class="social-footer-links">
+                    <a href="https://www.facebook.com/share/1ErA2onGqh/?mibextid=wwXIfr" target="_blank" rel="noopener" class="footer-social-pill fb" title="Facebook">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        <span>Facebook</span>
+                    </a>
+                    <a href="https://www.facebook.com/share/1ErA2onGqh/?mibextid=wwXIfr" target="_blank" rel="noopener" class="footer-social-pill ig" title="Instagram">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                        <span>Instagram</span>
+                    </a>
+                    <a href="https://www.linkedin.com/in/mostafa-mohamed-assem-69509823b?utm_source=share_via&utm_content=profile&utm_medium=member_ios" target="_blank" rel="noopener" class="footer-social-pill in" title="LinkedIn">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                        <span>LinkedIn</span>
+                    </a>
+                </div>
+            </footer>
+        </main>
 
         <!-- Bottom Navigation -->
         <nav class="bottom-nav">
@@ -213,7 +216,7 @@
                 <div class="modal-handle"></div>
                 <div class="modal-header-actions">
                     <h2 class="modal-title" id="modal-title">اسم التمرين</h2>
-                    <button type="button" class="btn-alt-modal" id="btn-modal-swap-alt">🔄 بديل التمرين</button>
+                    <button type="button" class="btn-alt-modal" id="btn-modal-swap-alt" data-i18n="btn_alt_ex">🔄 بديل التمرين</button>
                 </div>
 
                 <div class="last-session-box" id="last-session-box">
@@ -226,11 +229,11 @@
                     <span class="live-rest-inline" id="live-rest-counter" style="display:none;">⏱️ 01:00</span>
                 </div>
 
-                <!-- Active Set Inputs Form with Big Steppers -->
+                <!-- Active Set Inputs Form -->
                 <div class="active-set-card">
                     <div class="active-set-row">
                         <div class="active-set-field">
-                            <label>الوزن (كجم)</label>
+                            <label data-i18n="lbl_weight">الوزن (كجم)</label>
                             <div class="stepper-box">
                                 <button type="button" class="stepper-btn-inline" onclick="stepActiveWeight(-2.5)">−</button>
                                 <input type="number" step="0.5" id="active-set-weight" class="active-input" value="20">
@@ -238,7 +241,7 @@
                             </div>
                         </div>
                         <div class="active-set-field">
-                            <label>العدات (التكرار)</label>
+                            <label data-i18n="lbl_reps">العدات (التكرار)</label>
                             <div class="stepper-box">
                                 <button type="button" class="stepper-btn-inline" onclick="stepActiveReps(-1)">−</button>
                                 <input type="number" id="active-set-reps" class="active-input" value="10">
@@ -247,44 +250,44 @@
                         </div>
                     </div>
                     
-                    <button type="button" class="btn-finish-set" id="btn-finish-set">
+                    <button type="button" class="btn-finish-set" id="btn-finish-set" data-i18n="btn_finish_set">
                         ✅ أنهيت المجموعة وبدء الراحة ⏱️
                     </button>
                 </div>
 
-                <!-- Rest Options & Quick Water Tracker -->
+                <!-- Rest Options & Water Bar -->
                 <div class="intra-workout-bar">
                     <div class="intra-water">
-                        <span>ماء؟ 💧</span>
+                        <span data-i18n="lbl_water_q">ماء؟ 💧</span>
                         <button type="button" class="btn-water-quick" onclick="addWater(1)">+250ml</button>
                     </div>
                     <div class="intra-rest-chips">
-                        <span>الراحة:</span>
+                        <span data-i18n="lbl_rest">الراحة:</span>
                         <button type="button" class="chip-rest" data-sec="30">30s</button>
                         <button type="button" class="chip-rest active" data-sec="60">60s</button>
                         <button type="button" class="chip-rest" data-sec="90">90s</button>
                         <button type="button" class="chip-rest" data-sec="120">2m</button>
-                        <button type="button" class="chip-rest" data-sec="0">بدون</button>
+                        <button type="button" class="chip-rest" data-sec="0" data-i18n="chip_none">بدون</button>
                     </div>
                 </div>
 
                 <!-- Logged Sets Overview List -->
                 <div class="sets-header">
-                    <span>المجموعة</span>
-                    <span>الوزن (كجم)</span>
-                    <span>العدات</span>
-                    <span>حذف</span>
+                    <span data-i18n="tbl_set">المجموعة</span>
+                    <span data-i18n="tbl_wt">الوزن (كجم)</span>
+                    <span data-i18n="tbl_reps">العدات</span>
+                    <span data-i18n="tbl_del">حذف</span>
                 </div>
                 <div id="sets-container" class="sets-container"></div>
 
                 <div class="notes-row">
-                    <label for="notes-input">ملاحظات التمرين</label>
-                    <textarea id="notes-input" rows="2" placeholder="ملاحظاتك..."></textarea>
+                    <label for="notes-input" data-i18n="notes_label">ملاحظات التمرين</label>
+                    <textarea id="notes-input" rows="2" placeholder="..."></textarea>
                 </div>
 
                 <div class="modal-actions">
-                    <button type="button" class="btn-cancel" id="btn-cancel">إلغاء</button>
-                    <button type="button" class="btn-save" id="btn-save">حفظ وإنهاء التمرين</button>
+                    <button type="button" class="btn-cancel" id="btn-cancel" data-i18n="cancel_btn">إلغاء</button>
+                    <button type="button" class="btn-save" id="btn-save" data-i18n="save_btn">حفظ وإنهاء التمرين</button>
                 </div>
             </div>
         </div>
@@ -294,10 +297,10 @@
             <div class="modal-backdrop" id="swap-modal-backdrop"></div>
             <div class="modal-sheet">
                 <div class="modal-handle"></div>
-                <h2 class="modal-title">🔄 بدائل الأجهزة والتمارين</h2>
-                <p class="swap-subtitle" id="swap-current-name">اختر بديلاً مناسباً لنفس الزاوية العضلية:</p>
+                <h2 class="modal-title" data-i18n="swap_title">🔄 بدائل الأجهزة والتمارين</h2>
+                <p class="swap-subtitle" id="swap-current-name"></p>
                 <div id="swap-alternatives-list" class="swap-list"></div>
-                <button type="button" class="btn-cancel" id="btn-close-swap" style="width:100%;margin-top:12px;">إلغاء</button>
+                <button type="button" class="btn-cancel" id="btn-close-swap" style="width:100%;margin-top:12px;" data-i18n="close_btn">إلغاء</button>
             </div>
         </div>
 
@@ -306,30 +309,30 @@
             <div class="modal-backdrop" id="plan-modal-backdrop"></div>
             <div class="modal-sheet">
                 <div class="modal-handle"></div>
-                <h2 class="modal-title">🎯 إعداد خطتك التدريبية والبدنية</h2>
+                <h2 class="modal-title" data-i18n="quiz_title">🎯 إعداد خطتك التدريبية والبدنية</h2>
                 <form id="quiz-form">
                     <div class="quiz-row-2">
                         <div class="quiz-group">
-                            <label>الوزن الحالي (كجم):</label>
-                            <input type="number" id="quiz-weight" class="quiz-input" placeholder="مثال: 75" required>
+                            <label data-i18n="quiz_weight_lbl">الوزن الحالي (كجم):</label>
+                            <input type="number" id="quiz-weight" class="quiz-input" placeholder="75" required>
                         </div>
                         <div class="quiz-group">
-                            <label>الطول (سم):</label>
-                            <input type="number" id="quiz-height" class="quiz-input" placeholder="مثال: 178" required>
+                            <label data-i18n="quiz_height_lbl">الطول (سم):</label>
+                            <input type="number" id="quiz-height" class="quiz-input" placeholder="178" required>
                         </div>
                     </div>
 
                     <div class="quiz-group">
-                        <label>1. ما هو هدفك الأساسي؟</label>
+                        <label data-i18n="quiz_goal">1. ما هو هدفك الأساسي؟</label>
                         <select id="quiz-goal" class="quiz-select">
-                            <option value="bulk">تضخيم وبناء عضلات صافية (Hypertrophy / Bulking)</option>
-                            <option value="cut">تنشيف وحرق دهون ونحت عضل (Cutting / Fat Loss)</option>
-                            <option value="strength">زيادة القوة البدنية واللياقة الشاملة (Strength)</option>
+                            <option value="bulk">تضخيم وبناء عضلات صافية (Bulking)</option>
+                            <option value="cut">تنشيف وحرق دهون (Cutting)</option>
+                            <option value="strength">زيادة القوة واللياقة (Strength)</option>
                         </select>
                     </div>
 
                     <div class="quiz-group">
-                        <label>2. مستواك التدريبي في الجيم:</label>
+                        <label data-i18n="quiz_level">2. مستواك التدريبي في الجيم:</label>
                         <select id="quiz-level" class="quiz-select">
                             <option value="beginner">مبتدئ (أقل من 6 شهور)</option>
                             <option value="intermediate">متوسط (من 6 شهور إلى سنتين)</option>
@@ -338,7 +341,7 @@
                     </div>
 
                     <div class="quiz-group">
-                        <label>3. كم يوماً تستطيع التمرين أسبوعياً؟</label>
+                        <label data-i18n="quiz_days">3. كم يوماً تستطيع التمرين أسبوعياً؟</label>
                         <select id="quiz-days" class="quiz-select">
                             <option value="3">3 أيام أسبوعياً (Full Body Split)</option>
                             <option value="4">4 أيام أسبوعياً (Upper / Lower Split)</option>
@@ -348,7 +351,7 @@
                     </div>
 
                     <div class="quiz-group">
-                        <label>4. هل تعاني من أي إصابات لتجنبها؟</label>
+                        <label data-i18n="quiz_injury_lbl">4. هل تعاني من أي إصابات لتجنبها؟</label>
                         <select id="quiz-injury" class="quiz-select">
                             <option value="none">لا توجد إصابات (سليم والحمد لله)</option>
                             <option value="lower_back">إصابة / ألم أسفل الظهر (تجنب الديدليفت والضغط العمودي)</option>
@@ -358,7 +361,7 @@
                     </div>
 
                     <div class="quiz-group">
-                        <label>5. عضلة ترغب في التركيز عليها كنقطة ضعف:</label>
+                        <label data-i18n="quiz_focus">5. عضلة ترغب في التركيز عليها كنقطة ضعف:</label>
                         <select id="quiz-focus" class="quiz-select">
                             <option value="balanced">توزيع متوازن لكامل الجسم</option>
                             <option value="chest">عضلات الصدر (Chest Focus)</option>
@@ -370,8 +373,8 @@
                     </div>
 
                     <div class="modal-actions" style="margin-top:18px;">
-                        <button type="button" class="btn-cancel" id="btn-cancel-quiz">إلغاء</button>
-                        <button type="submit" class="btn-save">توليد الخطة الذكية 🚀</button>
+                        <button type="button" class="btn-cancel" id="btn-cancel-quiz" data-i18n="cancel_btn">إلغاء</button>
+                        <button type="submit" class="btn-save" data-i18n="generate_plan_btn">توليد الخطة الذكية 🚀</button>
                     </div>
                 </form>
             </div>
@@ -382,11 +385,11 @@
             <div class="modal-backdrop" id="approval-modal-backdrop"></div>
             <div class="modal-sheet">
                 <div class="modal-handle"></div>
-                <h2 class="modal-title">🎉 تم تجهيز برنامجك التدريبي!</h2>
+                <h2 class="modal-title" data-i18n="approval_title">🎉 تم تجهيز برنامجك التدريبي!</h2>
                 <div id="approval-plan-content" class="approval-content"></div>
                 <div class="modal-actions" style="margin-top:16px;">
-                    <button type="button" class="btn-cancel" id="btn-reject-plan">تعديل</button>
-                    <button type="button" class="btn-save" id="btn-accept-plan">اعتماد وبدء تمرين اليوم ⚡</button>
+                    <button type="button" class="btn-cancel" id="btn-reject-plan" data-i18n="edit_plan_btn">تعديل</button>
+                    <button type="button" class="btn-save" id="btn-accept-plan" data-i18n="accept_plan_btn">اعتماد وبدء تمرين اليوم ⚡</button>
                 </div>
             </div>
         </div>
@@ -397,11 +400,11 @@
             <div class="modal-sheet">
                 <div class="modal-handle"></div>
                 <div class="notif-modal-header">
-                    <h2 class="modal-title" style="margin-bottom:0;">🔔 التنبيهات والمتابعة</h2>
-                    <button type="button" class="btn-clear-notifs" id="btn-clear-all-notifs">مسح الكل</button>
+                    <h2 class="modal-title" style="margin-bottom:0;" data-i18n="notif_title">🔔 التنبيهات والمتابعة</h2>
+                    <button type="button" class="btn-clear-notifs" id="btn-clear-all-notifs" data-i18n="clear_all">مسح الكل</button>
                 </div>
                 <div id="notif-content-box" class="notif-content-box"></div>
-                <button type="button" class="btn-cancel" id="btn-close-notif" style="width:100%;margin-top:12px;">إغلاق</button>
+                <button type="button" class="btn-cancel" id="btn-close-notif" style="width:100%;margin-top:12px;" data-i18n="close_btn">إغلاق</button>
             </div>
         </div>
 
@@ -410,13 +413,13 @@
             <div class="modal-backdrop" id="users-modal-backdrop"></div>
             <div class="modal-sheet">
                 <div class="modal-handle"></div>
-                <h2 class="modal-title">إدارة المتدربين</h2>
+                <h2 class="modal-title" data-i18n="manage_users_title">إدارة المتدربين</h2>
                 <div class="add-user-input-box">
-                    <input type="text" id="new-user-name-input" placeholder="اسم متدرب جديد...">
-                    <button type="button" id="btn-create-user" class="btn-primary-small">إضافة</button>
+                    <input type="text" id="new-user-name-input" placeholder="...">
+                    <button type="button" id="btn-create-user" class="btn-primary-small" data-i18n="add_user_btn">إضافة</button>
                 </div>
                 <div id="users-list-container" class="users-list-container"></div>
-                <button type="button" class="btn-cancel" id="btn-close-users" style="width:100%;margin-top:12px;">إغلاق</button>
+                <button type="button" class="btn-cancel" id="btn-close-users" style="width:100%;margin-top:12px;" data-i18n="close_btn">إغلاق</button>
             </div>
         </div>
 
