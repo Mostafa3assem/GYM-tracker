@@ -86,18 +86,6 @@
                 </div>
             </div>
 
-            <!-- Floating Rest Timer -->
-            <div id="rest-timer-box" class="rest-timer-box">
-                <div class="rest-timer-info">
-                    <span class="rest-title" data-i18n="rest_title">⏱️ وقت الراحة المتبقي</span>
-                    <span class="rest-countdown" id="rest-countdown">01:00</span>
-                </div>
-                <div class="rest-controls">
-                    <button type="button" class="rest-btn" data-add="30">+30s</button>
-                    <button type="button" class="rest-btn cancel" id="rest-cancel-btn" data-i18n="stop_btn">إنهاء</button>
-                </div>
-            </div>
-
             <div id="today-list" class="today-list"></div>
 
             <button class="fab" id="fab-btn" aria-label="إضافة تمرين">
@@ -140,8 +128,9 @@
         <!-- === VIEW: History === -->
         <section id="history-view" class="view">
             <div class="history-actions-bar">
-                <button class="btn-backup" id="btn-export" data-i18n="export_btn">📥 نسخ احتياطي</button>
-                <label class="btn-backup" for="import-file-input" data-i18n="import_btn">📤 استرجاع</label>
+                <button class="btn-backup" id="btn-export-pdf">📄 تصدير تقرير PDF</button>
+                <button class="btn-backup" id="btn-export-json">📥 نسخ احتياطي</button>
+                <label class="btn-backup" for="import-file-input">📤 استرجاع</label>
                 <input type="file" id="import-file-input" accept=".json" style="display:none">
             </div>
             <div id="history-list" class="history-list"></div>
@@ -182,81 +171,127 @@
             </button>
         </nav>
 
-        <!-- === MODAL: Exercise Sets Logger === -->
+        <!-- === MODAL: Interactive Live Exercise Logger === -->
         <div id="exercise-modal" class="modal">
             <div class="modal-backdrop" id="modal-backdrop"></div>
             <div class="modal-sheet">
                 <div class="modal-handle"></div>
-                <h2 class="modal-title" id="modal-title">اسم التمرين</h2>
+                <div class="modal-header-actions">
+                    <h2 class="modal-title" id="modal-title">اسم التمرين</h2>
+                    <button type="button" class="btn-alt-modal" id="btn-modal-swap-alt">🔄 بديل التمرين</button>
+                </div>
 
                 <div class="last-session-box" id="last-session-box">
                     <div id="last-session-text"></div>
                 </div>
 
-                <div class="sets-header">
-                    <span data-i18n="tbl_set">المجموعة</span>
-                    <span data-i18n="tbl_wt">الوزن (كجم)</span>
-                    <span data-i18n="tbl_reps">العدات</span>
-                    <span data-i18n="tbl_del">حذف</span>
+                <!-- Live Set Tracker Bar -->
+                <div class="live-set-bar">
+                    <span class="live-set-badge" id="live-set-status">المجموعة 1 من 3</span>
+                    <span class="live-rest-inline" id="live-rest-counter" style="display:none;">⏱️ 01:00</span>
                 </div>
 
-                <div id="sets-container" class="sets-container"></div>
+                <!-- Active Set Inputs Form -->
+                <div class="active-set-card">
+                    <div class="active-set-row">
+                        <div class="active-set-field">
+                            <label>الوزن المسحوب (كجم)</label>
+                            <div class="stepper-box">
+                                <button type="button" class="stepper-btn-inline" onclick="stepActiveWeight(-2.5)">−</button>
+                                <input type="number" step="0.5" id="active-set-weight" class="active-input" value="20">
+                                <button type="button" class="stepper-btn-inline" onclick="stepActiveWeight(2.5)">+</button>
+                            </div>
+                        </div>
+                        <div class="active-set-field">
+                            <label>عدد التكرارات (العدات)</label>
+                            <div class="stepper-box">
+                                <button type="button" class="stepper-btn-inline" onclick="stepActiveReps(-1)">−</button>
+                                <input type="number" id="active-set-reps" class="active-input" value="10">
+                                <button type="button" class="stepper-btn-inline" onclick="stepActiveReps(1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="btn-finish-set" id="btn-finish-set">
+                        ✅ أنهيت المجموعة وبدء الراحة ⏱️
+                    </button>
+                </div>
 
-                <button type="button" class="btn-add-set" id="btn-add-set" data-i18n="add_set_btn">+ إضافة مجموعة</button>
-
-                <div class="rest-picker-box">
-                    <span class="rest-picker-label" data-i18n="rest_after_label">⏱️ راحة بعد الحفظ:</span>
-                    <div class="rest-chips">
-                        <button type="button" class="chip-time" data-sec="30">30s</button>
+                <!-- Quick Rest & Water Bar During Exercise -->
+                <div class="intra-workout-bar">
+                    <div class="intra-water">
+                        <span>شربت مياه؟ 💧</span>
+                        <button type="button" class="btn-water-quick" onclick="addWater(1)">+ كوب 250ml</button>
+                    </div>
+                    <div class="intra-rest-chips">
+                        <span>الراحة:</span>
                         <button type="button" class="chip-time active" data-sec="60">60s</button>
                         <button type="button" class="chip-time" data-sec="90">90s</button>
                         <button type="button" class="chip-time" data-sec="120">2m</button>
-                        <button type="button" class="chip-time" data-sec="0" data-i18n="chip_none">بدون</button>
                     </div>
                 </div>
 
+                <!-- Logged Sets Overview List -->
+                <div class="sets-header" style="margin-top:12px;">
+                    <span>المجموعات المسجلة</span>
+                    <span>الوزن × العدات</span>
+                    <span>تعديل</span>
+                </div>
+                <div id="sets-container" class="sets-container"></div>
+
                 <div class="notes-row">
-                    <label for="notes-input" data-i18n="notes_label">ملاحظات</label>
-                    <textarea id="notes-input" rows="2" placeholder="..."></textarea>
+                    <label for="notes-input">ملاحظات التمرين</label>
+                    <textarea id="notes-input" rows="2" placeholder="فورم ممتاز، زيادة في الوزن..."></textarea>
                 </div>
 
                 <div class="modal-actions">
-                    <button type="button" class="btn-cancel" id="btn-cancel" data-i18n="cancel_btn">إلغاء</button>
-                    <button type="button" class="btn-save" id="btn-save" data-i18n="save_btn">حفظ وبدء الراحة ⏱️</button>
+                    <button type="button" class="btn-cancel" id="btn-cancel">إلغاء</button>
+                    <button type="button" class="btn-save" id="btn-save">حفظ وإنهاء التمرين</button>
                 </div>
             </div>
         </div>
 
-        <!-- === MODAL: Exercise Swapper (Busy Machine Alternative) === -->
+        <!-- === MODAL: Exercise Swapper === -->
         <div id="swap-modal" class="modal">
             <div class="modal-backdrop" id="swap-modal-backdrop"></div>
             <div class="modal-sheet">
                 <div class="modal-handle"></div>
-                <h2 class="modal-title">🔄 بديل الجهاز المشغول</h2>
-                <p class="swap-subtitle" id="swap-current-name">الجهاز مشغول؟ اختر أحد البدائل لنفس الزاوية العضلية:</p>
+                <h2 class="modal-title">🔄 بدائل الأجهزة والتمارين</h2>
+                <p class="swap-subtitle" id="swap-current-name">اختر بديلاً مناسباً لنفس الزاوية العضلية:</p>
                 <div id="swap-alternatives-list" class="swap-list"></div>
-                <button type="button" class="btn-cancel" id="btn-close-swap" style="width:100%;margin-top:12px;" data-i18n="close_btn">إلغاء</button>
+                <button type="button" class="btn-cancel" id="btn-close-swap" style="width:100%;margin-top:12px;">إلغاء</button>
             </div>
         </div>
 
-        <!-- === MODAL: Plan Creator Quiz === -->
+        <!-- === MODAL: Smart Plan Quiz (Comprehensive) === -->
         <div id="plan-modal" class="modal">
             <div class="modal-backdrop" id="plan-modal-backdrop"></div>
             <div class="modal-sheet">
                 <div class="modal-handle"></div>
-                <h2 class="modal-title" data-i18n="quiz_title">🎯 إعداد خطتك التدريبية الذكية</h2>
+                <h2 class="modal-title">🎯 إعداد خطتك التدريبية والبدنية</h2>
                 <form id="quiz-form">
+                    <div class="quiz-row-2">
+                        <div class="quiz-group">
+                            <label>الوزن الحالي (كجم):</label>
+                            <input type="number" id="quiz-weight" class="quiz-select" placeholder="مثال: 75" required>
+                        </div>
+                        <div class="quiz-group">
+                            <label>الطول (سم):</label>
+                            <input type="number" id="quiz-height" class="quiz-select" placeholder="مثال: 178" required>
+                        </div>
+                    </div>
+
                     <div class="quiz-group">
-                        <label data-i18n="quiz_goal">1. ما هو هدفك الأساسي؟</label>
+                        <label>1. ما هو هدفك الأساسي؟</label>
                         <select id="quiz-goal" class="quiz-select">
                             <option value="bulk">تضخيم وبناء عضلات صافية (Hypertrophy / Bulking)</option>
-                            <option value="cut">تنشيف وحرق دهون مع نحت العضل (Cutting / Fat Loss)</option>
+                            <option value="cut">تنشيف وحرق دهون ونحت عضل (Cutting / Fat Loss)</option>
                             <option value="strength">زيادة القوة البدنية واللياقة الشاملة (Strength)</option>
                         </select>
                     </div>
 
                     <div class="quiz-group">
-                        <label data-i18n="quiz_level">2. مستواك التدريبي في الجيم:</label>
+                        <label>2. مستواك التدريبي في الجيم:</label>
                         <select id="quiz-level" class="quiz-select">
                             <option value="beginner">مبتدئ (أقل من 6 شهور)</option>
                             <option value="intermediate">متوسط (من 6 شهور إلى سنتين)</option>
@@ -265,17 +300,27 @@
                     </div>
 
                     <div class="quiz-group">
-                        <label data-i18n="quiz_days">3. كم يوماً تستطيع التمرين أسبوعياً؟</label>
+                        <label>3. كم يوماً تستطيع التمرين أسبوعياً؟</label>
                         <select id="quiz-days" class="quiz-select">
                             <option value="3">3 أيام أسبوعياً (Full Body Split)</option>
-                            <option value="4" selected>4 أيام أسبوعياً (Upper / Lower Split)</option>
-                            <option value="5">5 أيام أسبوعياً (Push / Pull / Legs + Upper)</option>
-                            <option value="6">6 أيام أسبوعياً (Push / Pull / Legs Classic)</option>
+                            <option value="4">4 أيام أسبوعياً (Upper / Lower Split)</option>
+                            <option value="5" selected>5 أيام أسبوعياً (Push / Pull / Legs / Upper / Lower)</option>
+                            <option value="6">6 أيام أسبوعياً (Push / Pull / Legs 2x)</option>
                         </select>
                     </div>
 
                     <div class="quiz-group">
-                        <label data-i18n="quiz_focus">4. عضلة ترغب في التركيز عليها كنقطة ضعف:</label>
+                        <label>4. هل تعاني من أي إصابات لتجنبها؟</label>
+                        <select id="quiz-injury" class="quiz-select">
+                            <option value="none">لا توجد إصابات (سليم والحمد لله)</option>
+                            <option value="lower_back">إصابة / ألم أسفل الظهر (تجنب الديدليفت والضغط العمودي)</option>
+                            <option value="shoulder">إصابة / خشونة في الكتف (تجنب الضغط العالي بالبار)</option>
+                            <option value="knee">إصابة / ألم في الركبة (تجنب السكوات العميق والمكبس العالي)</option>
+                        </select>
+                    </div>
+
+                    <div class="quiz-group">
+                        <label>5. عضلة ترغب في التركيز عليها كنقطة ضعف:</label>
                         <select id="quiz-focus" class="quiz-select">
                             <option value="balanced">توزيع متوازن لكامل الجسم</option>
                             <option value="chest">عضلات الصدر (Chest Focus)</option>
@@ -287,8 +332,8 @@
                     </div>
 
                     <div class="modal-actions" style="margin-top:18px;">
-                        <button type="button" class="btn-cancel" id="btn-cancel-quiz" data-i18n="cancel_btn">إلغاء</button>
-                        <button type="submit" class="btn-save" data-i18n="generate_plan_btn">توليد الخطة الذكية 🚀</button>
+                        <button type="button" class="btn-cancel" id="btn-cancel-quiz">إلغاء</button>
+                        <button type="submit" class="btn-save">توليد الخطة الذكية 🚀</button>
                     </div>
                 </form>
             </div>
@@ -304,7 +349,7 @@
                     <button type="button" class="btn-clear-notifs" id="btn-clear-all-notifs">مسح الكل</button>
                 </div>
                 <div id="notif-content-box" class="notif-content-box"></div>
-                <button type="button" class="btn-cancel" id="btn-close-notif" style="width:100%;margin-top:12px;" data-i18n="close_btn">إغلاق</button>
+                <button type="button" class="btn-cancel" id="btn-close-notif" style="width:100%;margin-top:12px;">إغلاق</button>
             </div>
         </div>
 
@@ -313,18 +358,21 @@
             <div class="modal-backdrop" id="users-modal-backdrop"></div>
             <div class="modal-sheet">
                 <div class="modal-handle"></div>
-                <h2 class="modal-title" data-i18n="manage_users_title">إدارة المتدربين</h2>
+                <h2 class="modal-title">إدارة المتدربين</h2>
                 <div class="add-user-input-box">
                     <input type="text" id="new-user-name-input" placeholder="اسم متدرب جديد...">
-                    <button type="button" id="btn-create-user" class="btn-primary-small" data-i18n="add_user_btn">إضافة</button>
+                    <button type="button" id="btn-create-user" class="btn-primary-small">إضافة</button>
                 </div>
                 <div id="users-list-container" class="users-list-container"></div>
-                <button type="button" class="btn-cancel" id="btn-close-users" style="width:100%;margin-top:12px;" data-i18n="close_btn">إغلاق</button>
+                <button type="button" class="btn-cancel" id="btn-close-users" style="width:100%;margin-top:12px;">إغلاق</button>
             </div>
         </div>
 
         <div id="toast" class="toast" aria-live="polite"></div>
     </div>
+
+    <!-- Hidden Printable PDF Container -->
+    <div id="printable-pdf" class="printable-pdf"></div>
 
     <script src="./app.js"></script>
     <script>
