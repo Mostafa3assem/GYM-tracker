@@ -42,7 +42,7 @@ body{
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 input,textarea,select{font-family:inherit;color:var(--text)}
 
-/* Header & Top Controls */
+/* Header */
 .app-header{
   position:sticky;top:0;z-index:50;
   display:flex;justify-content:space-between;align-items:center;
@@ -61,10 +61,14 @@ input,textarea,select{font-family:inherit;color:var(--text)}
   background:var(--bg-input);border:1px solid var(--border);
   border-radius:8px;padding:3px 8px;font-size:.78rem;font-weight:700;color:var(--accent);outline:none;
 }
-.btn-icon-user{
-  width:24px;height:24px;border-radius:6px;background:var(--border);
-  display:flex;align-items:center;justify-content:center;font-size:.85rem;
+.btn-icon-user, .btn-icon-head{
+  width:26px;height:26px;border-radius:8px;background:var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:.85rem;position:relative;
 }
+.notif-badge{
+  position:absolute;top:-3px;right:-3px;width:9px;height:9px;background:var(--orange);border-radius:50%;display:none;
+}
+.notif-badge.active{display:block}
 
 .header-left{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
 .header-top-actions{display:flex;align-items:center;gap:8px}
@@ -91,6 +95,16 @@ input,textarea,select{font-family:inherit;color:var(--text)}
 .view{display:none;padding:16px 16px 24px;animation:fadeUp .3s cubic-bezier(0.16, 1, 0.3, 1) both}
 .view.active{display:block}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* Plan Banner */
+.plan-banner{
+  background:linear-gradient(135deg,#1f1c38 0%,#131c26 100%);
+  border:1px solid var(--accent);border-radius:var(--r-card);
+  padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;
+}
+.plan-banner-tag{font-size:.72rem;font-weight:800;background:var(--accent);color:var(--bg);padding:2px 8px;border-radius:6px;display:inline-block;margin-bottom:2px}
+.plan-banner-text p{margin:0;font-size:.78rem;color:var(--text2)}
+.btn-banner-action{background:var(--accent);color:var(--bg);font-weight:800;padding:8px 12px;border-radius:10px;font-size:.78rem}
 
 /* Summary */
 .summary-card{
@@ -168,6 +182,23 @@ input,textarea,select{font-family:inherit;color:var(--text)}
 .ex-card .last-wt{margin-top:auto;padding-top:6px;font-family:'Inter',sans-serif;font-size:.85rem;font-weight:700;color:var(--text2)}
 .ex-card .done-badge{position:absolute;top:10px;inset-inline-end:10px;width:20px;height:20px;border-radius:50%;background:var(--success);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.7rem}
 
+/* Plan View / Smart Coach Cards */
+.coach-header-card{
+  background:linear-gradient(135deg,#18182b 0%,#0e1c22 100%);
+  border:1px solid var(--accent);border-radius:var(--r-card);padding:18px;margin-bottom:16px;
+}
+.coach-badge{display:inline-block;padding:3px 10px;background:var(--accent);color:var(--bg);border-radius:8px;font-size:.75rem;font-weight:800;margin-bottom:8px}
+.coach-header-card h3{margin:0 0 6px;font-size:1.2rem;font-weight:800}
+.coach-header-card p{margin:0;font-size:.85rem;color:var(--text2);line-height:1.5}
+
+.plan-day-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-card);padding:16px;margin-bottom:12px}
+.plan-day-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.plan-day-header h4{font-size:1rem;font-weight:800;color:var(--accent);margin:0}
+.plan-ex-item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:.85rem}
+.plan-ex-item:last-child{border-bottom:none}
+.plan-ex-name{font-weight:600}
+.plan-ex-meta{color:var(--text2);font-family:'Inter',sans-serif;font-weight:700}
+
 /* History */
 .history-actions-bar{display:flex;gap:10px;margin-bottom:14px}
 .btn-backup{flex:1;display:flex;align-items:center;justify-content:center;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-btn);padding:12px 10px;font-size:.8rem;font-weight:700;color:var(--text2);cursor:pointer}
@@ -191,7 +222,7 @@ input,textarea,select{font-family:inherit;color:var(--text)}
   background:rgba(12,12,18,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
   border-top:1px solid var(--border);padding-top:6px;
 }
-.nav-btn{display:flex;flex-direction:column;align-items:center;gap:2px;width:33.3%;color:var(--text3);font-size:.72rem;font-weight:700}
+.nav-btn{display:flex;flex-direction:column;align-items:center;gap:2px;width:25%;color:var(--text3);font-size:.68rem;font-weight:700}
 .nav-btn.active{color:var(--accent)}
 
 /* Modals */
@@ -210,6 +241,10 @@ input,textarea,select{font-family:inherit;color:var(--text)}
 .modal-handle{width:40px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 14px}
 .modal-title{font-size:1.25rem;font-weight:800;text-align:center;margin-bottom:12px}
 
+.quiz-group{margin-bottom:14px}
+.quiz-group label{display:block;font-size:.85rem;font-weight:700;color:var(--text2);margin-bottom:6px}
+.quiz-select{width:100%;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--r-input);padding:10px 12px;font-size:.88rem;color:var(--text);outline:none}
+
 .last-session-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--r-btn);padding:10px 14px;margin-bottom:16px;text-align:center;font-size:.82rem;color:var(--text2)}
 .sets-header{display:grid;grid-template-columns:36px 1fr 1fr 34px;gap:8px;padding:0 6px 8px;font-size:.78rem;font-weight:700;color:var(--text2);text-align:center}
 .sets-container{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
@@ -224,7 +259,7 @@ input,textarea,select{font-family:inherit;color:var(--text)}
 .rest-picker-box{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding:0 4px}
 .rest-picker-label{font-size:.82rem;font-weight:700;color:var(--text2)}
 .rest-chips{display:flex;gap:6px}
-.chip-time{padding:5px 10px;border-radius:8px;background:var(--bg);border:1px solid var(--border);font-size:.78rem;font-family:'Inter',sans-serif;font-weight:700;color:var(--text2)}
+.chip-time{padding:5px 9px;border-radius:8px;background:var(--bg);border:1px solid var(--border);font-size:.75rem;font-family:'Inter',sans-serif;font-weight:700;color:var(--text2)}
 .chip-time.active{background:rgba(0,212,170,.15);border-color:var(--accent);color:var(--accent)}
 
 .notes-row{margin-bottom:16px}
@@ -234,7 +269,7 @@ input,textarea,select{font-family:inherit;color:var(--text)}
 .btn-cancel{flex:1;padding:14px;border-radius:var(--r-btn);font-size:.92rem;font-weight:700;background:var(--bg);border:1px solid var(--border);color:var(--text2)}
 .btn-save{flex:2;padding:14px;border-radius:var(--r-btn);font-size:.92rem;font-weight:800;background:var(--accent);color:var(--bg)}
 
-/* Users Management Modal */
+/* Users Management */
 .add-user-input-box{display:flex;gap:8px;margin-bottom:16px}
 .add-user-input-box input{flex:1;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--r-btn);padding:10px 14px;font-size:.88rem}
 .btn-primary-small{background:var(--accent);color:var(--bg);font-weight:800;border-radius:var(--r-btn);padding:0 18px;font-size:.85rem}
@@ -244,6 +279,12 @@ input,textarea,select{font-family:inherit;color:var(--text)}
 .user-item-actions{display:flex;gap:6px}
 .btn-user-action{padding:4px 8px;border-radius:6px;font-size:.78rem;font-weight:700;background:var(--bg-card-up);border:1px solid var(--border);color:var(--text2)}
 .btn-user-action.delete{color:var(--danger);border-color:rgba(239,68,68,.3)}
+
+/* Notifications Modal */
+.notif-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--r-btn);padding:14px;margin-bottom:10px}
+.notif-card h4{margin:0 0 4px;font-size:.95rem;color:var(--accent)}
+.notif-card p{margin:0 0 10px;font-size:.82rem;color:var(--text2);line-height:1.5}
+.btn-notif-act{background:var(--accent);color:var(--bg);padding:6px 14px;border-radius:8px;font-size:.78rem;font-weight:800}
 
 /* Toast */
 .toast{
