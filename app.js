@@ -1,5 +1,5 @@
 /**
- * تمريني – Smart Gym Tracker & Coach (Offline-Ready PWA)
+ * تمريني – Smart Gym Tracker Pro (PWA Edition)
  */
 
 const I18N = {
@@ -101,65 +101,67 @@ const I18N = {
   }
 };
 
+// ── Exercise Library with Alternatives ────────────────────────────
 const EXERCISES = [
   // صدر
-  { id:'bench-press',         name_ar:'بنش بريس مستوي بالبار',     name_en:'Barbell Flat Bench Press',      category:'chest', icon:'🏋️' },
-  { id:'incline-barbell',     name_ar:'بنش مائل عالي بالبار',       name_en:'Incline Barbell Bench Press',   category:'chest', icon:'🏋️' },
-  { id:'decline-barbell',     name_ar:'بنش مائل هابط بالبار',       name_en:'Decline Barbell Bench Press',   category:'chest', icon:'🏋️' },
-  { id:'db-flat-press',       name_ar:'تجميع بالدامبلز مستوي',     name_en:'Flat Dumbbell Press',           category:'chest', icon:'🏋️' },
-  { id:'db-incline-press',    name_ar:'تجميع بالدامبلز مائل عالي',   name_en:'Incline Dumbbell Press',        category:'chest', icon:'🏋️' },
-  { id:'chest-fly-db',        name_ar:'تفتيح دامبلز مستوي (فلاي)',  name_en:'Flat Dumbbell Fly',             category:'chest', icon:'🦋' },
-  { id:'chest-fly-incline',   name_ar:'تفتيح دامبلز مائل عالي',     name_en:'Incline Dumbbell Fly',          category:'chest', icon:'🦋' },
-  { id:'pec-deck',            name_ar:'فراشة جهاز (بيك ديك)',      name_en:'Pec Deck Machine Fly',          category:'chest', icon:'🦋' },
-  { id:'cable-crossover-high',name_ar:'كروس أوفر كيبل من أعلى',     name_en:'High-to-Low Cable Fly',         category:'chest', icon:'💪' },
-  { id:'cable-crossover-low', name_ar:'كروس أوفر كيبل من أسفل',    name_en:'Low-to-High Cable Fly',         category:'chest', icon:'💪' },
-  { id:'chest-press-machine', name_ar:'جهاز ضغط الصدر جالساً',     name_en:'Seated Machine Chest Press',    category:'chest', icon:'🤖' },
-  { id:'dips-chest',          name_ar:'متوازي بالتركيز على الصدر',  name_en:'Chest Focused Dips',            category:'chest', icon:'🤸' },
+  { id:'bench-press',         name_ar:'بنش بريس مستوي بالبار',     name_en:'Barbell Flat Bench Press',      category:'chest', icon:'🏋️', alts:['db-flat-press', 'chest-press-machine', 'dips-chest'] },
+  { id:'incline-barbell',     name_ar:'بنش مائل عالي بالبار',       name_en:'Incline Barbell Bench Press',   category:'chest', icon:'🏋️', alts:['db-incline-press', 'chest-fly-incline'] },
+  { id:'decline-barbell',     name_ar:'بنش مائل هابط بالبار',       name_en:'Decline Barbell Bench Press',   category:'chest', icon:'🏋️', alts:['dips-chest', 'cable-crossover-low'] },
+  { id:'db-flat-press',       name_ar:'تجميع بالدامبلز مستوي',     name_en:'Flat Dumbbell Press',           category:'chest', icon:'🏋️', alts:['bench-press', 'chest-press-machine'] },
+  { id:'db-incline-press',    name_ar:'تجميع بالدامبلز مائل عالي',   name_en:'Incline Dumbbell Press',        category:'chest', icon:'🏋️', alts:['incline-barbell', 'chest-fly-incline'] },
+  { id:'chest-fly-db',        name_ar:'تفتيح دامبلز مستوي (فلاي)',  name_en:'Flat Dumbbell Fly',             category:'chest', icon:'🦋', alts:['pec-deck', 'cable-crossover-high'] },
+  { id:'chest-fly-incline',   name_ar:'تفتيح دامبلز مائل عالي',     name_en:'Incline Dumbbell Fly',          category:'chest', icon:'🦋', alts:['db-incline-press', 'pec-deck'] },
+  { id:'pec-deck',            name_ar:'فراشة جهاز (بيك ديك)',      name_en:'Pec Deck Machine Fly',          category:'chest', icon:'🦋', alts:['chest-fly-db', 'cable-crossover-high'] },
+  { id:'cable-crossover-high',name_ar:'كروس أوفر كيبل من أعلى',     name_en:'High-to-Low Cable Fly',         category:'chest', icon:'💪', alts:['pec-deck', 'chest-fly-db'] },
+  { id:'cable-crossover-low', name_ar:'كروس أوفر كيبل من أسفل',    name_en:'Low-to-High Cable Fly',         category:'chest', icon:'💪', alts:['decline-barbell', 'dips-chest'] },
+  { id:'chest-press-machine', name_ar:'جهاز ضغط الصدر جالساً',     name_en:'Seated Machine Chest Press',    category:'chest', icon:'🤖', alts:['bench-press', 'db-flat-press'] },
+  { id:'dips-chest',          name_ar:'متوازي بالتركيز على الصدر',  name_en:'Chest Focused Dips',            category:'chest', icon:'🤸', alts:['decline-barbell', 'cable-crossover-low'] },
   // ظهر
-  { id:'deadlift',            name_ar:'ديدليفت بار حر',            name_en:'Conventional Deadlift',         category:'back', icon:'🏋️' },
-  { id:'lat-pulldown-wide',   name_ar:'سحب علوي أمامي عريض',       name_en:'Wide-Grip Lat Pulldown',        category:'back', icon:'🔽' },
-  { id:'lat-pulldown-close',  name_ar:'سحب علوي قبضة ضيقة (V-Bar)',name_en:'Close-Grip V-Bar Pulldown',     category:'back', icon:'🔽' },
-  { id:'barbell-row',         name_ar:'تجديف بالبار (بنت أوفر رو)', name_en:'Bent-Over Barbell Row',         category:'back', icon:'🏋️' },
-  { id:'db-single-row',       name_ar:'سحب دمبل فردي (منشار)',      name_en:'One-Arm Dumbbell Row',          category:'back', icon:'💪' },
-  { id:'seated-cable-row',    name_ar:'سحب أرضي كيبل (سيتد رو)',    name_en:'Seated Cable Row',              category:'back', icon:'🚣' },
-  { id:'t-bar-row',           name_ar:'تي بار رو حر',              name_en:'T-Bar Row',                     category:'back', icon:'🏋️' },
-  { id:'pullup-weighted',     name_ar:'عقلة حرة / بوزن',           name_en:'Pull-Ups / Chin-Ups',           category:'back', icon:'🧗' },
-  { id:'back-extension',      name_ar:'قطنية على الدكة (فيبر)',     name_en:'Hyperextensions (Lower Back)',  category:'back', icon:'🔙' },
-  { id:'shrugs-barbell',      name_ar:'ترابيس بالبار (شراجز)',     name_en:'Barbell Shrugs',                category:'back', icon:'🏋️' },
+  { id:'deadlift',            name_ar:'ديدليفت بار حر',            name_en:'Conventional Deadlift',         category:'back', icon:'🏋️', alts:['back-extension', 'barbell-row'] },
+  { id:'lat-pulldown-wide',   name_ar:'سحب علوي أمامي عريض',       name_en:'Wide-Grip Lat Pulldown',        category:'back', icon:'🔽', alts:['pullup-weighted', 'lat-pulldown-close'] },
+  { id:'lat-pulldown-close',  name_ar:'سحب علوي قبضة ضيقة (V-Bar)',name_en:'Close-Grip V-Bar Pulldown',     category:'back', icon:'🔽', alts:['seated-cable-row', 'lat-pulldown-wide'] },
+  { id:'barbell-row',         name_ar:'تجديف بالبار (بنت أوفر رو)', name_en:'Bent-Over Barbell Row',         category:'back', icon:'🏋️', alts:['t-bar-row', 'db-single-row', 'seated-cable-row'] },
+  { id:'db-single-row',       name_ar:'سحب دمبل فردي (منشار)',      name_en:'One-Arm Dumbbell Row',          category:'back', icon:'💪', alts:['barbell-row', 't-bar-row'] },
+  { id:'seated-cable-row',    name_ar:'سحب أرضي كيبل (سيتد رو)',    name_en:'Seated Cable Row',              category:'back', icon:'🚣', alts:['t-bar-row', 'barbell-row'] },
+  { id:'t-bar-row',           name_ar:'تي بار رو حر',              name_en:'T-Bar Row',                     category:'back', icon:'🏋️', alts:['barbell-row', 'seated-cable-row'] },
+  { id:'pullup-weighted',     name_ar:'عقلة حرة / بوزن',           name_en:'Pull-Ups / Chin-Ups',           category:'back', icon:'🧗', alts:['lat-pulldown-wide', 'lat-pulldown-close'] },
+  { id:'back-extension',      name_ar:'قطنية على الدكة (فيبر)',     name_en:'Hyperextensions (Lower Back)',  category:'back', icon:'🔙', alts:['deadlift'] },
+  { id:'shrugs-barbell',      name_ar:'ترابيس بالبار (شراجز)',     name_en:'Barbell Shrugs',                category:'back', icon:'🏋️', alts:['shrugs-dumbbell'] },
   // أكتاف
-  { id:'overhead-press-bar',  name_ar:'ضغط كتف بار واقف (OHP)',    name_en:'Overhead Barbell Press',        category:'shoulders', icon:'🏋️' },
-  { id:'db-shoulder-press',   name_ar:'ضغط كتف بالدامبلز جالساً',   name_en:'Seated Dumbbell Shoulder Press',category:'shoulders', icon:'🏋️' },
-  { id:'lateral-raise-db',    name_ar:'رفرفة جانبي بالدامبلز',     name_en:'Dumbbell Lateral Raise',        category:'shoulders', icon:'🦅' },
-  { id:'front-raise-db',      name_ar:'رفرفة أمامي بالدامبلز',     name_en:'Front Dumbbell Raise',          category:'shoulders', icon:'💪' },
-  { id:'rear-delt-fly-db',    name_ar:'رفرفة خلفي بالدامبلز منحني', name_en:'Bent-Over Rear Delt Fly',      category:'shoulders', icon:'🦋' },
-  { id:'face-pull',           name_ar:'فيس بول بالحبل على الكيبل',  name_en:'Cable Face Pulls',              category:'shoulders', icon:'🎯' },
+  { id:'overhead-press-bar',  name_ar:'ضغط كتف بار واقف (OHP)',    name_en:'Overhead Barbell Press',        category:'shoulders', icon:'🏋️', alts:['db-shoulder-press', 'arnold-press'] },
+  { id:'db-shoulder-press',   name_ar:'ضغط كتف بالدامبلز جالساً',   name_en:'Seated Dumbbell Shoulder Press',category:'shoulders', icon:'🏋️', alts:['overhead-press-bar'] },
+  { id:'lateral-raise-db',    name_ar:'رفرفة جانبي بالدامبلز',     name_en:'Dumbbell Lateral Raise',        category:'shoulders', icon:'🦅', alts:['lateral-raise-cable'] },
+  { id:'front-raise-db',      name_ar:'رفرفة أمامي بالدامبلز',     name_en:'Front Dumbbell Raise',          category:'shoulders', icon:'💪', alts:['overhead-press-bar'] },
+  { id:'rear-delt-fly-db',    name_ar:'رفرفة خلفي بالدامبلز منحني', name_en:'Bent-Over Rear Delt Fly',      category:'shoulders', icon:'🦋', alts:['face-pull'] },
+  { id:'face-pull',           name_ar:'فيس بول بالحبل على الكيبل',  name_en:'Cable Face Pulls',              category:'shoulders', icon:'🎯', alts:['rear-delt-fly-db'] },
   // ذراع
-  { id:'barbell-curl',        name_ar:'بايسبس بار مستقيم واقف',    name_en:'Standing Barbell Curl',         category:'arms', icon:'💪' },
-  { id:'hammer-curl',         name_ar:'هامر كيرل بالدامبلز',       name_en:'Dumbbell Hammer Curl',          category:'arms', icon:'🔨' },
-  { id:'preacher-curl',       name_ar:'لاري سكوت (بريتشر كيرل)',   name_en:'Preacher Curl Bench',           category:'arms', icon:'💪' },
-  { id:'tricep-pushdown-rope',name_ar:'ترايسبس حبل على الكيبل',    name_en:'Tricep Rope Pushdown',          category:'arms', icon:'⬇️' },
-  { id:'skull-crushers',      name_ar:'تكسير جمجمة بار زجزاج',     name_en:'EZ-Bar Skull Crushers',         category:'arms', icon:'💀' },
-  { id:'overhead-db-tricep',  name_ar:'ترايسبس دامبلز خلف الرأس',  name_en:'Overhead Dumbbell Extension',   category:'arms', icon:'⬆️' },
+  { id:'barbell-curl',        name_ar:'بايسبس بار مستقيم واقف',    name_en:'Standing Barbell Curl',         category:'arms', icon:'💪', alts:['ez-bar-curl', 'hammer-curl', 'preacher-curl'] },
+  { id:'hammer-curl',         name_ar:'هامر كيرل بالدامبلز',       name_en:'Dumbbell Hammer Curl',          category:'arms', icon:'🔨', alts:['barbell-curl', 'preacher-curl'] },
+  { id:'preacher-curl',       name_ar:'لاري سكوت (بريتشر كيرل)',   name_en:'Preacher Curl Bench',           category:'arms', icon:'💪', alts:['barbell-curl', 'hammer-curl'] },
+  { id:'tricep-pushdown-rope',name_ar:'ترايسبس حبل على الكيبل',    name_en:'Tricep Rope Pushdown',          category:'arms', icon:'⬇️', alts:['skull-crushers', 'overhead-db-tricep'] },
+  { id:'skull-crushers',      name_ar:'تكسير جمجمة بار زجزاج',     name_en:'EZ-Bar Skull Crushers',         category:'arms', icon:'💀', alts:['tricep-pushdown-rope', 'overhead-db-tricep'] },
+  { id:'overhead-db-tricep',  name_ar:'ترايسبس دامبلز خلف الرأس',  name_en:'Overhead Dumbbell Extension',   category:'arms', icon:'⬆️', alts:['tricep-pushdown-rope', 'skull-crushers'] },
   // أرجل
-  { id:'barbell-squat',       name_ar:'سكوات خلفي بار حر',         name_en:'Barbell Back Squat',            category:'legs', icon:'🦵' },
-  { id:'leg-press',           name_ar:'مكبس أرجل (ليج بريس 45°)',  name_en:'45° Leg Press Machine',         category:'legs', icon:'🦵' },
-  { id:'leg-extension',       name_ar:'جهاز رفرفة أرجل أمامي',     name_en:'Seated Leg Extension (Quads)',  category:'legs', icon:'🦵' },
-  { id:'lying-leg-curl',      name_ar:'جهاز نوم خلفيات أرجل',      name_en:'Lying Leg Curl (Hamstrings)',   category:'legs', icon:'🦵' },
-  { id:'standing-calf-raise', name_ar:'سمانة واقف بالجهاز أو البار',name_en:'Standing Calf Raise',          category:'legs', icon:'🦵' },
+  { id:'barbell-squat',       name_ar:'سكوات خلفي بار حر',         name_en:'Barbell Back Squat',            category:'legs', icon:'🦵', alts:['leg-press', 'hack-squat'] },
+  { id:'leg-press',           name_ar:'مكبس أرجل (ليج بريس 45°)',  name_en:'45° Leg Press Machine',         category:'legs', icon:'🦵', alts:['barbell-squat', 'hack-squat'] },
+  { id:'leg-extension',       name_ar:'جهاز رفرفة أرجل أمامي',     name_en:'Seated Leg Extension (Quads)',  category:'legs', icon:'🦵', alts:['barbell-squat'] },
+  { id:'lying-leg-curl',      name_ar:'جهاز نوم خلفيات أرجل',      name_en:'Lying Leg Curl (Hamstrings)',   category:'legs', icon:'🦵', alts:['deadlift'] },
+  { id:'standing-calf-raise', name_ar:'سمانة واقف بالجهاز أو البار',name_en:'Standing Calf Raise',          category:'legs', icon:'🦵', alts:['leg-press'] },
   // بطن وكارديو
-  { id:'cable-crunch',        name_ar:'طحن كيبل للبطن بحبل',       name_en:'Kneeling Cable Crunch',         category:'core', icon:'💪' },
-  { id:'hanging-leg-raise',   name_ar:'رفع أرجل متعلق على العقلة', name_en:'Hanging Leg/Knee Raise',        category:'core', icon:'🦵' },
-  { id:'plank',               name_ar:'بلانك ثبات',                name_en:'Plank Hold',                    category:'core', icon:'📏' },
-  { id:'treadmill',           name_ar:'مشاية كهربائية (سير)',      name_en:'Treadmill Running / Incline',   category:'cardio', icon:'🏃' }
+  { id:'cable-crunch',        name_ar:'طحن كيبل للبطن بحبل',       name_en:'Kneeling Cable Crunch',         category:'core', icon:'💪', alts:['hanging-leg-raise', 'plank'] },
+  { id:'hanging-leg-raise',   name_ar:'رفع أرجل متعلق على العقلة', name_en:'Hanging Leg/Knee Raise',        category:'core', icon:'🦵', alts:['cable-crunch'] },
+  { id:'plank',               name_ar:'بلانك ثبات',                name_en:'Plank Hold',                    category:'core', icon:'📏', alts:['cable-crunch'] },
+  { id:'treadmill',           name_ar:'مشاية كهربائية (سير)',      name_en:'Treadmill Running / Incline',   category:'cardio', icon:'🏃', alts:['stationary-bike'] }
 ];
 
-const STORAGE_KEY_PREFIX = 'gymTracker_v4_';
+const STORAGE_KEY_PREFIX = 'gymTracker_v5_';
 
 // ── State ─────────────────────────────────────────────────────────
 let lang           = localStorage.getItem('gymTrackerLang') || 'ar';
+let theme          = localStorage.getItem('gymTrackerTheme') || 'dark';
 let users          = ['مصطفى', 'أحمد'];
 let currentUser    = 'مصطفى';
-let currentData    = { workouts: [], plan: null, lastCheckIn: Date.now() };
+let currentData    = { workouts: [], plan: null, lastCheckIn: Date.now(), notifications: [], water: 0 };
 let category       = 'all';
 let query          = '';
 let modalExId      = null;
@@ -167,37 +169,7 @@ let modalSets      = [];
 let selectedRestSec= 60;
 let restRef        = null;
 let restRemaining  = 0;
-
-// ── Audio Beep ────────────────────────────────────────────────────
-const playMultipleBeeps = (count = 5) => {
-  let beepsPlayed = 0;
-  const playSingle = () => {
-    try {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(950, ctx.currentTime);
-      gain.gain.setValueAtTime(0.4, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.4);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.4);
-    } catch (e) {}
-
-    if ('vibrate' in navigator) navigator.vibrate([180, 100, 180]);
-    beepsPlayed++;
-    if (beepsPlayed < count) setTimeout(playSingle, 600);
-  };
-  playSingle();
-};
-
-const sendBackgroundNotification = (title, body) => {
-  if ('Notification' in window && Notification.permission === 'granted') {
-    new Notification(title, { body, icon: './icon-512.png', badge: './icon-512.png' });
-  }
-};
+let swapTargetExId = null;
 
 // ── Helpers ───────────────────────────────────────────────────────
 const $ = (sel) => document.getElementById(sel) || document.querySelector(sel);
@@ -229,6 +201,54 @@ const fmtDuration = (ms) => {
   return h > 0 ? `${h}h ${m}m` : `${m} min`;
 };
 
+// ── Sound & Haptics ───────────────────────────────────────────────
+const playMultipleBeeps = (count = 5) => {
+  let beepsPlayed = 0;
+  const playSingle = () => {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(950, ctx.currentTime);
+      gain.gain.setValueAtTime(0.4, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.4);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.4);
+    } catch (e) {}
+
+    if ('vibrate' in navigator) navigator.vibrate([180, 100, 180]);
+    beepsPlayed++;
+    if (beepsPlayed < count) setTimeout(playSingle, 600);
+  };
+  playSingle();
+};
+
+const sendBackgroundNotification = (title, body) => {
+  if ('Notification' in window && Notification.permission === 'granted') {
+    new Notification(title, { body, icon: './icon-512.png', badge: './icon-512.png' });
+  }
+};
+
+// ── Theme Management ──────────────────────────────────────────────
+const applyTheme = () => {
+  const isLight = theme === 'light';
+  document.body.classList.toggle('light-theme', isLight);
+  const themeBtn = $('btn-theme-toggle');
+  if (themeBtn) themeBtn.textContent = isLight ? '🌙' : '☀️';
+
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  if (metaTheme) metaTheme.setAttribute('content', isLight ? '#f4f5fa' : '#09090e');
+};
+
+const toggleTheme = () => {
+  theme = theme === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('gymTrackerTheme', theme);
+  applyTheme();
+};
+
 // ── Storage ───────────────────────────────────────────────────────
 const loadUsers = () => {
   try {
@@ -248,9 +268,12 @@ const saveUsers = () => {
 
 const loadUserData = () => {
   try {
-    currentData = JSON.parse(localStorage.getItem(STORAGE_KEY_PREFIX + currentUser)) || { workouts: [], plan: null, lastCheckIn: Date.now() };
+    currentData = JSON.parse(localStorage.getItem(STORAGE_KEY_PREFIX + currentUser)) || {
+      workouts: [], plan: null, lastCheckIn: Date.now(), notifications: [], water: 0
+    };
+    if (!currentData.notifications) currentData.notifications = [];
   } catch {
-    currentData = { workouts: [], plan: null, lastCheckIn: Date.now() };
+    currentData = { workouts: [], plan: null, lastCheckIn: Date.now(), notifications: [], water: 0 };
   }
 };
 
@@ -280,7 +303,23 @@ const lastSession = (exId) => {
   return null;
 };
 
-// ── Plan Algorithm (Smart Coach) ──────────────────────────────────
+// ── Water Hydration Tracker ───────────────────────────────────────
+const renderWaterDisplay = () => {
+  const w = currentData.water || 0;
+  const liters = (w * 0.25).toFixed(2);
+  $('water-count-display').textContent = `${liters} ${lang === 'ar' ? 'لتر' : 'L'} (${w} ${lang === 'ar' ? 'أكواب' : 'cups'})`;
+};
+
+const addWater = (delta) => {
+  currentData.water = Math.max(0, (currentData.water || 0) + delta);
+  saveUserData();
+  renderWaterDisplay();
+  if (delta > 0 && currentData.water % 4 === 0) {
+    toast('ممتاز! حافظ على ترطيب عضلاتك 💧');
+  }
+};
+
+// ── Plan Algorithm ────────────────────────────────────────────────
 const generateSmartPlan = (goal, level, days, focus) => {
   let planTitle = '';
   let daysRoutines = [];
@@ -290,123 +329,83 @@ const generateSmartPlan = (goal, level, days, focus) => {
   if (days === '3') {
     planTitle = 'Full Body 3x (شامل الجسم 3 أيام)';
     daysRoutines = [
-      {
-        dayName: 'يوم 1: شامل أ (Full Body A)',
-        exercises: ['barbell-squat', 'bench-press', 'lat-pulldown-wide', 'overhead-press-bar', 'barbell-curl', 'cable-crunch']
-      },
-      {
-        dayName: 'يوم 2: شامل ب (Full Body B)',
-        exercises: ['deadlift', 'db-incline-press', 'seated-cable-row', 'lateral-raise-db', 'tricep-pushdown-rope', 'plank']
-      },
-      {
-        dayName: 'يوم 3: شامل ج (Full Body C)',
-        exercises: ['leg-press', 'chest-fly-db', 'pullup-weighted', 'face-pull', 'hammer-curl', 'treadmill']
-      }
+      { dayName: 'يوم 1: شامل أ (Full Body A)', exercises: ['barbell-squat', 'bench-press', 'lat-pulldown-wide', 'overhead-press-bar', 'barbell-curl', 'cable-crunch'] },
+      { dayName: 'يوم 2: شامل ب (Full Body B)', exercises: ['deadlift', 'db-incline-press', 'seated-cable-row', 'lateral-raise-db', 'tricep-pushdown-rope', 'plank'] },
+      { dayName: 'يوم 3: شامل ج (Full Body C)', exercises: ['leg-press', 'chest-fly-db', 'pullup-weighted', 'face-pull', 'hammer-curl', 'treadmill'] }
     ];
   } else if (days === '4') {
     planTitle = 'Upper / Lower 4x (علوي / سفلي 4 أيام)';
     daysRoutines = [
-      {
-        dayName: 'يوم 1: جزء علوي أ (Upper A)',
-        exercises: ['bench-press', 'barbell-row', 'overhead-press-bar', 'lat-pulldown-close', 'barbell-curl', 'tricep-pushdown-rope']
-      },
-      {
-        dayName: 'يوم 2: جزء سفلي أ (Lower A)',
-        exercises: ['barbell-squat', 'lying-leg-curl', 'leg-extension', 'standing-calf-raise', 'hanging-leg-raise']
-      },
-      {
-        dayName: 'يوم 3: جزء علوي ب (Upper B)',
-        exercises: ['incline-barbell', 'pullup-weighted', 'db-shoulder-press', 'seated-cable-row', 'preacher-curl', 'skull-crushers']
-      },
-      {
-        dayName: 'يوم 4: جزء سفلي ب (Lower B)',
-        exercises: ['leg-press', 'deadlift', 'leg-extension', 'standing-calf-raise', 'cable-crunch']
-      }
+      { dayName: 'يوم 1: جزء علوي أ (Upper A)', exercises: ['bench-press', 'barbell-row', 'overhead-press-bar', 'lat-pulldown-close', 'barbell-curl', 'tricep-pushdown-rope'] },
+      { dayName: 'يوم 2: جزء سفلي أ (Lower A)', exercises: ['barbell-squat', 'lying-leg-curl', 'leg-extension', 'standing-calf-raise', 'hanging-leg-raise'] },
+      { dayName: 'يوم 3: جزء علوي ب (Upper B)', exercises: ['incline-barbell', 'pullup-weighted', 'db-shoulder-press', 'seated-cable-row', 'preacher-curl', 'skull-crushers'] },
+      { dayName: 'يوم 4: جزء سفلي ب (Lower B)', exercises: ['leg-press', 'deadlift', 'leg-extension', 'standing-calf-raise', 'cable-crunch'] }
     ];
   } else {
     planTitle = 'Push / Pull / Legs (PPL Split)';
     daysRoutines = [
-      {
-        dayName: 'يوم 1: دفع (Push - صدر وأكتاف وتراي)',
-        exercises: ['bench-press', 'incline-barbell', 'lateral-raise-db', 'chest-fly-db', 'tricep-pushdown-rope', 'overhead-db-tricep']
-      },
-      {
-        dayName: 'يوم 2: سحب (Pull - ظهر وبايسبس وترابيس)',
-        exercises: ['lat-pulldown-wide', 'barbell-row', 'seated-cable-row', 'shrugs-barbell', 'barbell-curl', 'hammer-curl']
-      },
-      {
-        dayName: 'يوم 3: أرجل وبطن (Legs & Abs)',
-        exercises: ['barbell-squat', 'leg-press', 'lying-leg-curl', 'leg-extension', 'standing-calf-raise', 'cable-crunch']
-      },
-      {
-        dayName: 'يوم 4: علوي / تركيز ضعف (Upper Focus)',
-        exercises: ['db-incline-press', 'pullup-weighted', 'db-shoulder-press', 'face-pull', 'preacher-curl', 'skull-crushers']
-      }
+      { dayName: 'يوم 1: دفع (Push - صدر وأكتاف وتراي)', exercises: ['bench-press', 'incline-barbell', 'lateral-raise-db', 'chest-fly-db', 'tricep-pushdown-rope', 'overhead-db-tricep'] },
+      { dayName: 'يوم 2: سحب (Pull - ظهر وبايسبس وترابيس)', exercises: ['lat-pulldown-wide', 'barbell-row', 'seated-cable-row', 'shrugs-barbell', 'barbell-curl', 'hammer-curl'] },
+      { dayName: 'يوم 3: أرجل وبطن (Legs & Abs)', exercises: ['barbell-squat', 'leg-press', 'lying-leg-curl', 'leg-extension', 'standing-calf-raise', 'cable-crunch'] },
+      { dayName: 'يوم 4: علوي / تركيز ضعف (Upper Focus)', exercises: ['db-incline-press', 'pullup-weighted', 'db-shoulder-press', 'face-pull', 'preacher-curl', 'skull-crushers'] }
     ];
   }
 
-  // Adjust for weak point focus
-  if (focus === 'arms') {
-    daysRoutines.forEach(d => { if (!d.exercises.includes('hammer-curl')) d.exercises.push('hammer-curl'); });
-  } else if (focus === 'chest') {
-    daysRoutines.forEach(d => { if (!d.exercises.includes('pec-deck')) d.exercises.push('pec-deck'); });
-  }
-
-  return {
-    createdAt: Date.now(),
-    goal,
-    level,
-    days,
-    focus,
-    title: planTitle,
-    repScheme,
-    setsCount,
-    routines: daysRoutines
-  };
+  return { createdAt: Date.now(), goal, level, days, focus, title: planTitle, repScheme, setsCount, routines: daysRoutines };
 };
 
-// ── Check-in & Notifications ──────────────────────────────────────
-const checkPlanNotifications = () => {
-  const badge = $('notif-badge');
-  const now = Date.now();
-  const daysSinceCheckIn = (now - (currentData.lastCheckIn || 0)) / (1000 * 60 * 60 * 24);
+// ── Notifications Management (Dismissable) ────────────────────────
+const addSystemNotification = (title, body, actionType = null) => {
+  if (!currentData.notifications) currentData.notifications = [];
+  const id = Date.now().toString(36) + Math.random().toString(36).slice(2);
+  currentData.notifications.unshift({ id, title, body, actionType, time: Date.now() });
+  saveUserData();
+  updateNotifBadge();
+};
 
-  if (!currentData.plan || daysSinceCheckIn >= 14) {
+const updateNotifBadge = () => {
+  const badge = $('notif-badge');
+  if (currentData.notifications && currentData.notifications.length > 0) {
     badge.classList.add('active');
   } else {
     badge.classList.remove('active');
   }
 };
 
-const openNotifModal = () => {
+const renderNotifsModal = () => {
   const container = $('notif-content-box');
-  const now = Date.now();
-  const daysSinceCheckIn = Math.floor((now - (currentData.lastCheckIn || 0)) / (1000 * 60 * 60 * 24));
-
-  if (!currentData.plan) {
-    container.innerHTML = `
-      <div class="notif-card">
-        <h4>🚀 ابدأ مع المدرب الذكي!</h4>
-        <p>لم تقم بإعداد خطتك التدريبية بعد. أجب عن 4 أسئلة وسيقوم النظام بتصميم جدول متكامل يناسب هدفك وجسمك.</p>
-        <button type="button" class="btn-notif-act" onclick="openPlanQuizModal()">إعداد الخطة الآن</button>
-      </div>`;
-  } else {
-    container.innerHTML = `
-      <div class="notif-card">
-        <h4>📊 متابعة الخطة والأداء (Check-in)</h4>
-        <p>لقد مر <strong>${daysSinceCheckIn}</strong> يوماً على خطتك الحالية (${currentData.plan.title}). هل تشعر أن الأوزان أصبحت خفيفة أم تحتاج لتعديل الجدول؟</p>
-        <button type="button" class="btn-notif-act" onclick="openPlanQuizModal()">تحديث وتعديل الخطة</button>
-      </div>
-      <div class="notif-card">
-        <h4>⚡ نصيحة المدرب لهذا الأسبوع</h4>
-        <p>${currentData.plan.goal === 'bulk' ? 'ركز على زيادة نصف كجم إلى كجم في مجموعاتك الأساسية هذا الأسبوع (Progressive Overload) مع تناول بروتين كافٍ.' : 'حافظ على وتيرة راحة قصيرة (45-60 ثانية) لزيادة حرق السعرات أثناء التمرين.'}</p>
-      </div>`;
+  if (!currentData.notifications || currentData.notifications.length === 0) {
+    container.innerHTML = `<div class="empty-state" style="padding:20px 0;"><p>لا توجد تنبيهات جديدة 🎉</p></div>`;
+    return;
   }
 
-  currentData.lastCheckIn = Date.now();
-  saveUserData();
-  checkPlanNotifications();
+  container.innerHTML = currentData.notifications.map((n, idx) => `
+    <div class="notif-card" id="notif-item-${n.id}">
+      <button type="button" class="btn-del-notif" onclick="dismissNotification('${n.id}')" title="مسح">✕</button>
+      <h4>${n.title}</h4>
+      <p>${n.body}</p>
+      ${n.actionType === 'plan' ? `<button type="button" class="btn-notif-act" onclick="openPlanQuizModal()">إعداد الخطة الآن</button>` : ''}
+    </div>
+  `).join('');
+};
 
+window.dismissNotification = (notifId) => {
+  currentData.notifications = currentData.notifications.filter(n => n.id !== notifId);
+  saveUserData();
+  renderNotifsModal();
+  updateNotifBadge();
+};
+
+const clearAllNotifications = () => {
+  currentData.notifications = [];
+  saveUserData();
+  renderNotifsModal();
+  updateNotifBadge();
+  toast('تم مسح جميع الإشعارات 🗑️');
+};
+
+const openNotifModal = () => {
+  renderNotifsModal();
   $('notif-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
 };
@@ -414,6 +413,66 @@ const openNotifModal = () => {
 const closeNotifModal = () => {
   $('notif-modal').classList.remove('open');
   document.body.style.overflow = '';
+};
+
+// ── Busy Machine Swapper ──────────────────────────────────────────
+const openSwapperModal = (currentExId) => {
+  swapTargetExId = currentExId;
+  const def = EXERCISES.find(e => e.id === currentExId);
+  if (!def) return;
+
+  $('swap-current-name').innerHTML = `الجهاز مشغول لـ <strong>${lang === 'ar' ? def.name_ar : def.name_en}</strong>؟<br>اختر أحد البدائل المتاحة لنفس الزاوية العضلية:`;
+
+  const container = $('swap-alternatives-list');
+  const alts = def.alts || [];
+
+  if (alts.length === 0) {
+    container.innerHTML = `<p style="text-align:center;color:var(--text3);font-size:.85rem;">لا توجد بدائل مسجلة لهذا التمرين.</p>`;
+  } else {
+    container.innerHTML = alts.map(altId => {
+      const altDef = EXERCISES.find(e => e.id === altId);
+      if (!altDef) return '';
+      const name = lang === 'ar' ? altDef.name_ar : altDef.name_en;
+      return `
+        <div class="swap-item" onclick="confirmExerciseSwap('${altId}')">
+          <div class="swap-item-info">
+            <h5>${altDef.icon} ${name}</h5>
+            <span>بديل فعال لنفس العضلة</span>
+          </div>
+          <span style="color:var(--accent);font-weight:800;font-size:.9rem;">استبدال ⚡</span>
+        </div>`;
+    }).join('');
+  }
+
+  $('swap-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+};
+
+const closeSwapperModal = () => {
+  $('swap-modal').classList.remove('open');
+  document.body.style.overflow = '';
+  swapTargetExId = null;
+};
+
+window.confirmExerciseSwap = (newExId) => {
+  if (!swapTargetExId) return;
+  const w = todayWorkout();
+  const targetIdx = w.exercises.findIndex(e => e.id === swapTargetExId);
+
+  if (targetIdx >= 0) {
+    const last = lastSession(newExId);
+    const prevSets = w.exercises[targetIdx].sets || [];
+    const newSets = prevSets.map((s, i) => ({
+      weight: last?.sets?.[i]?.weight || last?.sets?.[0]?.weight || s.weight,
+      reps: s.reps
+    }));
+
+    w.exercises[targetIdx] = { id: newExId, sets: newSets, notes: 'تم استبداله كبديل للجهاز المشغول', time: Date.now() };
+    saveUserData();
+    closeSwapperModal();
+    renderToday();
+    toast('تم استبدال التمرين بنجاح 🔄');
+  }
 };
 
 // ── Render: Plan View ─────────────────────────────────────────────
@@ -506,6 +565,7 @@ const applyLanguage = () => {
   renderLibrary();
   renderHistory();
   renderPlanView();
+  renderWaterDisplay();
 };
 
 const toggleLanguage = () => {
@@ -538,6 +598,7 @@ const renderToday = () => {
   $('summary-exercises').textContent = exCount;
   $('summary-sets').textContent = setCount;
   updateTimer();
+  renderWaterDisplay();
 
   const banner = $('plan-banner');
   if (currentData.plan && exCount === 0) {
@@ -572,8 +633,11 @@ const renderToday = () => {
           <div class="info">
             <h4>${exName}</h4>
           </div>
-          <button class="edit-btn" onclick="openModal('${ex.id}')">${I18N[lang].edit_name}</button>
-          <button class="remove-btn" onclick="removeExercise('${ex.id}')">✕</button>
+          <div class="card-actions">
+            <button class="swap-btn" onclick="openSwapperModal('${ex.id}')" title="بديل الجهاز المشغول">🔄</button>
+            <button class="edit-btn" onclick="openModal('${ex.id}')">${I18N[lang].edit_name}</button>
+            <button class="remove-btn" onclick="removeExercise('${ex.id}')">✕</button>
+          </div>
         </div>
         <div class="today-sets-chips">${setsChips}</div>
       </div>`;
@@ -859,7 +923,6 @@ const handleQuizSubmit = (e) => {
   saveUserData();
 
   closePlanQuizModal();
-  checkPlanNotifications();
   switchView('plan-view');
   toast('تم توليد الخطة التدريبية بنجاح 🎯');
 };
@@ -959,7 +1022,7 @@ const handleUserSelectChange = (e) => {
   loadUserData();
   renderToday();
   renderPlanView();
-  checkPlanNotifications();
+  updateNotifBadge();
   toast(`👤 ${currentUser}`);
 };
 
@@ -992,7 +1055,7 @@ const importData = (e) => {
         currentUser = imported.activeUser || users[0];
         saveUsers();
         users.forEach(u => {
-          localStorage.setItem(STORAGE_KEY_PREFIX + u, JSON.stringify(imported.data[u] || { workouts: [], plan: null }));
+          localStorage.setItem(STORAGE_KEY_PREFIX + u, JSON.stringify(imported.data[u] || { workouts: [] }));
         });
         loadUserData();
         renderUserSelect();
@@ -1025,9 +1088,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   loadUsers();
   loadUserData();
+  applyTheme();
   applyLanguage();
-  checkPlanNotifications();
 
+  // Initial welcome notification if no plan exists
+  if (!currentData.plan && (!currentData.notifications || currentData.notifications.length === 0)) {
+    addSystemNotification('🚀 ابدأ مع المدرب الذكي!', 'لم تقم بإعداد خطتك التدريبية بعد. اضغط هنا للإجابة عن 4 أسئلة والحصول على جدول مخصص.', 'plan');
+  }
+
+  updateNotifBadge();
+
+  $('btn-theme-toggle').addEventListener('click', toggleTheme);
   $('btn-lang-toggle').addEventListener('click', toggleLanguage);
   $('user-select').addEventListener('change', handleUserSelectChange);
   $('btn-manage-users').addEventListener('click', openUsersModal);
@@ -1038,6 +1109,13 @@ document.addEventListener('DOMContentLoaded', () => {
   $('btn-notifications').addEventListener('click', openNotifModal);
   $('btn-close-notif').addEventListener('click', closeNotifModal);
   $('notif-modal-backdrop').addEventListener('click', closeNotifModal);
+  $('btn-clear-all-notifs').addEventListener('click', clearAllNotifications);
+
+  $('btn-close-swap').addEventListener('click', closeSwapperModal);
+  $('swap-modal-backdrop').addEventListener('click', closeSwapperModal);
+
+  $('btn-water-plus').addEventListener('click', () => addWater(1));
+  $('btn-water-minus').addEventListener('click', () => addWater(-1));
 
   $('quiz-form').addEventListener('submit', handleQuizSubmit);
   $('btn-cancel-quiz').addEventListener('click', closePlanQuizModal);
@@ -1077,6 +1155,7 @@ document.addEventListener('DOMContentLoaded', () => {
       closeUsersModal();
       closePlanQuizModal();
       closeNotifModal();
+      closeSwapperModal();
     }
   });
 
