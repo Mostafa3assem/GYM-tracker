@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>تمريني - Gym Tracker</title>
+    <title>تمريني - Gym Tracker Pro</title>
     <meta name="theme-color" content="#0a0a0f">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -21,7 +21,14 @@
         <header class="app-header">
             <div class="header-right">
                 <span class="logo-icon">💪</span>
-                <h1 class="logo-text">تمريني</h1>
+                <div class="header-title-box">
+                    <h1 class="logo-text">تمريني</h1>
+                    <!-- User Profile Selector -->
+                    <div class="user-selector-wrap">
+                        <select id="user-select" class="user-select"></select>
+                        <button id="btn-add-user" class="btn-icon-user" title="إضافة متدرب">+</button>
+                    </div>
+                </div>
             </div>
             <div class="header-left">
                 <div class="brand-badge">
@@ -53,12 +60,11 @@
             <!-- Floating Rest Timer -->
             <div id="rest-timer-box" class="rest-timer-box">
                 <div class="rest-timer-info">
-                    <span class="rest-title">⏱️ وقت الراحة</span>
-                    <span class="rest-countdown" id="rest-countdown">00:60</span>
+                    <span class="rest-title">⏱️ وقت الراحة المتبقي</span>
+                    <span class="rest-countdown" id="rest-countdown">01:00</span>
                 </div>
                 <div class="rest-controls">
-                    <button type="button" class="rest-btn" data-time="30">+30ث</button>
-                    <button type="button" class="rest-btn" data-time="60">+60ث</button>
+                    <button type="button" class="rest-btn" data-add="30">+30ث</button>
                     <button type="button" class="rest-btn cancel" id="rest-cancel-btn">إنهاء</button>
                 </div>
             </div>
@@ -136,7 +142,7 @@
             </button>
         </nav>
 
-        <!-- === MODAL: Add/Edit Exercise === -->
+        <!-- === MODAL: Sets & Exercise Logger === -->
         <div id="exercise-modal" class="modal">
             <div class="modal-backdrop" id="modal-backdrop"></div>
             <div class="modal-sheet">
@@ -144,61 +150,44 @@
                 <h2 class="modal-title" id="modal-title">اسم التمرين</h2>
 
                 <div class="last-session-box" id="last-session-box">
-                    <span id="last-session-text">أول مرة تلعب التمرين ده! 💪</span>
+                    <div id="last-session-text">أول مرة تلعب التمرين ده! 💪</div>
                 </div>
 
-                <!-- Weight -->
-                <div class="input-row">
-                    <label>الوزن (كجم)</label>
-                    <div class="stepper">
-                        <button type="button" class="stepper-btn minus" data-field="weight" data-delta="-2.5">−</button>
-                        <span class="stepper-value" id="val-weight">0</span>
-                        <button type="button" class="stepper-btn plus" data-field="weight" data-delta="2.5">+</button>
-                    </div>
-                    <span class="weight-diff" id="weight-diff"></span>
+                <!-- Sets Table Container -->
+                <div class="sets-header">
+                    <span>المجموعة</span>
+                    <span>الوزن (كجم)</span>
+                    <span>العدات</span>
+                    <span>حذف</span>
                 </div>
 
-                <!-- Sets -->
-                <div class="input-row">
-                    <label>المجموعات</label>
-                    <div class="stepper">
-                        <button type="button" class="stepper-btn minus" data-field="sets" data-delta="-1">−</button>
-                        <span class="stepper-value" id="val-sets">3</span>
-                        <button type="button" class="stepper-btn plus" data-field="sets" data-delta="1">+</button>
-                    </div>
-                </div>
+                <div id="sets-container" class="sets-container"></div>
 
-                <!-- Reps -->
-                <div class="input-row">
-                    <label>التكرارات</label>
-                    <div class="stepper">
-                        <button type="button" class="stepper-btn minus" data-field="reps" data-delta="-1">−</button>
-                        <span class="stepper-value" id="val-reps">10</span>
-                        <button type="button" class="stepper-btn plus" data-field="reps" data-delta="1">+</button>
+                <button type="button" class="btn-add-set" id="btn-add-set">+ إضافة مجموعة جديدة</button>
+
+                <!-- Rest Timer Quick Selection -->
+                <div class="rest-picker-box">
+                    <span class="rest-picker-label">⏱️ راحة بعد الحفظ:</span>
+                    <div class="rest-chips">
+                        <button type="button" class="chip-time active" data-sec="60">60ث</button>
+                        <button type="button" class="chip-time" data-sec="90">90ث</button>
+                        <button type="button" class="chip-time" data-sec="120">2د</button>
+                        <button type="button" class="chip-time" data-sec="0">بدون</button>
                     </div>
                 </div>
 
-                <!-- Notes -->
                 <div class="notes-row">
                     <label for="notes-input">ملاحظات</label>
-                    <textarea id="notes-input" rows="2" placeholder="مثال: رفعت الوزن في آخر مجموعة..."></textarea>
+                    <textarea id="notes-input" rows="2" placeholder="ملاحظات التمرين أو الفورم..."></textarea>
                 </div>
 
                 <div class="modal-actions">
                     <button type="button" class="btn-cancel" id="btn-cancel">إلغاء</button>
-                    <button type="button" class="btn-save" id="btn-save">حفظ وبدء الراحة ⏱️</button>
+                    <button type="button" class="btn-save" id="btn-save">حفظ التمرين</button>
                 </div>
             </div>
         </div>
 
-        <!-- Signature -->
-        <div class="signature">
-            <span class="sig-line"></span>
-            <span class="sig-text">Built by <strong>SEC ASSEM</strong></span>
-            <span class="sig-line"></span>
-        </div>
-
-        <!-- Toast -->
         <div id="toast" class="toast" aria-live="polite"></div>
     </div>
 
