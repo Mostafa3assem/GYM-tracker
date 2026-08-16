@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>تمريني - Gym Tracker Pro</title>
+    <title>تمريني - Gym Tracker Ultimate</title>
     <meta name="theme-color" content="#0a0a0f">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -22,17 +22,19 @@
             <div class="header-right">
                 <span class="logo-icon">💪</span>
                 <div class="header-title-box">
-                    <h1 class="logo-text">تمريني</h1>
-                    <!-- User Profile Selector -->
+                    <h1 class="logo-text" data-i18n="app_title">تمريني</h1>
                     <div class="user-selector-wrap">
                         <select id="user-select" class="user-select"></select>
-                        <button id="btn-add-user" class="btn-icon-user" title="إضافة متدرب">+</button>
+                        <button id="btn-manage-users" class="btn-icon-user" title="إدارة المتدربين">⚙️</button>
                     </div>
                 </div>
             </div>
             <div class="header-left">
-                <div class="brand-badge">
-                    <span class="brand-text">SEC ASSEM</span>
+                <div class="header-top-actions">
+                    <button id="btn-lang-toggle" class="btn-lang">EN</button>
+                    <div class="brand-badge">
+                        <span class="brand-text">SEC ASSEM</span>
+                    </div>
                 </div>
                 <div class="header-date" id="current-date"></div>
             </div>
@@ -43,29 +45,29 @@
             <div class="summary-card">
                 <div class="summary-item">
                     <span class="summary-value" id="summary-exercises">0</span>
-                    <span class="summary-label">تمرين</span>
+                    <span class="summary-label" data-i18n="exercises_label">تمرين</span>
                 </div>
                 <div class="summary-divider"></div>
                 <div class="summary-item">
                     <span class="summary-value" id="summary-sets">0</span>
-                    <span class="summary-label">مجموعة</span>
+                    <span class="summary-label" data-i18n="sets_label">مجموعة</span>
                 </div>
                 <div class="summary-divider"></div>
                 <div class="summary-item">
                     <span class="summary-value" id="summary-timer">00:00</span>
-                    <span class="summary-label">الوقت</span>
+                    <span class="summary-label" data-i18n="time_label">الوقت</span>
                 </div>
             </div>
 
             <!-- Floating Rest Timer -->
             <div id="rest-timer-box" class="rest-timer-box">
                 <div class="rest-timer-info">
-                    <span class="rest-title">⏱️ وقت الراحة المتبقي</span>
+                    <span class="rest-title" data-i18n="rest_title">⏱️ وقت الراحة</span>
                     <span class="rest-countdown" id="rest-countdown">01:00</span>
                 </div>
                 <div class="rest-controls">
-                    <button type="button" class="rest-btn" data-add="30">+30ث</button>
-                    <button type="button" class="rest-btn cancel" id="rest-cancel-btn">إنهاء</button>
+                    <button type="button" class="rest-btn" data-add="30">+30s</button>
+                    <button type="button" class="rest-btn cancel" id="rest-cancel-btn" data-i18n="stop_btn">إنهاء</button>
                 </div>
             </div>
 
@@ -90,14 +92,14 @@
             </div>
 
             <div class="category-pills" id="category-pills">
-                <button class="pill active" data-category="all">الكل</button>
-                <button class="pill" data-category="chest">صدر</button>
-                <button class="pill" data-category="back">ظهر</button>
-                <button class="pill" data-category="shoulders">أكتاف</button>
-                <button class="pill" data-category="arms">ذراع</button>
-                <button class="pill" data-category="legs">أرجل</button>
-                <button class="pill" data-category="core">بطن</button>
-                <button class="pill" data-category="cardio">كارديو</button>
+                <button class="pill active" data-category="all" data-i18n="cat_all">الكل</button>
+                <button class="pill" data-category="chest" data-i18n="cat_chest">صدر</button>
+                <button class="pill" data-category="back" data-i18n="cat_back">ظهر</button>
+                <button class="pill" data-category="shoulders" data-i18n="cat_shoulders">أكتاف</button>
+                <button class="pill" data-category="arms" data-i18n="cat_arms">ذراع</button>
+                <button class="pill" data-category="legs" data-i18n="cat_legs">أرجل</button>
+                <button class="pill" data-category="core" data-i18n="cat_core">بطن</button>
+                <button class="pill" data-category="cardio" data-i18n="cat_cardio">كارديو</button>
             </div>
 
             <div id="exercise-grid" class="exercise-grid"></div>
@@ -106,8 +108,8 @@
         <!-- === VIEW: History === -->
         <section id="history-view" class="view">
             <div class="history-actions-bar">
-                <button class="btn-backup" id="btn-export">📥 تصدير نسخة احتياطية</button>
-                <label class="btn-backup" for="import-file-input">📤 استرجاع بيانات</label>
+                <button class="btn-backup" id="btn-export" data-i18n="export_btn">📥 نسخ احتياطي</button>
+                <label class="btn-backup" for="import-file-input" data-i18n="import_btn">📤 استرجاع</label>
                 <input type="file" id="import-file-input" accept=".json" style="display:none">
             </div>
             <div id="history-list" class="history-list"></div>
@@ -122,7 +124,7 @@
                     <circle cx="3" cy="12" r="1.5" fill="currentColor"></circle>
                     <circle cx="3" cy="17.5" r="1.5" fill="currentColor"></circle>
                 </svg>
-                <span>اليوم</span>
+                <span data-i18n="nav_today">اليوم</span>
             </button>
             <button class="nav-btn" data-view="library-view">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -131,18 +133,18 @@
                     <rect x="3" y="14" width="7" height="7" rx="1"></rect>
                     <rect x="14" y="14" width="7" height="7" rx="1"></rect>
                 </svg>
-                <span>التمارين</span>
+                <span data-i18n="nav_exercises">التمارين</span>
             </button>
             <button class="nav-btn" data-view="history-view">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="10"></circle>
                     <polyline points="12 6 12 12 16 14"></polyline>
                 </svg>
-                <span>السجل</span>
+                <span data-i18n="nav_history">السجل</span>
             </button>
         </nav>
 
-        <!-- === MODAL: Sets & Exercise Logger === -->
+        <!-- === MODAL: Exercise Sets Logger === -->
         <div id="exercise-modal" class="modal">
             <div class="modal-backdrop" id="modal-backdrop"></div>
             <div class="modal-sheet">
@@ -150,41 +152,54 @@
                 <h2 class="modal-title" id="modal-title">اسم التمرين</h2>
 
                 <div class="last-session-box" id="last-session-box">
-                    <div id="last-session-text">أول مرة تلعب التمرين ده! 💪</div>
+                    <div id="last-session-text"></div>
                 </div>
 
-                <!-- Sets Table Container -->
                 <div class="sets-header">
-                    <span>المجموعة</span>
-                    <span>الوزن (كجم)</span>
-                    <span>العدات</span>
-                    <span>حذف</span>
+                    <span data-i18n="tbl_set">المجموعة</span>
+                    <span data-i18n="tbl_wt">الوزن (كجم)</span>
+                    <span data-i18n="tbl_reps">العدات</span>
+                    <span data-i18n="tbl_del">حذف</span>
                 </div>
 
                 <div id="sets-container" class="sets-container"></div>
 
-                <button type="button" class="btn-add-set" id="btn-add-set">+ إضافة مجموعة جديدة</button>
+                <button type="button" class="btn-add-set" id="btn-add-set" data-i18n="add_set_btn">+ إضافة مجموعة</button>
 
-                <!-- Rest Timer Quick Selection -->
                 <div class="rest-picker-box">
-                    <span class="rest-picker-label">⏱️ راحة بعد الحفظ:</span>
+                    <span class="rest-picker-label" data-i18n="rest_after_label">⏱️ راحة بعد الحفظ:</span>
                     <div class="rest-chips">
-                        <button type="button" class="chip-time active" data-sec="60">60ث</button>
-                        <button type="button" class="chip-time" data-sec="90">90ث</button>
-                        <button type="button" class="chip-time" data-sec="120">2د</button>
-                        <button type="button" class="chip-time" data-sec="0">بدون</button>
+                        <button type="button" class="chip-time active" data-sec="60">60s</button>
+                        <button type="button" class="chip-time" data-sec="90">90s</button>
+                        <button type="button" class="chip-time" data-sec="120">2m</button>
+                        <button type="button" class="chip-time" data-sec="0" data-i18n="chip_none">بدون</button>
                     </div>
                 </div>
 
                 <div class="notes-row">
-                    <label for="notes-input">ملاحظات</label>
-                    <textarea id="notes-input" rows="2" placeholder="ملاحظات التمرين أو الفورم..."></textarea>
+                    <label for="notes-input" data-i18n="notes_label">ملاحظات</label>
+                    <textarea id="notes-input" rows="2" placeholder="..."></textarea>
                 </div>
 
                 <div class="modal-actions">
-                    <button type="button" class="btn-cancel" id="btn-cancel">إلغاء</button>
-                    <button type="button" class="btn-save" id="btn-save">حفظ التمرين</button>
+                    <button type="button" class="btn-cancel" id="btn-cancel" data-i18n="cancel_btn">إلغاء</button>
+                    <button type="button" class="btn-save" id="btn-save" data-i18n="save_btn">حفظ التمرين</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- === MODAL: User Management === -->
+        <div id="users-modal" class="modal">
+            <div class="modal-backdrop" id="users-modal-backdrop"></div>
+            <div class="modal-sheet">
+                <div class="modal-handle"></div>
+                <h2 class="modal-title" data-i18n="manage_users_title">إدارة المتدربين</h2>
+                <div class="add-user-input-box">
+                    <input type="text" id="new-user-name-input" placeholder="اسم متدرب جديد...">
+                    <button type="button" id="btn-create-user" class="btn-primary-small" data-i18n="add_user_btn">إضافة</button>
+                </div>
+                <div id="users-list-container" class="users-list-container"></div>
+                <button type="button" class="btn-cancel" id="btn-close-users" style="width:100%;margin-top:12px;" data-i18n="close_btn">إغلاق</button>
             </div>
         </div>
 
