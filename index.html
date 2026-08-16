@@ -2,18 +2,18 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>تمريني - Gym Tracker</title>
     <meta name="theme-color" content="#0a0a0f">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="description" content="تطبيق لتتبع تمارينك الرياضية والأوزان في الجيم.">
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon-512.jpg">
+    <meta name="apple-mobile-web-app-title" content="تمريني">
+    <link rel="manifest" href="./manifest.json">
+    <link rel="apple-touch-icon" href="./icon-512.jpg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
     <div id="app">
@@ -35,18 +35,31 @@
         <section id="today-view" class="view active">
             <div class="summary-card">
                 <div class="summary-item">
-                    <span class="summary-value" id="summary-exercises">٠</span>
+                    <span class="summary-value" id="summary-exercises">0</span>
                     <span class="summary-label">تمرين</span>
                 </div>
                 <div class="summary-divider"></div>
                 <div class="summary-item">
-                    <span class="summary-value" id="summary-sets">٠</span>
+                    <span class="summary-value" id="summary-sets">0</span>
                     <span class="summary-label">مجموعة</span>
                 </div>
                 <div class="summary-divider"></div>
                 <div class="summary-item">
-                    <span class="summary-value" id="summary-timer">٠٠:٠٠</span>
+                    <span class="summary-value" id="summary-timer">00:00</span>
                     <span class="summary-label">الوقت</span>
+                </div>
+            </div>
+
+            <!-- Floating Rest Timer -->
+            <div id="rest-timer-box" class="rest-timer-box">
+                <div class="rest-timer-info">
+                    <span class="rest-title">⏱️ وقت الراحة</span>
+                    <span class="rest-countdown" id="rest-countdown">00:60</span>
+                </div>
+                <div class="rest-controls">
+                    <button type="button" class="rest-btn" data-time="30">+30ث</button>
+                    <button type="button" class="rest-btn" data-time="60">+60ث</button>
+                    <button type="button" class="rest-btn cancel" id="rest-cancel-btn">إنهاء</button>
                 </div>
             </div>
 
@@ -86,6 +99,11 @@
 
         <!-- === VIEW: History === -->
         <section id="history-view" class="view">
+            <div class="history-actions-bar">
+                <button class="btn-backup" id="btn-export">📥 تصدير نسخة احتياطية</button>
+                <label class="btn-backup" for="import-file-input">📤 استرجاع بيانات</label>
+                <input type="file" id="import-file-input" accept=".json" style="display:none">
+            </div>
             <div id="history-list" class="history-list"></div>
         </section>
 
@@ -98,7 +116,7 @@
                     <circle cx="3" cy="12" r="1.5" fill="currentColor"></circle>
                     <circle cx="3" cy="17.5" r="1.5" fill="currentColor"></circle>
                 </svg>
-                <span>تمرين اليوم</span>
+                <span>اليوم</span>
             </button>
             <button class="nav-btn" data-view="library-view">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -134,7 +152,7 @@
                     <label>الوزن (كجم)</label>
                     <div class="stepper">
                         <button type="button" class="stepper-btn minus" data-field="weight" data-delta="-2.5">−</button>
-                        <span class="stepper-value" id="val-weight">٠</span>
+                        <span class="stepper-value" id="val-weight">0</span>
                         <button type="button" class="stepper-btn plus" data-field="weight" data-delta="2.5">+</button>
                     </div>
                     <span class="weight-diff" id="weight-diff"></span>
@@ -145,7 +163,7 @@
                     <label>المجموعات</label>
                     <div class="stepper">
                         <button type="button" class="stepper-btn minus" data-field="sets" data-delta="-1">−</button>
-                        <span class="stepper-value" id="val-sets">٣</span>
+                        <span class="stepper-value" id="val-sets">3</span>
                         <button type="button" class="stepper-btn plus" data-field="sets" data-delta="1">+</button>
                     </div>
                 </div>
@@ -155,7 +173,7 @@
                     <label>التكرارات</label>
                     <div class="stepper">
                         <button type="button" class="stepper-btn minus" data-field="reps" data-delta="-1">−</button>
-                        <span class="stepper-value" id="val-reps">١٠</span>
+                        <span class="stepper-value" id="val-reps">10</span>
                         <button type="button" class="stepper-btn plus" data-field="reps" data-delta="1">+</button>
                     </div>
                 </div>
@@ -163,12 +181,12 @@
                 <!-- Notes -->
                 <div class="notes-row">
                     <label for="notes-input">ملاحظات</label>
-                    <textarea id="notes-input" rows="2" placeholder="مثال: فورم ممتاز، زودت الوزن..."></textarea>
+                    <textarea id="notes-input" rows="2" placeholder="مثال: رفعت الوزن في آخر مجموعة..."></textarea>
                 </div>
 
                 <div class="modal-actions">
                     <button type="button" class="btn-cancel" id="btn-cancel">إلغاء</button>
-                    <button type="button" class="btn-save" id="btn-save">حفظ التمرين</button>
+                    <button type="button" class="btn-save" id="btn-save">حفظ وبدء الراحة ⏱️</button>
                 </div>
             </div>
         </div>
@@ -184,10 +202,12 @@
         <div id="toast" class="toast" aria-live="polite"></div>
     </div>
 
-    <script src="app.js"></script>
+    <script src="./app.js"></script>
     <script>
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js').catch(() => {});
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js').catch(() => {});
+        });
       }
     </script>
 </body>
