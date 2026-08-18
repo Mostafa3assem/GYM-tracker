@@ -154,7 +154,7 @@ const BASE_EXERCISES = [
   { id:'treadmill',           name_ar:'مشاية كهربائية (سير)',      name_en:'Treadmill Running / Incline',   category:'cardio', icon:'🏃', yt:'https://www.youtube.com/watch?v=8i3VqdIk-1U', alts:['stationary-bike'] }
 ];
 
-const STORAGE_KEY_PREFIX = 'gymTracker_v19_';
+const STORAGE_KEY_PREFIX = 'gymTracker_v20_';
 const GLOBAL_CUSTOM_KEY = 'gymTracker_global_custom_exercises';
 
 // ── State ─────────────────────────────────────────────────────────
@@ -924,13 +924,20 @@ const renderPlanView = () => {
   `;
 };
 
+window.setPickerCategory = (cat, btn) => {
+  pickerCategory = cat;
+  $$('#routine-picker-cat-pills .picker-pill').forEach(p => p.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderRoutineExPicker();
+};
+
 window.openAddExToRoutineModal = (routineIdx) => {
   targetRoutineIndexForAdd = routineIdx;
   pickerCategory = 'all';
   if ($('routine-ex-search')) $('routine-ex-search').value = '';
   
-  $$('#routine-picker-cat-pills .pill').forEach(p => {
-    p.classList.toggle('active', p.dataset.pickerCat === 'all');
+  $$('#routine-picker-cat-pills .picker-pill').forEach(p => {
+    p.classList.toggle('active', p.getAttribute('onclick')?.includes("'all'"));
   });
 
   renderRoutineExPicker();
@@ -1685,16 +1692,6 @@ document.addEventListener('DOMContentLoaded', () => {
   $('btn-open-history').addEventListener('click', openHistoryModal);
   $('btn-close-history').addEventListener('click', closeHistoryModal);
   $('history-modal-backdrop').addEventListener('click', closeHistoryModal);
-
-  // Routine Picker Category Filter Binding
-  $$('#routine-picker-cat-pills .pill').forEach(pill => {
-    pill.addEventListener('click', () => {
-      $$('#routine-picker-cat-pills .pill').forEach(p => p.classList.remove('active'));
-      pill.classList.add('active');
-      pickerCategory = pill.dataset.pickerCat;
-      renderRoutineExPicker();
-    });
-  });
 
   $('btn-close-routine-picker').addEventListener('click', () => {
     $('add-to-routine-modal').classList.remove('open');
