@@ -1,5 +1,5 @@
 /**
- * تمريني – Smart Gym Tracker Pro (Manual Schedule Builder, AI Sync & Weekly Management)
+ * تمريني – Smart Gym Tracker Pro (Routine Exercise Muscle Filters & Category Picker)
  */
 
 const I18N = {
@@ -101,7 +101,7 @@ const I18N = {
   }
 };
 
-// Base Built-in Exercises
+// Base Built-in Database
 const BASE_EXERCISES = [
   // صدر
   { id:'bench-press',         name_ar:'بنش بريس مستوي بالبار',     name_en:'Barbell Flat Bench Press',      category:'chest', icon:'🏋️', yt:'https://www.youtube.com/watch?v=rT7DgCr-3pg', alts:['db-flat-press', 'chest-press-machine', 'dips-chest'] },
@@ -154,7 +154,7 @@ const BASE_EXERCISES = [
   { id:'treadmill',           name_ar:'مشاية كهربائية (سير)',      name_en:'Treadmill Running / Incline',   category:'cardio', icon:'🏃', yt:'https://www.youtube.com/watch?v=8i3VqdIk-1U', alts:['stationary-bike'] }
 ];
 
-const STORAGE_KEY_PREFIX = 'gymTracker_v18_';
+const STORAGE_KEY_PREFIX = 'gymTracker_v19_';
 const GLOBAL_CUSTOM_KEY = 'gymTracker_global_custom_exercises';
 
 // ── State ─────────────────────────────────────────────────────────
@@ -167,6 +167,8 @@ let globalCustomExercises = [];
 let category       = 'all';
 let query          = '';
 
+// Routine Exercise Picker state
+let pickerCategory = 'all';
 let selectedExIds  = [];
 let targetRoutineIndexForAdd = null;
 
@@ -924,6 +926,13 @@ const renderPlanView = () => {
 
 window.openAddExToRoutineModal = (routineIdx) => {
   targetRoutineIndexForAdd = routineIdx;
+  pickerCategory = 'all';
+  if ($('routine-ex-search')) $('routine-ex-search').value = '';
+  
+  $$('#routine-picker-cat-pills .pill').forEach(p => {
+    p.classList.toggle('active', p.dataset.pickerCat === 'all');
+  });
+
   renderRoutineExPicker();
   $('add-to-routine-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -935,17 +944,25 @@ const renderRoutineExPicker = () => {
   const searchQ = ($('routine-ex-search')?.value || '').toLowerCase().trim();
 
   let list = allEx;
+  if (pickerCategory !== 'all') {
+    list = list.filter(e => e.category === pickerCategory);
+  }
   if (searchQ) {
     list = list.filter(e => e.name_ar.toLowerCase().includes(searchQ) || e.name_en.toLowerCase().includes(searchQ));
+  }
+
+  if (list.length === 0) {
+    container.innerHTML = `<p style="text-align:center;color:var(--text3);padding:16px 0;">لا توجد تمارين مطابقة لهذا الاختيار</p>`;
+    return;
   }
 
   container.innerHTML = list.map(e => `
     <div class="routine-picker-item" onclick="confirmAddExToRoutine('${e.id}')">
       <div>
         <strong>${e.icon} ${e.name_ar}</strong>
-        <div style="font-size:.75rem;color:var(--orange);">${e.category}</div>
+        <div style="font-size:.75rem;color:var(--orange);font-weight:700;">${e.category}</div>
       </div>
-      <span style="color:var(--accent);font-weight:800;">إضافة ➕</span>
+      <span style="color:var(--accent);font-weight:800;font-size:.85rem;">إضافة ➕</span>
     </div>
   `).join('');
 };
@@ -1668,6 +1685,16 @@ document.addEventListener('DOMContentLoaded', () => {
   $('btn-open-history').addEventListener('click', openHistoryModal);
   $('btn-close-history').addEventListener('click', closeHistoryModal);
   $('history-modal-backdrop').addEventListener('click', closeHistoryModal);
+
+  // Routine Picker Category Filter Binding
+  $$('#routine-picker-cat-pills .pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      $$('#routine-picker-cat-pills .pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      pickerCategory = pill.dataset.pickerCat;
+      renderRoutineExPicker();
+    });
+  });
 
   $('btn-close-routine-picker').addEventListener('click', () => {
     $('add-to-routine-modal').classList.remove('open');
