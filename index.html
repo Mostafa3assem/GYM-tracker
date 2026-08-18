@@ -413,15 +413,29 @@
             </div>
         </div>
 
-        <!-- === MODAL: Add Exercise to Specific Routine Day === -->
+        <!-- === MODAL: Add Exercise to Specific Routine Day with Category Filter === -->
         <div id="add-to-routine-modal" class="modal">
             <div class="modal-backdrop" id="add-to-routine-backdrop"></div>
             <div class="modal-sheet">
                 <div class="modal-handle"></div>
                 <h2 class="modal-title">➕ إضافة تمرين إلى الجدول</h2>
-                <div class="search-box" style="margin-bottom:12px;">
-                    <input type="text" id="routine-ex-search" placeholder="ابحث عن تمرين لإضافته...">
+                
+                <div class="search-box" style="margin-bottom:8px;">
+                    <input type="text" id="routine-ex-search" placeholder="ابحث عن تمرين بالاسم...">
                 </div>
+
+                <!-- Muscle Category Filter Pills inside Picker -->
+                <div class="category-pills" id="routine-picker-cat-pills" style="margin-bottom:10px;">
+                    <button type="button" class="pill active" data-picker-cat="all">الكل</button>
+                    <button type="button" class="pill" data-picker-cat="chest">صدر</button>
+                    <button type="button" class="pill" data-picker-cat="back">ظهر</button>
+                    <button type="button" class="pill" data-picker-cat="shoulders">أكتاف</button>
+                    <button type="button" class="pill" data-picker-cat="arms">ذراع</button>
+                    <button type="button" class="pill" data-picker-cat="legs">أرجل</button>
+                    <button type="button" class="pill" data-picker-cat="core">بطن</button>
+                    <button type="button" class="pill" data-picker-cat="cardio">كارديو</button>
+                </div>
+
                 <div id="routine-ex-picker-list" class="routine-picker-list"></div>
                 <button type="button" class="btn-cancel" id="btn-close-routine-picker" style="width:100%;margin-top:12px;">إلغاء</button>
             </div>
