@@ -413,18 +413,21 @@
             </div>
         </div>
 
-        <!-- === MODAL: Add Exercise to Specific Routine Day with Category Filter === -->
+        <!-- === MODAL: Add Multiple Exercises to Routine Day with Live Selection Bar === -->
         <div id="add-to-routine-modal" class="modal">
             <div class="modal-backdrop" id="add-to-routine-backdrop"></div>
             <div class="modal-sheet">
                 <div class="modal-handle"></div>
-                <h2 class="modal-title">➕ إضافة تمرين إلى الجدول</h2>
+                <div class="picker-modal-top">
+                    <h2 class="modal-title" style="margin-bottom:0;">➕ اختيار تمارين للجدول</h2>
+                    <span id="picker-selected-counter" class="picker-count-badge">0 محدد</span>
+                </div>
                 
-                <div class="search-box" style="margin-bottom:8px;">
+                <div class="search-box" style="margin:10px 0 8px;">
                     <input type="text" id="routine-ex-search" placeholder="ابحث عن تمرين بالاسم...">
                 </div>
 
-                <!-- Muscle Category Filter Pills inside Picker with Direct Inline Functions -->
+                <!-- Muscle Category Filter Pills -->
                 <div class="category-pills" id="routine-picker-cat-pills" style="margin-bottom:10px;">
                     <button type="button" class="picker-pill active" onclick="setPickerCategory('all', this)">الكل</button>
                     <button type="button" class="picker-pill" onclick="setPickerCategory('chest', this)">صدر</button>
@@ -437,7 +440,13 @@
                 </div>
 
                 <div id="routine-ex-picker-list" class="routine-picker-list"></div>
-                <button type="button" class="btn-cancel" id="btn-close-routine-picker" style="width:100%;margin-top:12px;">إلغاء</button>
+
+                <div class="modal-actions" style="margin-top:14px;">
+                    <button type="button" class="btn-cancel" id="btn-close-routine-picker">إلغاء</button>
+                    <button type="button" class="btn-save" id="btn-confirm-picker-selection" onclick="confirmMultipleExToRoutine()">
+                        إضافة التمارين المحددة 🚀
+                    </button>
+                </div>
             </div>
         </div>
 
