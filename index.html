@@ -17,7 +17,7 @@
 </head>
 <body>
     <div id="app">
-        <!-- Clean Minimal Header -->
+        <!-- Minimal Header -->
         <header class="app-header">
             <div class="header-brand">
                 <span class="logo-icon">💪</span>
@@ -29,7 +29,7 @@
             </div>
         </header>
 
-        <!-- Main Content Area -->
+        <!-- Main Content -->
         <main class="app-main-content">
             <!-- === TAB 1: WORKOUT TODAY === -->
             <section id="today-view" class="view active">
@@ -180,7 +180,7 @@
                                 <span class="btn-icon">📄</span>
                                 <span>تقرير PDF</span>
                             </button>
-                            <button type="button" class="btn-settings-card" id="btn-export-json">
+                            <button type="button" class="btn-export-json-btn btn-settings-card" id="btn-export-json">
                                 <span class="btn-icon">📥</span>
                                 <span>نسخ احتياطي</span>
                             </button>
@@ -200,7 +200,7 @@
                         </div>
                     </div>
 
-                    <!-- Developer & Social Footer -->
+                    <!-- Social Footer -->
                     <footer class="app-social-footer">
                         <div class="footer-brand-title">SEC ASSEM • Tamriny App</div>
                         <div class="social-footer-links">
@@ -278,7 +278,7 @@
 
                 <!-- Live Status & Rest Bar -->
                 <div class="live-set-bar">
-                    <span class="live-set-badge" id="live-set-status">المجموعة 1 من 4</span>
+                    <span class="live-set-badge" id="live-set-status">المجموعة 1 من 3</span>
                     <span class="live-rest-inline" id="live-rest-counter" style="display:none;">⏱️ 01:00</span>
                 </div>
 
@@ -324,7 +324,7 @@
                     </div>
                 </div>
 
-                <!-- Logged Sets Overview List -->
+                <!-- Logged Sets Overview List with Active Set Indicator -->
                 <div class="sets-header">
                     <span data-i18n="tbl_set">المجموعة</span>
                     <span data-i18n="tbl_wt">الوزن (كجم)</span>
@@ -333,7 +333,12 @@
                 </div>
                 <div id="sets-container" class="sets-container"></div>
 
-                <div class="notes-row">
+                <!-- Add Set Button -->
+                <button type="button" class="btn-add-set-row" id="btn-add-new-set" onclick="addNewSetRow()">
+                    ➕ إضافة مجموعة جديدة
+                </button>
+
+                <div class="notes-row" style="margin-top:14px;">
                     <label for="notes-input" data-i18n="notes_label">ملاحظات التمرين</label>
                     <textarea id="notes-input" rows="2" placeholder="..."></textarea>
                 </div>
@@ -547,7 +552,7 @@
         <div id="toast" class="toast" aria-live="polite"></div>
     </div>
 
-    <!-- Hidden Printable PDF Container -->
+    <!-- Printable PDF Container -->
     <div id="printable-pdf" class="printable-pdf"></div>
 
     <script src="./app.js"></script>
