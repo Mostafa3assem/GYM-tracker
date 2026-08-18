@@ -1,5 +1,5 @@
 /**
- * تمريني – Smart Gym Tracker Pro (Routine Exercise Muscle Filters & Category Picker)
+ * تمريني – Smart Gym Tracker Pro (Multi-Select for Routine Day, Reordering & Full Plan Deletion)
  */
 
 const I18N = {
@@ -154,7 +154,7 @@ const BASE_EXERCISES = [
   { id:'treadmill',           name_ar:'مشاية كهربائية (سير)',      name_en:'Treadmill Running / Incline',   category:'cardio', icon:'🏃', yt:'https://www.youtube.com/watch?v=8i3VqdIk-1U', alts:['stationary-bike'] }
 ];
 
-const STORAGE_KEY_PREFIX = 'gymTracker_v20_';
+const STORAGE_KEY_PREFIX = 'gymTracker_v21_';
 const GLOBAL_CUSTOM_KEY = 'gymTracker_global_custom_exercises';
 
 // ── State ─────────────────────────────────────────────────────────
@@ -169,6 +169,7 @@ let query          = '';
 
 // Routine Exercise Picker state
 let pickerCategory = 'all';
+let pickerSelectedExIds = [];
 let selectedExIds  = [];
 let targetRoutineIndexForAdd = null;
 
@@ -481,9 +482,21 @@ window.removeDayFromRoutine = (rIdx) => {
   if (!confirm(lang === 'ar' ? `حذف "${dayName}" بالكامل من الجدول؟` : `Delete "${dayName}" from routine?`)) return;
 
   currentData.plan.routines.splice(rIdx, 1);
+  if (currentData.plan.routines.length === 0) {
+    currentData.plan = null;
+  }
   saveUserData();
   renderPlanView();
   toast(lang === 'ar' ? 'تم حذف اليوم من الجدول 🗑️' : 'Day deleted from routine 🗑️', 'error');
+};
+
+window.deleteAllSchedule = () => {
+  if (!currentData.plan) return;
+  if (!confirm(lang === 'ar' ? 'هل أنت متأكد من مسح الجدول الأسبوعي بالكامل؟' : 'Delete full weekly routine?')) return;
+  currentData.plan = null;
+  saveUserData();
+  renderPlanView();
+  toast(lang === 'ar' ? 'تم مسح الجدول الأسبوعي بالكامل 🗑️' : 'Weekly schedule deleted 🗑️', 'error');
 };
 
 window.editRoutineDayTitle = (rIdx) => {
@@ -496,6 +509,18 @@ window.editRoutineDayTitle = (rIdx) => {
   saveUserData();
   renderPlanView();
   toast('✅');
+};
+
+window.moveExInRoutine = (rIdx, exIdx, delta) => {
+  if (!currentData.plan || !currentData.plan.routines[rIdx]) return;
+  const list = currentData.plan.routines[rIdx].exercises;
+  const targetIdx = exIdx + delta;
+  if (targetIdx < 0 || targetIdx >= list.length) return;
+
+  const item = list.splice(exIdx, 1)[0];
+  list.splice(targetIdx, 0, item);
+  saveUserData();
+  renderPlanView();
 };
 
 // ── Custom Exercise Addition & Smart Delete Prompt ────────────────
@@ -873,11 +898,12 @@ const renderPlanView = () => {
           <h3 style="margin:6px 0 2px;font-size:1.15rem;font-weight:900;">جدولك الأسبوعي المخصص</h3>
         </div>
         <div style="display:flex;gap:6px;">
-          <button type="button" class="btn-quiz-coach" onclick="createManualCustomSchedule()">✍️ جدول يدوي</button>
-          <button type="button" class="btn-quiz-coach" onclick="openPlanQuizModal()">🤖 مدرب ذكي</button>
+          <button type="button" class="btn-quiz-coach" onclick="createManualCustomSchedule()">✍️ يدوي</button>
+          <button type="button" class="btn-quiz-coach" onclick="openPlanQuizModal()">🤖 ذكي</button>
+          <button type="button" class="btn-delete-all-plan" onclick="deleteAllSchedule()" title="مسح الجدول بالكامل">🗑️ مسح</button>
         </div>
       </div>
-      <p style="margin:0;font-size:.82rem;color:var(--text2);">يمكنك تعديل وحذف وإضافة تمارين لكل يوم، أو إضافة أيام جديدة وبدء تمرين اليوم مباشرة:</p>
+      <p style="margin:0;font-size:.82rem;color:var(--text2);">يمكنك إضافة عدة تمارين بالترتيب، إعادة ترتيبها بالأسهم ⬆️⬇️، وبدء تمرين اليوم مباشرة:</p>
     </div>
 
     <div class="weekly-routines-container">
@@ -891,7 +917,7 @@ const renderPlanView = () => {
             <div class="routine-day-actions">
               <button type="button" class="btn-add-ex-to-day" onclick="openAddExToRoutineModal(${rIdx})">➕ تمرين</button>
               <button type="button" class="btn-start-day-now" onclick="applyPlanDayToToday(${rIdx})">بدء هذا اليوم ⚡</button>
-              ${p.routines.length > 1 ? `<button type="button" onclick="removeDayFromRoutine(${rIdx})" style="color:var(--danger);font-size:.9rem;padding:0 4px;" title="حذف اليوم بالكامل">🗑️</button>` : ''}
+              <button type="button" onclick="removeDayFromRoutine(${rIdx})" style="color:var(--danger);font-size:.9rem;padding:0 4px;" title="حذف هذا اليوم">🗑️</button>
             </div>
           </div>
           <div class="routine-ex-list">
@@ -909,6 +935,8 @@ const renderPlanView = () => {
                   </div>
                   <div class="routine-ex-meta">
                     <span>${lastWeightStr}</span>
+                    <button type="button" class="btn-reorder-ex" onclick="moveExInRoutine(${rIdx}, ${exIdx}, -1)" ${exIdx === 0 ? 'disabled style="opacity:0.3;"' : ''} title="تحريك لأعلى">⬆️</button>
+                    <button type="button" class="btn-reorder-ex" onclick="moveExInRoutine(${rIdx}, ${exIdx}, 1)" ${exIdx === r.exercises.length - 1 ? 'disabled style="opacity:0.3;"' : ''} title="تحريك لأسفل">⬇️</button>
                     <button type="button" class="btn-del-from-routine" onclick="removeExFromRoutine(${rIdx}, ${exIdx})" title="حذف من جدول هذا اليوم">✕</button>
                   </div>
                 </div>`;
@@ -924,6 +952,7 @@ const renderPlanView = () => {
   `;
 };
 
+// ── Multi-Exercise Selection Picker for Routine Day ───────────────
 window.setPickerCategory = (cat, btn) => {
   pickerCategory = cat;
   $$('#routine-picker-cat-pills .picker-pill').forEach(p => p.classList.remove('active'));
@@ -934,12 +963,14 @@ window.setPickerCategory = (cat, btn) => {
 window.openAddExToRoutineModal = (routineIdx) => {
   targetRoutineIndexForAdd = routineIdx;
   pickerCategory = 'all';
+  pickerSelectedExIds = [];
   if ($('routine-ex-search')) $('routine-ex-search').value = '';
   
   $$('#routine-picker-cat-pills .picker-pill').forEach(p => {
     p.classList.toggle('active', p.getAttribute('onclick')?.includes("'all'"));
   });
 
+  updatePickerCounterUI();
   renderRoutineExPicker();
   $('add-to-routine-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -963,29 +994,58 @@ const renderRoutineExPicker = () => {
     return;
   }
 
-  container.innerHTML = list.map(e => `
-    <div class="routine-picker-item" onclick="confirmAddExToRoutine('${e.id}')">
-      <div>
-        <strong>${e.icon} ${e.name_ar}</strong>
-        <div style="font-size:.75rem;color:var(--orange);font-weight:700;">${e.category}</div>
+  container.innerHTML = list.map(e => {
+    const isSelected = pickerSelectedExIds.includes(e.id);
+    return `
+      <div class="routine-picker-item ${isSelected ? 'selected' : ''}" onclick="togglePickerExSelection('${e.id}')">
+        <div>
+          <strong>${e.icon} ${e.name_ar}</strong>
+          <div style="font-size:.75rem;color:var(--orange);font-weight:700;">${e.category}</div>
+        </div>
+        <div class="picker-checkbox">${isSelected ? '✓' : ''}</div>
       </div>
-      <span style="color:var(--accent);font-weight:800;font-size:.85rem;">إضافة ➕</span>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 };
 
-window.confirmAddExToRoutine = (exId) => {
-  if (targetRoutineIndexForAdd === null || !currentData.plan) return;
-  const routine = currentData.plan.routines[targetRoutineIndexForAdd];
-  if (!routine.exercises.includes(exId)) {
-    routine.exercises.push(exId);
-    saveUserData();
-    renderPlanView();
-    toast(lang === 'ar' ? 'تمت إضافة التمرين إلى اليوم المختار ✅' : 'Exercise added to routine ✅');
+window.togglePickerExSelection = (exId) => {
+  const idx = pickerSelectedExIds.indexOf(exId);
+  if (idx >= 0) pickerSelectedExIds.splice(idx, 1);
+  else pickerSelectedExIds.push(exId);
+
+  updatePickerCounterUI();
+  renderRoutineExPicker();
+};
+
+const updatePickerCounterUI = () => {
+  const countEl = $('picker-selected-counter');
+  if (countEl) {
+    countEl.textContent = `${pickerSelectedExIds.length} محدد`;
   }
+};
+
+window.confirmMultipleExToRoutine = () => {
+  if (targetRoutineIndexForAdd === null || !currentData.plan) return;
+  if (pickerSelectedExIds.length === 0) {
+    toast(lang === 'ar' ? 'يرجى تحديد تمرين واحد على الأقل!' : 'Select at least one exercise!', 'error');
+    return;
+  }
+
+  const routine = currentData.plan.routines[targetRoutineIndexForAdd];
+  pickerSelectedExIds.forEach(exId => {
+    if (!routine.exercises.includes(exId)) {
+      routine.exercises.push(exId);
+    }
+  });
+
+  saveUserData();
+  renderPlanView();
+  toast(lang === 'ar' ? `تمت إضافة ${pickerSelectedExIds.length} تمارين إلى الجدول بالترتيب 🚀` : `Added ${pickerSelectedExIds.length} exercises 🚀`);
+
   $('add-to-routine-modal').classList.remove('open');
   document.body.style.overflow = '';
   targetRoutineIndexForAdd = null;
+  pickerSelectedExIds = [];
 };
 
 window.removeExFromRoutine = (rIdx, exIdx) => {
