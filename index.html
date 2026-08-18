@@ -424,16 +424,16 @@
                     <input type="text" id="routine-ex-search" placeholder="ابحث عن تمرين بالاسم...">
                 </div>
 
-                <!-- Muscle Category Filter Pills inside Picker -->
+                <!-- Muscle Category Filter Pills inside Picker with Direct Inline Functions -->
                 <div class="category-pills" id="routine-picker-cat-pills" style="margin-bottom:10px;">
-                    <button type="button" class="pill active" data-picker-cat="all">الكل</button>
-                    <button type="button" class="pill" data-picker-cat="chest">صدر</button>
-                    <button type="button" class="pill" data-picker-cat="back">ظهر</button>
-                    <button type="button" class="pill" data-picker-cat="shoulders">أكتاف</button>
-                    <button type="button" class="pill" data-picker-cat="arms">ذراع</button>
-                    <button type="button" class="pill" data-picker-cat="legs">أرجل</button>
-                    <button type="button" class="pill" data-picker-cat="core">بطن</button>
-                    <button type="button" class="pill" data-picker-cat="cardio">كارديو</button>
+                    <button type="button" class="picker-pill active" onclick="setPickerCategory('all', this)">الكل</button>
+                    <button type="button" class="picker-pill" onclick="setPickerCategory('chest', this)">صدر</button>
+                    <button type="button" class="picker-pill" onclick="setPickerCategory('back', this)">ظهر</button>
+                    <button type="button" class="picker-pill" onclick="setPickerCategory('shoulders', this)">أكتاف</button>
+                    <button type="button" class="picker-pill" onclick="setPickerCategory('arms', this)">ذراع</button>
+                    <button type="button" class="picker-pill" onclick="setPickerCategory('legs', this)">أرجل</button>
+                    <button type="button" class="picker-pill" onclick="setPickerCategory('core', this)">بطن</button>
+                    <button type="button" class="picker-pill" onclick="setPickerCategory('cardio', this)">كارديو</button>
                 </div>
 
                 <div id="routine-ex-picker-list" class="routine-picker-list"></div>
