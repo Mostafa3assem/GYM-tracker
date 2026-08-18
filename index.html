@@ -17,7 +17,7 @@
 </head>
 <body>
     <div id="app">
-        <!-- Minimal Header -->
+        <!-- Header -->
         <header class="app-header">
             <div class="header-brand">
                 <span class="logo-icon">💪</span>
@@ -35,13 +35,13 @@
             <section id="today-view" class="view active">
                 <div id="plan-banner" class="plan-banner" style="display:none">
                     <div class="plan-banner-text">
-                        <span class="plan-banner-tag" id="plan-banner-title">خطة مخصصة</span>
-                        <p id="plan-banner-sub">تم تجهيز تمارين اليوم، اضغط للبدء</p>
+                        <span class="plan-banner-tag" id="plan-banner-title">خطة الأسبوع جاهزة</span>
+                        <p id="plan-banner-sub">اضغط لتحميل جدول اليوم المخصص وبدء التمرين</p>
                     </div>
-                    <button type="button" id="btn-load-plan-day" class="btn-banner-action">تحميل الجدول ⚡</button>
+                    <button type="button" id="btn-load-plan-day" class="btn-banner-action">تحميل اليوم ⚡</button>
                 </div>
 
-                <!-- Daily Summary -->
+                <!-- Daily Summary with Interactive Session Timer Control -->
                 <div class="summary-card">
                     <div class="summary-item">
                         <span class="summary-value" id="summary-exercises">0</span>
@@ -55,7 +55,9 @@
                     <div class="summary-divider"></div>
                     <div class="summary-item">
                         <span class="summary-value" id="summary-timer">00:00</span>
-                        <span class="summary-label" data-i18n="time_label">الوقت</span>
+                        <button type="button" class="btn-timer-control" id="btn-toggle-workout-timer" title="التحكم في وقت التمرين">
+                            ⏹️ إنهاء الجلسة
+                        </button>
                     </div>
                 </div>
 
@@ -89,7 +91,7 @@
                 </button>
             </section>
 
-            <!-- === TAB 2: SMART COACH & PROGRAMS === -->
+            <!-- === TAB 2: SMART COACH & INTERACTIVE WEEKLY PLANNER === -->
             <section id="plan-view" class="view">
                 <div id="plan-display-container"></div>
             </section>
@@ -140,7 +142,6 @@
             <!-- === TAB 4: SETTINGS & ATHLETE PROFILE === -->
             <section id="settings-view" class="view">
                 <div class="settings-container">
-                    <!-- Athlete Selection Card -->
                     <div class="settings-group">
                         <h4 class="settings-group-title">👤 ملف المتدرب</h4>
                         <div class="settings-row">
@@ -152,7 +153,6 @@
                         </div>
                     </div>
 
-                    <!-- App Preferences Card -->
                     <div class="settings-group">
                         <h4 class="settings-group-title">⚙️ تفضيلات التطبيق</h4>
                         <div class="settings-row">
@@ -172,7 +172,6 @@
                         </div>
                     </div>
 
-                    <!-- Data & Reports Card -->
                     <div class="settings-group">
                         <h4 class="settings-group-title">📊 البيانات والتقارير</h4>
                         <div class="settings-btn-grid">
@@ -180,7 +179,7 @@
                                 <span class="btn-icon">📄</span>
                                 <span>تقرير PDF</span>
                             </button>
-                            <button type="button" class="btn-export-json-btn btn-settings-card" id="btn-export-json">
+                            <button type="button" class="btn-settings-card" id="btn-export-json">
                                 <span class="btn-icon">📥</span>
                                 <span>نسخ احتياطي</span>
                             </button>
@@ -192,7 +191,6 @@
                         </div>
                     </div>
 
-                    <!-- History Overview Link -->
                     <div class="settings-group">
                         <div class="settings-row clickable" id="btn-open-history">
                             <span>📋 سجل التمارين السابقة</span>
@@ -200,7 +198,6 @@
                         </div>
                     </div>
 
-                    <!-- Social Footer -->
                     <footer class="app-social-footer">
                         <div class="footer-brand-title">SEC ASSEM • Tamriny App</div>
                         <div class="social-footer-links">
@@ -235,7 +232,10 @@
             </button>
             <button class="nav-btn" data-view="plan-view">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
                 </svg>
                 <span data-i18n="nav_plan">البرامج</span>
             </button>
@@ -324,7 +324,7 @@
                     </div>
                 </div>
 
-                <!-- Logged Sets Overview List with Active Set Indicator -->
+                <!-- Logged Sets Overview List -->
                 <div class="sets-header">
                     <span data-i18n="tbl_set">المجموعة</span>
                     <span data-i18n="tbl_wt">الوزن (كجم)</span>
@@ -410,6 +410,20 @@
                         <button type="submit" class="btn-save">حفظ التمرين 💾</button>
                     </div>
                 </form>
+            </div>
+        </div>
+
+        <!-- === MODAL: Add Exercise to Specific Routine Day === -->
+        <div id="add-to-routine-modal" class="modal">
+            <div class="modal-backdrop" id="add-to-routine-backdrop"></div>
+            <div class="modal-sheet">
+                <div class="modal-handle"></div>
+                <h2 class="modal-title">➕ إضافة تمرين إلى الجدول</h2>
+                <div class="search-box" style="margin-bottom:12px;">
+                    <input type="text" id="routine-ex-search" placeholder="ابحث عن تمرين لإضافته...">
+                </div>
+                <div id="routine-ex-picker-list" class="routine-picker-list"></div>
+                <button type="button" class="btn-cancel" id="btn-close-routine-picker" style="width:100%;margin-top:12px;">إلغاء</button>
             </div>
         </div>
 
@@ -515,7 +529,7 @@
                 <div id="approval-plan-content" class="approval-content"></div>
                 <div class="modal-actions" style="margin-top:16px;">
                     <button type="button" class="btn-cancel" id="btn-reject-plan" data-i18n="edit_plan_btn">تعديل</button>
-                    <button type="button" class="btn-save" id="btn-accept-plan" data-i18n="accept_plan_btn">اعتماد وبدء تمرين اليوم ⚡</button>
+                    <button type="button" class="btn-save" id="btn-accept-plan" data-i18n="accept_plan_btn">اعتماد الخطة في الجدول ⚡</button>
                 </div>
             </div>
         </div>
@@ -552,7 +566,6 @@
         <div id="toast" class="toast" aria-live="polite"></div>
     </div>
 
-    <!-- Printable PDF Container -->
     <div id="printable-pdf" class="printable-pdf"></div>
 
     <script src="./app.js"></script>
