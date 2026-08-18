@@ -1,5 +1,5 @@
 /**
- * تمريني – Smart Gym Tracker Pro (Multi-Select Flow, Social Footer & Guided Sets)
+ * تمريني – Smart Gym Tracker Pro (User-Scoped & Global Custom Exercises)
  */
 
 const I18N = {
@@ -103,66 +103,69 @@ const I18N = {
   }
 };
 
-const EXERCISES = [
+// Base Exercises
+const BASE_EXERCISES = [
   // صدر
-  { id:'bench-press',         name_ar:'بنش بريس مستوي بالبار',     name_en:'Barbell Flat Bench Press',      category:'chest', icon:'🏋️', alts:['db-flat-press', 'chest-press-machine', 'dips-chest'] },
-  { id:'incline-barbell',     name_ar:'بنش مائل عالي بالبار',       name_en:'Incline Barbell Bench Press',   category:'chest', icon:'🏋️', alts:['db-incline-press', 'chest-fly-incline'] },
-  { id:'decline-barbell',     name_ar:'بنش مائل هابط بالبار',       name_en:'Decline Barbell Bench Press',   category:'chest', icon:'🏋️', alts:['dips-chest', 'cable-crossover-low'] },
-  { id:'db-flat-press',       name_ar:'تجميع بالدامبلز مستوي',     name_en:'Flat Dumbbell Press',           category:'chest', icon:'🏋️', alts:['bench-press', 'chest-press-machine'] },
-  { id:'db-incline-press',    name_ar:'تجميع بالدامبلز مائل عالي',   name_en:'Incline Dumbbell Press',        category:'chest', icon:'🏋️', alts:['incline-barbell', 'chest-fly-incline'] },
-  { id:'chest-fly-db',        name_ar:'تفتيح دامبلز مستوي (فلاي)',  name_en:'Flat Dumbbell Fly',             category:'chest', icon:'🦋', alts:['pec-deck', 'cable-crossover-high'] },
-  { id:'chest-fly-incline',   name_ar:'تفتيح دامبلز مائل عالي',     name_en:'Incline Dumbbell Fly',          category:'chest', icon:'🦋', alts:['db-incline-press', 'pec-deck'] },
-  { id:'pec-deck',            name_ar:'فراشة جهاز (بيك ديك)',      name_en:'Pec Deck Machine Fly',          category:'chest', icon:'🦋', alts:['chest-fly-db', 'cable-crossover-high'] },
-  { id:'cable-crossover-high',name_ar:'كروس أوفر كيبل من أعلى',     name_en:'High-to-Low Cable Fly',         category:'chest', icon:'💪', alts:['pec-deck', 'chest-fly-db'] },
-  { id:'cable-crossover-low', name_ar:'كروس أوفر كيبل من أسفل',    name_en:'Low-to-High Cable Fly',         category:'chest', icon:'💪', alts:['decline-barbell', 'dips-chest'] },
-  { id:'chest-press-machine', name_ar:'جهاز ضغط الصدر جالساً',     name_en:'Seated Machine Chest Press',    category:'chest', icon:'🤖', alts:['bench-press', 'db-flat-press'] },
-  { id:'dips-chest',          name_ar:'متوازي بالتركيز على الصدر',  name_en:'Chest Focused Dips',            category:'chest', icon:'🤸', alts:['decline-barbell', 'cable-crossover-low'] },
+  { id:'bench-press',         name_ar:'بنش بريس مستوي بالبار',     name_en:'Barbell Flat Bench Press',      category:'chest', icon:'🏋️', yt:'https://www.youtube.com/watch?v=rT7DgCr-3pg', alts:['db-flat-press', 'chest-press-machine', 'dips-chest'] },
+  { id:'incline-barbell',     name_ar:'بنش مائل عالي بالبار',       name_en:'Incline Barbell Bench Press',   category:'chest', icon:'🏋️', yt:'https://www.youtube.com/watch?v=SrqOu55lr6g', alts:['db-incline-press', 'chest-fly-incline'] },
+  { id:'decline-barbell',     name_ar:'بنش مائل هابط بالبار',       name_en:'Decline Barbell Bench Press',   category:'chest', icon:'🏋️', yt:'https://www.youtube.com/watch?v=LfyQBUKR8SE', alts:['dips-chest', 'cable-crossover-low'] },
+  { id:'db-flat-press',       name_ar:'تجميع بالدامبلز مستوي',     name_en:'Flat Dumbbell Press',           category:'chest', icon:'🏋️', yt:'https://www.youtube.com/watch?v=VmB1G1K7v94', alts:['bench-press', 'chest-press-machine'] },
+  { id:'db-incline-press',    name_ar:'تجميع بالدامبلز مائل عالي',   name_en:'Incline Dumbbell Press',        category:'chest', icon:'🏋️', yt:'https://www.youtube.com/watch?v=8iPEnn-ltC8', alts:['incline-barbell', 'chest-fly-incline'] },
+  { id:'chest-fly-db',        name_ar:'تفتيح دامبلز مستوي (فلاي)',  name_en:'Flat Dumbbell Fly',             category:'chest', icon:'🦋', yt:'https://www.youtube.com/watch?v=eozdVDA78K0', alts:['pec-deck', 'cable-crossover-high'] },
+  { id:'chest-fly-incline',   name_ar:'تفتيح دامبلز مائل عالي',     name_en:'Incline Dumbbell Fly',          category:'chest', icon:'🦋', yt:'https://www.youtube.com/watch?v=bDaIL_zKbGs', alts:['db-incline-press', 'pec-deck'] },
+  { id:'pec-deck',            name_ar:'فراشة جهاز (بيك ديك)',      name_en:'Pec Deck Machine Fly',          category:'chest', icon:'🦋', yt:'https://www.youtube.com/watch?v=O-mCkpBwMfs', alts:['chest-fly-db', 'cable-crossover-high'] },
+  { id:'cable-crossover-high',name_ar:'كروس أوفر كيبل من أعلى',     name_en:'High-to-Low Cable Fly',         category:'chest', icon:'💪', yt:'https://www.youtube.com/watch?v=taI4XduLp4M', alts:['pec-deck', 'chest-fly-db'] },
+  { id:'cable-crossover-low', name_ar:'كروس أوفر كيبل من أسفل',    name_en:'Low-to-High Cable Fly',         category:'chest', icon:'💪', yt:'https://www.youtube.com/watch?v=M1N804yWA-8', alts:['decline-barbell', 'dips-chest'] },
+  { id:'chest-press-machine', name_ar:'جهاز ضغط الصدر جالساً',     name_en:'Seated Machine Chest Press',    category:'chest', icon:'🤖', yt:'https://www.youtube.com/watch?v=xUm0BiZCWlQ', alts:['bench-press', 'db-flat-press'] },
+  { id:'dips-chest',          name_ar:'متوازي بالتركيز على الصدر',  name_en:'Chest Focused Dips',            category:'chest', icon:'🤸', yt:'https://www.youtube.com/watch?v=2z8JmcrW-As', alts:['decline-barbell', 'cable-crossover-low'] },
   // ظهر
-  { id:'deadlift',            name_ar:'ديدليفت بار حر',            name_en:'Conventional Deadlift',         category:'back', icon:'🏋️', alts:['back-extension', 'barbell-row'] },
-  { id:'lat-pulldown-wide',   name_ar:'سحب علوي أمامي عريض',       name_en:'Wide-Grip Lat Pulldown',        category:'back', icon:'🔽', alts:['pullup-weighted', 'lat-pulldown-close'] },
-  { id:'lat-pulldown-close',  name_ar:'سحب علوي قبضة ضيقة (V-Bar)',name_en:'Close-Grip V-Bar Pulldown',     category:'back', icon:'🔽', alts:['seated-cable-row', 'lat-pulldown-wide'] },
-  { id:'barbell-row',         name_ar:'تجديف بالبار (بنت أوفر رو)', name_en:'Bent-Over Barbell Row',         category:'back', icon:'🏋️', alts:['t-bar-row', 'db-single-row', 'seated-cable-row'] },
-  { id:'db-single-row',       name_ar:'سحب دمبل فردي (منشار)',      name_en:'One-Arm Dumbbell Row',          category:'back', icon:'💪', alts:['barbell-row', 't-bar-row'] },
-  { id:'seated-cable-row',    name_ar:'سحب أرضي كيبل (سيتد رو)',    name_en:'Seated Cable Row',              category:'back', icon:'🚣', alts:['t-bar-row', 'barbell-row'] },
-  { id:'t-bar-row',           name_ar:'تي بار رو حر',              name_en:'T-Bar Row',                     category:'back', icon:'🏋️', alts:['barbell-row', 'seated-cable-row'] },
-  { id:'pullup-weighted',     name_ar:'عقلة حرة / بوزن',           name_en:'Pull-Ups / Chin-Ups',           category:'back', icon:'🧗', alts:['lat-pulldown-wide', 'lat-pulldown-close'] },
-  { id:'back-extension',      name_ar:'قطنية على الدكة (فيبر)',     name_en:'Hyperextensions (Lower Back)',  category:'back', icon:'🔙', alts:['deadlift'] },
-  { id:'shrugs-barbell',      name_ar:'ترابيس بالبار (شراجز)',     name_en:'Barbell Shrugs',                category:'back', icon:'🏋️', alts:['shrugs-dumbbell'] },
+  { id:'deadlift',            name_ar:'ديدليفت بار حر',            name_en:'Conventional Deadlift',         category:'back', icon:'🏋️', yt:'https://www.youtube.com/watch?v=op9kVnSso6Q', alts:['back-extension', 'barbell-row'] },
+  { id:'lat-pulldown-wide',   name_ar:'سحب علوي أمامي عريض',       name_en:'Wide-Grip Lat Pulldown',        category:'back', icon:'🔽', yt:'https://www.youtube.com/watch?v=CAwf7n6Luuc', alts:['pullup-weighted', 'lat-pulldown-close'] },
+  { id:'lat-pulldown-close',  name_ar:'سحب علوي قبضة ضيقة (V-Bar)',name_en:'Close-Grip V-Bar Pulldown',     category:'back', icon:'🔽', yt:'https://www.youtube.com/watch?v=lueEJGjTuPQ', alts:['seated-cable-row', 'lat-pulldown-wide'] },
+  { id:'barbell-row',         name_ar:'تجديف بالبار (بنت أوفر رو)', name_en:'Bent-Over Barbell Row',         category:'back', icon:'🏋️', yt:'https://www.youtube.com/watch?v=FWJR5Ve8gkQ', alts:['t-bar-row', 'db-single-row', 'seated-cable-row'] },
+  { id:'db-single-row',       name_ar:'سحب دمبل فردي (منشار)',      name_en:'One-Arm Dumbbell Row',          category:'back', icon:'💪', yt:'https://www.youtube.com/watch?v=pYcpY20QaE8', alts:['barbell-row', 't-bar-row'] },
+  { id:'seated-cable-row',    name_ar:'سحب أرضي كيبل (سيتد رو)',    name_en:'Seated Cable Row',              category:'back', icon:'🚣', yt:'https://www.youtube.com/watch?v=GZbfZ033f74', alts:['t-bar-row', 'barbell-row'] },
+  { id:'t-bar-row',           name_ar:'تي بار رو حر',              name_en:'T-Bar Row',                     category:'back', icon:'🏋️', yt:'https://www.youtube.com/watch?v=j3Igk5nyZE4', alts:['barbell-row', 'seated-cable-row'] },
+  { id:'pullup-weighted',     name_ar:'عقلة حرة / بوزن',           name_en:'Pull-Ups / Chin-Ups',           category:'back', icon:'🧗', yt:'https://www.youtube.com/watch?v=eGo4IYlbE5g', alts:['lat-pulldown-wide', 'lat-pulldown-close'] },
+  { id:'back-extension',      name_ar:'قطنية على الدكة (فيبر)',     name_en:'Hyperextensions (Lower Back)',  category:'back', icon:'🔙', yt:'https://www.youtube.com/watch?v=ph3pddpKzzw', alts:['deadlift'] },
+  { id:'shrugs-barbell',      name_ar:'ترابيس بالبار (شراجز)',     name_en:'Barbell Shrugs',                category:'back', icon:'🏋️', yt:'https://www.youtube.com/watch?v=M5s25N1Yd-A', alts:['shrugs-dumbbell'] },
   // أكتاف
-  { id:'overhead-press-bar',  name_ar:'ضغط كتف بار واقف (OHP)',    name_en:'Overhead Barbell Press',        category:'shoulders', icon:'🏋️', alts:['db-shoulder-press', 'arnold-press'] },
-  { id:'db-shoulder-press',   name_ar:'ضغط كتف بالدامبلز جالساً',   name_en:'Seated Dumbbell Shoulder Press',category:'shoulders', icon:'🏋️', alts:['overhead-press-bar'] },
-  { id:'lateral-raise-db',    name_ar:'رفرفة جانبي بالدامبلز',     name_en:'Dumbbell Lateral Raise',        category:'shoulders', icon:'🦅', alts:['lateral-raise-cable'] },
-  { id:'front-raise-db',      name_ar:'رفرفة أمامي بالدامبلز',     name_en:'Front Dumbbell Raise',          category:'shoulders', icon:'💪', alts:['overhead-press-bar'] },
-  { id:'rear-delt-fly-db',    name_ar:'رفرفة خلفي بالدامبلز منحني', name_en:'Bent-Over Rear Delt Fly',      category:'shoulders', icon:'🦋', alts:['face-pull'] },
-  { id:'face-pull',           name_ar:'فيس بول بالحبل على الكيبل',  name_en:'Cable Face Pulls',              category:'shoulders', icon:'🎯', alts:['rear-delt-fly-db'] },
+  { id:'overhead-press-bar',  name_ar:'ضغط كتف بار واقف (OHP)',    name_en:'Overhead Barbell Press',        category:'shoulders', icon:'🏋️', yt:'https://www.youtube.com/watch?v=2yjwXTZQDDI', alts:['db-shoulder-press', 'arnold-press'] },
+  { id:'db-shoulder-press',   name_ar:'ضغط كتف بالدامبلز جالساً',   name_en:'Seated Dumbbell Shoulder Press',category:'shoulders', icon:'🏋️', yt:'https://www.youtube.com/watch?v=qEwKCR5JCog', alts:['overhead-press-bar'] },
+  { id:'lateral-raise-db',    name_ar:'رفرفة جانبي بالدامبلز',     name_en:'Dumbbell Lateral Raise',        category:'shoulders', icon:'🦅', yt:'https://www.youtube.com/watch?v=3VcKaXpzqRo', alts:['lateral-raise-cable'] },
+  { id:'front-raise-db',      name_ar:'رفرفة أمامي بالدامبلز',     name_en:'Front Dumbbell Raise',          category:'shoulders', icon:'💪', yt:'https://www.youtube.com/watch?v=-t7fuZ0KhDA', alts:['overhead-press-bar'] },
+  { id:'rear-delt-fly-db',    name_ar:'رفرفة خلفي بالدامبلز منحني', name_en:'Bent-Over Rear Delt Fly',      category:'shoulders', icon:'🦋', yt:'https://www.youtube.com/watch?v=EA7u4Q_8HQ0', alts:['face-pull'] },
+  { id:'face-pull',           name_ar:'فيس بول بالحبل على الكيبل',  name_en:'Cable Face Pulls',              category:'shoulders', icon:'🎯', yt:'https://www.youtube.com/watch?v=rep-qVOkqgk', alts:['rear-delt-fly-db'] },
   // ذراع
-  { id:'barbell-curl',        name_ar:'بايسبس بار مستقيم واقف',    name_en:'Standing Barbell Curl',         category:'arms', icon:'💪', alts:['ez-bar-curl', 'hammer-curl', 'preacher-curl'] },
-  { id:'hammer-curl',         name_ar:'هامر كيرل بالدامبلز',       name_en:'Dumbbell Hammer Curl',          category:'arms', icon:'🔨', alts:['barbell-curl', 'preacher-curl'] },
-  { id:'preacher-curl',       name_ar:'لاري سكوت (بريتشر كيرل)',   name_en:'Preacher Curl Bench',           category:'arms', icon:'💪', alts:['barbell-curl', 'hammer-curl'] },
-  { id:'tricep-pushdown-rope',name_ar:'ترايسبس حبل على الكيبل',    name_en:'Tricep Rope Pushdown',          category:'arms', icon:'⬇️', alts:['skull-crushers', 'overhead-db-tricep'] },
-  { id:'skull-crushers',      name_ar:'تكسير جمجمة بار زجزاج',     name_en:'EZ-Bar Skull Crushers',         category:'arms', icon:'💀', alts:['tricep-pushdown-rope', 'overhead-db-tricep'] },
-  { id:'overhead-db-tricep',  name_ar:'ترايسبس دامبلز خلف الرأس',  name_en:'Overhead Dumbbell Extension',   category:'arms', icon:'⬆️', alts:['tricep-pushdown-rope', 'skull-crushers'] },
+  { id:'barbell-curl',        name_ar:'بايسبس بار مستقيم واقف',    name_en:'Standing Barbell Curl',         category:'arms', icon:'💪', yt:'https://www.youtube.com/watch?v=kwG2ipFRgfo', alts:['ez-bar-curl', 'hammer-curl', 'preacher-curl'] },
+  { id:'hammer-curl',         name_ar:'هامر كيرل بالدامبلز',       name_en:'Dumbbell Hammer Curl',          category:'arms', icon:'🔨', yt:'https://www.youtube.com/watch?v=zC3nLlEvin4', alts:['barbell-curl', 'preacher-curl'] },
+  { id:'preacher-curl',       name_ar:'لاري سكوت (بريتشر كيرل)',   name_en:'Preacher Curl Bench',           category:'arms', icon:'💪', yt:'https://www.youtube.com/watch?v=fIWP-FRFNU0', alts:['barbell-curl', 'hammer-curl'] },
+  { id:'tricep-pushdown-rope',name_ar:'ترايسبس حبل على الكيبل',    name_en:'Tricep Rope Pushdown',          category:'arms', icon:'⬇️', yt:'https://www.youtube.com/watch?v=-zJbd-Fz5iY', alts:['skull-crushers', 'overhead-db-tricep'] },
+  { id:'skull-crushers',      name_ar:'تكسير جمجمة بار زجزاج',     name_en:'EZ-Bar Skull Crushers',         category:'arms', icon:'💀', yt:'https://www.youtube.com/watch?v=d_KZxkY_0aw', alts:['tricep-pushdown-rope', 'overhead-db-tricep'] },
+  { id:'overhead-db-tricep',  name_ar:'ترايسبس دامبلز خلف الرأس',  name_en:'Overhead Dumbbell Extension',   category:'arms', icon:'⬆️', yt:'https://www.youtube.com/watch?v=_gsUck-7M74', alts:['tricep-pushdown-rope', 'skull-crushers'] },
   // أرجل
-  { id:'barbell-squat',       name_ar:'سكوات خلفي بار حر',         name_en:'Barbell Back Squat',            category:'legs', icon:'🦵', alts:['leg-press', 'hack-squat'] },
-  { id:'leg-press',           name_ar:'مكبس أرجل (ليج بريس 45°)',  name_en:'45° Leg Press Machine',         category:'legs', icon:'🦵', alts:['barbell-squat', 'hack-squat'] },
-  { id:'leg-extension',       name_ar:'جهاز رفرفة أرجل أمامي',     name_en:'Seated Leg Extension (Quads)',  category:'legs', icon:'🦵', alts:['barbell-squat'] },
-  { id:'lying-leg-curl',      name_ar:'جهاز نوم خلفيات أرجل',      name_en:'Lying Leg Curl (Hamstrings)',   category:'legs', icon:'🦵', alts:['deadlift'] },
-  { id:'standing-calf-raise', name_ar:'سمانة واقف بالجهاز أو البار',name_en:'Standing Calf Raise',          category:'legs', icon:'🦵', alts:['leg-press'] },
+  { id:'barbell-squat',       name_ar:'سكوات خلفي بار حر',         name_en:'Barbell Back Squat',            category:'legs', icon:'🦵', yt:'https://www.youtube.com/watch?v=bEv6CCg2BC8', alts:['leg-press', 'hack-squat'] },
+  { id:'leg-press',           name_ar:'مكبس أرجل (ليج بريس 45°)',  name_en:'45° Leg Press Machine',         category:'legs', icon:'🦵', yt:'https://www.youtube.com/watch?v=IZxyjW7MPJQ', alts:['barbell-squat', 'hack-squat'] },
+  { id:'leg-extension',       name_ar:'جهاز رفرفة أرجل أمامي',     name_en:'Seated Leg Extension (Quads)',  category:'legs', icon:'🦵', yt:'https://www.youtube.com/watch?v=YyvSfVjQeL0', alts:['barbell-squat'] },
+  { id:'lying-leg-curl',      name_ar:'جهاز نوم خلفيات أرجل',      name_en:'Lying Leg Curl (Hamstrings)',   category:'legs', icon:'🦵', yt:'https://www.youtube.com/watch?v=1Tq3EDtZYMQ', alts:['deadlift'] },
+  { id:'standing-calf-raise', name_ar:'سمانة واقف بالجهاز أو البار',name_en:'Standing Calf Raise',          category:'legs', icon:'🦵', yt:'https://www.youtube.com/watch?v=-M4-G8p8fmc', alts:['leg-press'] },
   // بطن وكارديو
-  { id:'cable-crunch',        name_ar:'طحن كيبل للبطن بحبل',       name_en:'Kneeling Cable Crunch',         category:'core', icon:'💪', alts:['hanging-leg-raise', 'plank'] },
-  { id:'hanging-leg-raise',   name_ar:'رفع أرجل متعلق على العقلة', name_en:'Hanging Leg/Knee Raise',        category:'core', icon:'🦵', alts:['cable-crunch'] },
-  { id:'plank',               name_ar:'بلانك ثبات',                name_en:'Plank Hold',                    category:'core', icon:'📏', alts:['cable-crunch'] },
-  { id:'treadmill',           name_ar:'مشاية كهربائية (سير)',      name_en:'Treadmill Running / Incline',   category:'cardio', icon:'🏃', alts:['stationary-bike'] }
+  { id:'cable-crunch',        name_ar:'طحن كيبل للبطن بحبل',       name_en:'Kneeling Cable Crunch',         category:'core', icon:'💪', yt:'https://www.youtube.com/watch?v=2fORO_pwvBk', alts:['hanging-leg-raise', 'plank'] },
+  { id:'hanging-leg-raise',   name_ar:'رفع أرجل متعلق على العقلة', name_en:'Hanging Leg/Knee Raise',        category:'core', icon:'🦵', yt:'https://www.youtube.com/watch?v=hdng3Nm1x_E', alts:['cable-crunch'] },
+  { id:'plank',               name_ar:'بلانك ثبات',                name_en:'Plank Hold',                    category:'core', icon:'📏', yt:'https://www.youtube.com/watch?v=ASdvN_XEl_c', alts:['cable-crunch'] },
+  { id:'treadmill',           name_ar:'مشاية كهربائية (سير)',      name_en:'Treadmill Running / Incline',   category:'cardio', icon:'🏃', yt:'https://www.youtube.com/watch?v=8i3VqdIk-1U', alts:['stationary-bike'] }
 ];
 
-const STORAGE_KEY_PREFIX = 'gymTracker_v9_';
+const STORAGE_KEY_PREFIX = 'gymTracker_v12_';
+const GLOBAL_CUSTOM_KEY = 'gymTracker_global_custom_exercises';
 
 // ── State ─────────────────────────────────────────────────────────
 let lang           = localStorage.getItem('gymTrackerLang') || 'ar';
 let theme          = localStorage.getItem('gymTrackerTheme') || 'dark';
 let users          = ['مصطفى', 'أحمد'];
 let currentUser    = 'مصطفى';
-let currentData    = { workouts: [], plan: null, userProfile: {}, notifications: [], water: 0 };
+let currentData    = { workouts: [], plan: null, userProfile: {}, notifications: [], water: 0, customExercises: [] };
+let globalCustomExercises = [];
 let category       = 'all';
 let query          = '';
 
@@ -179,6 +182,24 @@ let restRef         = null;
 let restRemaining   = 0;
 let swapTargetExId  = null;
 let pendingPlan     = null;
+
+// Combine base exercises, global custom, and current user custom exercises
+const getAllExercises = () => {
+  const userCustom = currentData.customExercises || [];
+  return [...BASE_EXERCISES, ...globalCustomExercises, ...userCustom];
+};
+
+const loadGlobalCustomExercises = () => {
+  try {
+    globalCustomExercises = JSON.parse(localStorage.getItem(GLOBAL_CUSTOM_KEY)) || [];
+  } catch {
+    globalCustomExercises = [];
+  }
+};
+
+const saveGlobalCustomExercises = () => {
+  localStorage.setItem(GLOBAL_CUSTOM_KEY, JSON.stringify(globalCustomExercises));
+};
 
 // ── Audio Beep ────────────────────────────────────────────────────
 const playMultipleBeeps = (count = 5) => {
@@ -285,11 +306,12 @@ const saveUsers = () => {
 const loadUserData = () => {
   try {
     currentData = JSON.parse(localStorage.getItem(STORAGE_KEY_PREFIX + currentUser)) || {
-      workouts: [], plan: null, userProfile: {}, notifications: [], water: 0
+      workouts: [], plan: null, userProfile: {}, notifications: [], water: 0, customExercises: []
     };
     if (!currentData.notifications) currentData.notifications = [];
+    if (!currentData.customExercises) currentData.customExercises = [];
   } catch {
-    currentData = { workouts: [], plan: null, userProfile: {}, notifications: [], water: 0 };
+    currentData = { workouts: [], plan: null, userProfile: {}, notifications: [], water: 0, customExercises: [] };
   }
 };
 
@@ -415,9 +437,60 @@ const generateSmartPlan = (weight, height, goal, level, days, injury, focus) => 
   };
 };
 
+// ── Custom Exercise Addition Modal with User Scope ────────────────
+const openCustomExModal = () => {
+  const altsSelect = $('cust-alts');
+  const allEx = getAllExercises();
+  altsSelect.innerHTML = allEx.map(e => `<option value="${e.id}">${e.name_ar}</option>`).join('');
+
+  $('custom-ex-form').reset();
+  $('custom-ex-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+};
+
+const closeCustomExModal = () => {
+  $('custom-ex-modal').classList.remove('open');
+  document.body.style.overflow = '';
+};
+
+const handleCustomExSubmit = (e) => {
+  e.preventDefault();
+  const nameAr = $('cust-name-ar').value.trim();
+  const nameEn = $('cust-name-en').value.trim() || nameAr;
+  const category = $('cust-category').value;
+  const icon = $('cust-icon').value;
+  const scope = $('cust-scope').value;
+  const videoUrl = $('cust-video-url').value.trim();
+  const alts = Array.from($('cust-alts').selectedOptions).map(opt => opt.value);
+
+  const customId = 'cust_' + Date.now();
+  const newEx = {
+    id: customId,
+    name_ar: nameAr,
+    name_en: nameEn,
+    category: category,
+    icon: icon,
+    yt: videoUrl || '',
+    alts: alts
+  };
+
+  if (scope === 'all') {
+    globalCustomExercises.push(newEx);
+    saveGlobalCustomExercises();
+    toast(lang === 'ar' ? 'تمت إضافة التمرين لجميع المتدربين 🌐' : 'Exercise added globally for all athletes 🌐');
+  } else {
+    currentData.customExercises.push(newEx);
+    saveUserData();
+    toast(lang === 'ar' ? `تمت إضافة التمرين لـ ${currentUser} فقط 👤` : `Exercise added for ${currentUser} only 👤`);
+  }
+
+  closeCustomExModal();
+  renderLibrary();
+};
+
 // ── Interactive Live Set-by-Set Logger ────────────────────────────
 const openModal = (exId) => {
-  const def = EXERCISES.find(e => e.id === exId);
+  const def = getAllExercises().find(e => e.id === exId);
   if (!def) return;
 
   modalExId = exId;
@@ -427,12 +500,15 @@ const openModal = (exId) => {
   const exName = lang === 'ar' ? def.name_ar : def.name_en;
   $('modal-title').textContent = exName;
 
-  // رابط يوتيوب المباشر لشرح تكنيك التمرين
-  const ytQuery = encodeURIComponent(`how to do ${def.name_en} proper form execution`);
-  const ytUrl = `https://www.youtube.com/results?search_query=${ytQuery}`;
+  // إعداد رابط الفيديو المباشر
   const videoBtn = $('btn-modal-video');
   if (videoBtn) {
-    videoBtn.onclick = () => window.open(ytUrl, '_blank');
+    if (def.yt && def.yt.trim()) {
+      videoBtn.href = def.yt.startsWith('http') ? def.yt : `https://www.youtube.com/watch?v=${def.yt}`;
+    } else {
+      const q = encodeURIComponent(`how to do ${def.name_en} exercise proper form`);
+      videoBtn.href = `https://www.youtube.com/results?search_query=${q}`;
+    }
   }
 
   if (last && last.sets && last.sets.length) {
@@ -621,7 +697,7 @@ const promptNextExerciseFlow = (currentFinishedId) => {
   const currentIndex = w.exercises.findIndex(e => e.id === currentFinishedId);
   if (currentIndex >= 0 && currentIndex < w.exercises.length - 1) {
     const nextEx = w.exercises[currentIndex + 1];
-    const nextDef = EXERCISES.find(e => e.id === nextEx.id);
+    const nextDef = getAllExercises().find(e => e.id === nextEx.id);
     if (nextDef) {
       setTimeout(() => {
         const nextName = lang === 'ar' ? nextDef.name_ar : nextDef.name_en;
@@ -716,6 +792,7 @@ const exportPDFReport = () => {
   const p = currentData.plan;
   const prof = currentData.userProfile || {};
   const pastWorkouts = currentData.workouts || [];
+  const allEx = getAllExercises();
 
   let html = `
     <div class="pdf-header">
@@ -742,7 +819,7 @@ const exportPDFReport = () => {
         <div class="pdf-day-block">
           <div class="pdf-day-title">${r.dayName}</div>
           ${r.exercises.map(exId => {
-            const def = EXERCISES.find(e => e.id === exId);
+            const def = allEx.find(e => e.id === exId);
             return `<div class="pdf-ex-row"><span>${def ? (lang === 'ar' ? def.name_ar : def.name_en) : exId}</span><span>${p.setsCount} مجموعات × ${p.repScheme} عدات</span></div>`;
           }).join('')}
         </div>
@@ -757,9 +834,9 @@ const exportPDFReport = () => {
         <div class="pdf-day-block">
           <div class="pdf-day-title">${fmtDate(w.date)}</div>
           ${w.exercises.map(ex => {
-            const def = EXERCISES.find(e => e.id === ex.id);
+            const def = allEx.find(e => e.id === ex.id);
             const setsStr = (ex.sets || []).map((s, i) => `[م${i+1}: ${s.weight}كجم × ${s.reps}]`).join(' ');
-            return `<div class="pdf-ex-row"><span>${def ? (lang === 'ar' ? def.name_ar : def.name_en) : ex.id}</span><span>${setsStr}</span></div>`;
+            return `<div class="pdf-ex-row"><span>${def ? def.name_ar : ex.id}</span><span>${setsStr}</span></div>`;
           }).join('')}
         </div>
       `;
@@ -773,7 +850,8 @@ const exportPDFReport = () => {
 // ── Swapper Modal ─────────────────────────────────────────────────
 const openSwapperModal = (currentExId) => {
   swapTargetExId = currentExId;
-  const def = EXERCISES.find(e => e.id === currentExId);
+  const allEx = getAllExercises();
+  const def = allEx.find(e => e.id === currentExId);
   if (!def) return;
 
   $('swap-current-name').innerHTML = `${lang === 'ar' ? 'بدائل تمرين:' : 'Alternatives for:'} <strong>${lang === 'ar' ? def.name_ar : def.name_en}</strong>`;
@@ -784,7 +862,7 @@ const openSwapperModal = (currentExId) => {
     container.innerHTML = `<p style="text-align:center;color:var(--text3);font-size:.85rem;">${lang === 'ar' ? 'لا توجد بدائل مسجلة لهذا التمرين.' : 'No alternatives found.'}</p>`;
   } else {
     container.innerHTML = alts.map(altId => {
-      const altDef = EXERCISES.find(e => e.id === altId);
+      const altDef = allEx.find(e => e.id === altId);
       if (!altDef) return '';
       const name = lang === 'ar' ? altDef.name_ar : altDef.name_en;
       return `
@@ -903,6 +981,7 @@ const renderToday = () => {
   const w = todayWorkout();
   const exCount = w.exercises.length;
   const setCount = w.exercises.reduce((s, e) => s + (e.sets ? e.sets.length : 0), 0);
+  const allEx = getAllExercises();
 
   $('summary-exercises').textContent = exCount;
   $('summary-sets').textContent = setCount;
@@ -928,7 +1007,7 @@ const renderToday = () => {
   }
 
   list.innerHTML = w.exercises.map(ex => {
-    const def = EXERCISES.find(e => e.id === ex.id);
+    const def = allEx.find(e => e.id === ex.id);
     if (!def) return '';
     const exName = lang === 'ar' ? def.name_ar : def.name_en;
     const setsChips = (ex.sets || []).map((s, idx) => `
@@ -973,7 +1052,7 @@ const removeExercise = (exId) => {
 const renderLibrary = () => {
   $$('.pill').forEach(p => p.classList.toggle('active', p.dataset.category === category));
 
-  let list = EXERCISES;
+  let list = getAllExercises();
   if (category !== 'all') list = list.filter(e => e.category === category);
   if (query.trim()) {
     const q = query.trim().toLowerCase();
@@ -1015,6 +1094,7 @@ const renderPlanView = () => {
   }
 
   const p = currentData.plan;
+  const allEx = getAllExercises();
   container.innerHTML = `
     <div class="coach-header-card">
       <span class="coach-badge">${p.goal === 'bulk' ? (lang === 'ar' ? 'تضخيم وبناء عضل' : 'Bulking') : (p.goal === 'cut' ? (lang === 'ar' ? 'تنشيف وحرق دهون' : 'Cutting') : (lang === 'ar' ? 'قوة ولياقة' : 'Strength'))}</span>
@@ -1031,7 +1111,7 @@ const renderPlanView = () => {
           </div>
           <div class="plan-ex-list">
             ${r.exercises.map(exId => {
-              const def = EXERCISES.find(e => e.id === exId);
+              const def = allEx.find(e => e.id === exId);
               const exName = def ? (lang === 'ar' ? def.name_ar : def.name_en) : exId;
               return `
                 <div class="plan-ex-item">
@@ -1082,6 +1162,7 @@ const renderHistory = () => {
   const past = [...currentData.workouts]
     .filter(w => w.exercises && w.exercises.length > 0)
     .sort((a, b) => b.date.localeCompare(a.date));
+  const allEx = getAllExercises();
 
   if (past.length === 0) {
     container.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><p>${lang === 'ar' ? 'لا يوجد سجل تمارين بعد لـ ' : 'No history yet for '}<strong>${currentUser}</strong>.</p></div>`;
@@ -1101,7 +1182,7 @@ const renderHistory = () => {
         </div>
         <div class="history-details">
           ${w.exercises.map(ex => {
-            const def = EXERCISES.find(e => e.id === ex.id);
+            const def = allEx.find(e => e.id === ex.id);
             const exName = def ? (lang === 'ar' ? def.name_ar : def.name_en) : ex.id;
             const setsTxt = (ex.sets || []).map((s, i) => `[${lang === 'ar' ? 'م' : 'S'}${i+1}: ${s.weight}kg × ${s.reps}]`).join(' ');
             return `
@@ -1255,6 +1336,7 @@ const handleUserSelectChange = (e) => {
   saveUsers();
   loadUserData();
   renderToday();
+  renderLibrary();
   renderPlanView();
   toast(`👤 ${currentUser}`);
 };
@@ -1286,6 +1368,7 @@ const toast = (msg, type = 'success') => {
 document.addEventListener('DOMContentLoaded', () => {
   loadUsers();
   loadUserData();
+  loadGlobalCustomExercises();
   applyTheme();
   applyLanguage();
 
@@ -1296,6 +1379,12 @@ document.addEventListener('DOMContentLoaded', () => {
   $('btn-close-users').addEventListener('click', closeUsersModal);
   $('users-modal-backdrop').addEventListener('click', closeUsersModal);
   $('btn-create-user').addEventListener('click', createNewUser);
+
+  // Custom Exercise modal bindings
+  $('btn-open-custom-modal').addEventListener('click', openCustomExModal);
+  $('btn-cancel-custom-ex').addEventListener('click', closeCustomExModal);
+  $('custom-ex-backdrop').addEventListener('click', closeCustomExModal);
+  $('custom-ex-form').addEventListener('submit', handleCustomExSubmit);
 
   $('btn-notifications').addEventListener('click', openNotifModal);
   $('btn-close-notif').addEventListener('click', closeNotifModal);
@@ -1351,7 +1440,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   $('btn-export-pdf').addEventListener('click', exportPDFReport);
   $('btn-export-json').addEventListener('click', () => {
-    const blob = new Blob([JSON.stringify({ users, activeUser: currentUser, data: currentData }, null, 2)], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify({ users, activeUser: currentUser, data: currentData, globalCustom: globalCustomExercises }, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -1366,6 +1455,7 @@ document.addEventListener('DOMContentLoaded', () => {
       closePlanQuizModal();
       closeNotifModal();
       closeSwapperModal();
+      closeCustomExModal();
       $('approval-modal').classList.remove('open');
     }
   });
