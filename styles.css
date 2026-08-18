@@ -220,8 +220,12 @@ body.light-theme .summary-card { background: linear-gradient(145deg, #ffffff 0%,
   color: var(--danger); font-size: .75rem; font-weight: 800; text-decoration: underline;
 }
 
-/* Exercise Cards & Grid */
-.exercise-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:30px}
+/* Exercise Cards & Grid (With generous bottom padding for floating bar) */
+.exercise-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:12px;
+  margin-bottom:20px;
+  padding-bottom:90px; /* Prevents floating bar overlapping bottom cards */
+}
 .ex-card{
   background:var(--bg-card);border:1.5px solid var(--border);border-radius:var(--r-card);
   padding:14px;display:flex;flex-direction:column;gap:6px;position:relative;cursor:pointer;
@@ -249,14 +253,15 @@ body.light-theme .summary-card { background: linear-gradient(145deg, #ffffff 0%,
   background: var(--accent); border-color: var(--accent); color: var(--bg);
 }
 
+/* Custom Exercise Delete Button */
 .btn-delete-cust-ex {
   position: absolute; top: 10px; inset-inline-start: 10px;
-  width: 24px; height: 24px; border-radius: 6px;
-  background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3);
-  font-size: .75rem; display: flex; align-items: center; justify-content: center;
-  color: var(--danger); z-index: 10;
+  width: 28px; height: 28px; border-radius: 8px;
+  background: rgba(239, 68, 68, 0.18); border: 1px solid var(--danger);
+  font-size: .85rem; display: flex; align-items: center; justify-content: center;
+  color: var(--danger); z-index: 10; cursor: pointer;
 }
-.btn-delete-cust-ex:active { background: var(--danger); color: #fff; }
+.btn-delete-cust-ex:active { transform: scale(0.9); background: var(--danger); color: #fff; }
 
 /* Multi-start Floating Bar */
 .multi-start-bar {
@@ -365,12 +370,27 @@ body.light-theme .summary-card { background: linear-gradient(145deg, #ffffff 0%,
 .chip-rest.active{background:rgba(0,212,170,.15);border-color:var(--accent);color:var(--accent)}
 
 .sets-header{display:grid;grid-template-columns:36px 1fr 1fr 34px;gap:8px;padding:0 6px 8px;font-size:.78rem;font-weight:700;color:var(--text2);text-align:center}
-.sets-container{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
-.set-row{display:grid;grid-template-columns:36px 1fr 1fr 34px;gap:8px;align-items:center}
+.sets-container{display:flex;flex-direction:column;gap:8px;margin-bottom:8px}
+
+/* Set Row & Active Set Highlight */
+.set-row{
+  display:grid;grid-template-columns:36px 1fr 1fr 34px;gap:8px;align-items:center;
+  padding:6px;border-radius:12px;border:1.5px solid transparent;transition:all .2s ease;
+}
+.set-row.active-row{
+  border-color:var(--accent);background:rgba(0,212,170,.08);box-shadow:0 0 12px var(--accent-glow);
+}
 .set-index{width:32px;height:32px;border-radius:8px;background:var(--bg-input);display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-weight:800;font-size:.85rem;color:var(--accent);margin:0 auto}
+.set-row.active-row .set-index{background:var(--accent);color:var(--bg)}
 .set-input-box{display:flex;align-items:center;background:var(--bg-input);border:1px solid var(--border);border-radius:10px;overflow:hidden}
 .set-input{width:100%;background:none;border:none;text-align:center;font-family:'Inter',sans-serif;font-size:1.05rem;font-weight:800;color:var(--text);padding:8px 0;outline:none}
 .btn-remove-set{width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:1rem;border-radius:8px}
+
+.btn-add-set-row{
+  width:100%;padding:10px;background:var(--bg-input);border:1.5px dashed var(--accent);
+  color:var(--accent);font-size:.85rem;font-weight:800;border-radius:10px;margin-bottom:8px;
+}
+.btn-add-set-row:active{background:rgba(0,212,170,.15)}
 
 .notes-row{margin-bottom:14px}
 .notes-row label{display:block;font-size:.82rem;font-weight:700;color:var(--text2);margin-bottom:6px}
