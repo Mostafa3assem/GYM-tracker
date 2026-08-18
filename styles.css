@@ -66,7 +66,7 @@ body{
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 input,textarea,select{font-family:inherit;color:var(--text)}
 
-/* Fixed Form Controls Contrast */
+/* Form Controls */
 .quiz-input, .quiz-select, .settings-select, .search-box input, .notes-row textarea, .add-user-input-box input {
   background: var(--bg-input) !important;
   color: var(--text) !important;
@@ -190,7 +190,7 @@ body.light-theme .summary-card { background: linear-gradient(145deg, #ffffff 0%,
 .set-chip{background:var(--bg-input);border:1px solid var(--border);border-radius:8px;padding:4px 10px;font-size:.78rem;font-family:'Inter',sans-serif;color:var(--text)}
 .set-chip strong{color:var(--accent)}
 
-/* Safe Floating Action Button */
+/* Floating Action Button */
 .fab{
   position:fixed;
   bottom:calc(76px + env(safe-area-inset-bottom));
@@ -230,7 +230,7 @@ body.light-theme .summary-card { background: linear-gradient(145deg, #ffffff 0%,
   color: var(--danger); font-size: .75rem; font-weight: 800; text-decoration: underline;
 }
 
-/* Exercise Cards & Grid */
+/* Exercise Grid */
 .exercise-grid{
   display:grid;grid-template-columns:repeat(2,1fr);gap:12px;
   margin-bottom:20px;
@@ -274,7 +274,7 @@ body.light-theme .summary-card { background: linear-gradient(145deg, #ffffff 0%,
 }
 .btn-delete-cust-ex:active { transform: scale(0.88); background: var(--danger); color: #fff; }
 
-/* Interactive Weekly Planner Cards */
+/* Interactive Weekly Planner */
 .planner-header-card{
   background:linear-gradient(135deg,#18182b 0%,#0e1c22 100%);
   border:1.5px solid var(--accent);border-radius:var(--r-card);padding:18px;margin-bottom:16px;
@@ -310,7 +310,7 @@ body.light-theme .planner-header-card { background: linear-gradient(135deg, #e8f
 .btn-reorder-ex:active{background:var(--accent);color:var(--bg)}
 .btn-del-from-routine{color:var(--danger);font-size:.9rem;padding:4px;cursor:pointer}
 
-/* Picker Specific Category Pills */
+/* Picker Filter Pills */
 .picker-modal-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
 .picker-count-badge{font-size:.78rem;font-weight:800;background:var(--accent);color:var(--bg);padding:3px 10px;border-radius:var(--r-pill)}
 
@@ -361,7 +361,7 @@ body.light-theme .planner-header-card { background: linear-gradient(135deg, #e8f
   padding: 10px 16px; border-radius: 10px; font-size: .85rem;
 }
 
-/* Settings View & Control Cards */
+/* Settings View */
 .settings-container{display:flex;flex-direction:column;gap:14px;margin-bottom:20px}
 .settings-group{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-card);padding:16px}
 .settings-group-title{font-size:.88rem;font-weight:800;color:var(--accent);margin:0 0 12px}
