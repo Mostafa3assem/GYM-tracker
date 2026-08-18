@@ -1,5 +1,5 @@
 /**
- * تمريني – Smart Gym Tracker Pro (User-Scoped & Global Custom Exercises)
+ * تمريني – Smart Gym Tracker Pro (Delete Custom Exercises & Full Customization)
  */
 
 const I18N = {
@@ -103,7 +103,7 @@ const I18N = {
   }
 };
 
-// Base Exercises
+// Base Built-in Exercises
 const BASE_EXERCISES = [
   // صدر
   { id:'bench-press',         name_ar:'بنش بريس مستوي بالبار',     name_en:'Barbell Flat Bench Press',      category:'chest', icon:'🏋️', yt:'https://www.youtube.com/watch?v=rT7DgCr-3pg', alts:['db-flat-press', 'chest-press-machine', 'dips-chest'] },
@@ -156,7 +156,7 @@ const BASE_EXERCISES = [
   { id:'treadmill',           name_ar:'مشاية كهربائية (سير)',      name_en:'Treadmill Running / Incline',   category:'cardio', icon:'🏃', yt:'https://www.youtube.com/watch?v=8i3VqdIk-1U', alts:['stationary-bike'] }
 ];
 
-const STORAGE_KEY_PREFIX = 'gymTracker_v12_';
+const STORAGE_KEY_PREFIX = 'gymTracker_v13_';
 const GLOBAL_CUSTOM_KEY = 'gymTracker_global_custom_exercises';
 
 // ── State ─────────────────────────────────────────────────────────
@@ -374,7 +374,7 @@ const addWater = (delta) => {
   if (delta > 0) toast(lang === 'ar' ? 'عاش! كوب ماء إضافي للترطيب 💧' : 'Great! +250ml Water 💧');
 };
 
-// ── Enhanced Smart Coach (5/6 Days & Injury Safe) ─────────────────
+// ── Enhanced Smart Coach ──────────────────────────────────────────
 const generateSmartPlan = (weight, height, goal, level, days, injury, focus) => {
   let planTitle = '';
   let daysRoutines = [];
@@ -437,7 +437,7 @@ const generateSmartPlan = (weight, height, goal, level, days, injury, focus) => 
   };
 };
 
-// ── Custom Exercise Addition Modal with User Scope ────────────────
+// ── Custom Exercise Addition & Deletion ───────────────────────────
 const openCustomExModal = () => {
   const altsSelect = $('cust-alts');
   const allEx = getAllExercises();
@@ -471,7 +471,9 @@ const handleCustomExSubmit = (e) => {
     category: category,
     icon: icon,
     yt: videoUrl || '',
-    alts: alts
+    alts: alts,
+    isCustom: true,
+    isGlobal: scope === 'all'
   };
 
   if (scope === 'all') {
@@ -486,6 +488,33 @@ const handleCustomExSubmit = (e) => {
 
   closeCustomExModal();
   renderLibrary();
+};
+
+window.deleteCustomExercise = (exId, e) => {
+  e.stopPropagation();
+  const allEx = getAllExercises();
+  const target = allEx.find(item => item.id === exId);
+  const exName = target ? target.name_ar : 'هذا التمرين';
+
+  if (!confirm(lang === 'ar' ? `هل أنت متأكد من حذف تمرين "${exName}"؟` : `Delete exercise "${exName}"?`)) return;
+
+  // Check if global
+  if (globalCustomExercises.some(item => item.id === exId)) {
+    globalCustomExercises = globalCustomExercises.filter(item => item.id !== exId);
+    saveGlobalCustomExercises();
+  }
+
+  // Check if user custom
+  if (currentData.customExercises && currentData.customExercises.some(item => item.id === exId)) {
+    currentData.customExercises = currentData.customExercises.filter(item => item.id !== exId);
+    saveUserData();
+  }
+
+  // Remove from multi-select if selected
+  selectedExIds = selectedExIds.filter(id => id !== exId);
+  updateMultiSelectUI();
+  renderLibrary();
+  toast(lang === 'ar' ? 'تم حذف التمرين بنجاح 🗑️' : 'Exercise deleted 🗑️', 'error');
 };
 
 // ── Interactive Live Set-by-Set Logger ────────────────────────────
@@ -1068,13 +1097,22 @@ const renderLibrary = () => {
   grid.innerHTML = list.map(ex => {
     const exName = lang === 'ar' ? ex.name_ar : ex.name_en;
     const isSelected = selectedExIds.includes(ex.id);
+    const isCustom = ex.id.startsWith('cust_');
+
     return `
       <div class="ex-card ${isSelected ? 'selected' : ''}" data-exid="${ex.id}" onclick="openModal('${ex.id}')">
         <div class="ex-select-checkbox" onclick="toggleExerciseSelection('${ex.id}', event)">✓</div>
+        
+        ${isCustom ? `
+          <button type="button" class="btn-delete-cust-ex" onclick="deleteCustomExercise('${ex.id}', event)" title="حذف هذا التمرين المخصص">
+            🗑️
+          </button>
+        ` : ''}
+
         <div class="card-icon">${ex.icon}</div>
         <h4>${exName}</h4>
         <div class="ex-card-actions">
-          <span class="muscle-tag">${ex.category}</span>
+          <span class="muscle-tag">${ex.category}${isCustom ? ' (مخصص)' : ''}</span>
           <button type="button" class="btn-alt-badge" onclick="event.stopPropagation(); openSwapperModal('${ex.id}')">${lang === 'ar' ? 'بدائل 🔄' : 'Alts 🔄'}</button>
         </div>
       </div>`;
