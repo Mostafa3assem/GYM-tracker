@@ -1,5 +1,5 @@
 /**
- * تمريني – Smart Gym Tracker Pro (Delete Custom Exercises & Full Customization)
+ * تمريني – Smart Gym Tracker Pro (Phased Journey & Settings Screen Architecture)
  */
 
 const I18N = {
@@ -9,17 +9,16 @@ const I18N = {
     sets_label: 'مجموعة',
     time_label: 'الوقت',
     water_title: '💧 استهلاك الماء في التمرين',
-    plan_banner_sub: 'اضغط لبدء تمارين خطة اليوم بالتسلسل',
-    btn_start_plan: 'بدء التدريب ⚡',
+    today_routine_title: 'تمارين جلسة اليوم',
+    nav_today: 'اليوم',
+    nav_plan: 'البرامج',
+    nav_exercises: 'التمارين',
+    nav_settings: 'الإعدادات',
     cat_all: 'الكل', cat_chest: 'صدر', cat_back: 'ظهر', cat_shoulders: 'أكتاف', cat_arms: 'ذراع', cat_legs: 'أرجل', cat_core: 'بطن', cat_cardio: 'كارديو',
-    multi_hint: '💡 اضغط على الدائرة لاختيار عدة تمارين ولعبها بالتسلسل:',
+    multi_hint: '💡 حدد التمارين للبدء بها مباشرة:',
     clear_sel: 'إلغاء التحديد',
     multi_ready: 'جاهزة للإضافة وبدء الجلسة',
     btn_start_multi: 'بدء التمارين الآن 🚀',
-    export_pdf_btn: '📄 تقرير PDF',
-    export_btn: '📥 نسخ احتياطي',
-    import_btn: '📤 استرجاع',
-    nav_today: 'اليوم', nav_plan: 'المدرب الذكي', nav_exercises: 'التمارين', nav_history: 'السجل',
     btn_alt_ex: '🔄 بديل التمرين',
     lbl_weight: 'الوزن (كجم)',
     lbl_reps: 'العدات (التكرار)',
@@ -29,7 +28,7 @@ const I18N = {
     chip_none: 'بدون',
     tbl_set: 'المجموعة', tbl_wt: 'الوزن (كجم)', tbl_reps: 'العدات', tbl_del: 'حذف',
     notes_label: 'ملاحظات التمرين',
-    cancel_btn: 'إلغاء', save_btn: 'حفظ وإنهاء التمرين',
+    cancel_btn: 'إلغاء', save_btn: 'حفظ ومتابعة التمرين ❯',
     swap_title: '🔄 بدائل الأجهزة والتمارين',
     close_btn: 'إغلاق',
     quiz_title: '🎯 إعداد خطتك التدريبية والبدنية',
@@ -39,7 +38,7 @@ const I18N = {
     quiz_level: '2. مستواك التدريبي في الجيم:',
     quiz_days: '3. كم يوماً تستطيع التمرين أسبوعياً؟',
     quiz_injury_lbl: '4. هل تعاني من أي إصابات لتجنبها؟',
-    quiz_focus: '5. عضلة ترغب في التركيز عليها كنقطة ضعف:',
+    quiz_focus: '5. نقطة ضعف ترغب في التركيز عليها:',
     generate_plan_btn: 'توليد الخطة الذكية 🚀',
     approval_title: '🎉 تم تجهيز برنامجك التدريبي!',
     edit_plan_btn: 'تعديل',
@@ -49,7 +48,7 @@ const I18N = {
     manage_users_title: 'إدارة المتدربين',
     add_user_btn: 'إضافة',
     edit_name: 'تعديل', delete_user: 'حذف',
-    welcome_empty: 'مرحباً {user}! لم تسجل تمارين اليوم بعد.<br>اضغط على <strong>+</strong> لاختيار تمارينك أو افتح <strong>المدرب الذكي</strong> لتحميل جدولك!',
+    welcome_empty: 'مرحباً {user}! لم تسجل تمارين اليوم بعد.<br>اضغط على <strong>+</strong> لاختيار تمارينك أو افتح <strong>البرامج</strong> لتحميل جدولك!',
     search_placeholder: 'ابحث عن تمرين...'
   },
   en: {
@@ -58,17 +57,16 @@ const I18N = {
     sets_label: 'Sets',
     time_label: 'Time',
     water_title: '💧 Intra-workout Hydration',
-    plan_banner_sub: 'Tap to start today scheduled workout',
-    btn_start_plan: 'Start Workout ⚡',
+    today_routine_title: 'Today Workout Routine',
+    nav_today: 'Today',
+    nav_plan: 'Programs',
+    nav_exercises: 'Exercises',
+    nav_settings: 'Settings',
     cat_all: 'All', cat_chest: 'Chest', cat_back: 'Back', cat_shoulders: 'Shoulders', cat_arms: 'Arms', cat_legs: 'Legs', cat_core: 'Core', cat_cardio: 'Cardio',
-    multi_hint: '💡 Tap circles to select multiple exercises & start:',
+    multi_hint: '💡 Select exercises to start session:',
     clear_sel: 'Clear Selection',
     multi_ready: 'Ready to log workout flow',
     btn_start_multi: 'Start Selected Now 🚀',
-    export_pdf_btn: '📄 Export PDF',
-    export_btn: '📥 Backup',
-    import_btn: '📤 Restore',
-    nav_today: 'Today', nav_plan: 'Smart Coach', nav_exercises: 'Exercises', nav_history: 'History',
     btn_alt_ex: '🔄 Exercise Alternative',
     lbl_weight: 'Weight (kg)',
     lbl_reps: 'Reps Count',
@@ -78,7 +76,7 @@ const I18N = {
     chip_none: 'None',
     tbl_set: 'Set', tbl_wt: 'Weight (kg)', tbl_reps: 'Reps', tbl_del: 'Del',
     notes_label: 'Exercise Notes',
-    cancel_btn: 'Cancel', save_btn: 'Save & Finish Exercise',
+    cancel_btn: 'Cancel', save_btn: 'Save & Continue Exercise ❯',
     swap_title: '🔄 Exercise Alternatives',
     close_btn: 'Close',
     quiz_title: '🎯 Smart Workout Coach Setup',
@@ -98,12 +96,12 @@ const I18N = {
     manage_users_title: 'Manage Athletes',
     add_user_btn: 'Add',
     edit_name: 'Edit', delete_user: 'Delete',
-    welcome_empty: 'Welcome {user}! No workouts logged today.<br>Tap <strong>+</strong> to pick your workout or open <strong>Smart Coach</strong>!',
+    welcome_empty: 'Welcome {user}! No workouts logged today.<br>Tap <strong>+</strong> to pick your workout or open <strong>Programs</strong>!',
     search_placeholder: 'Search exercise...'
   }
 };
 
-// Base Built-in Exercises
+// Base Built-in Database
 const BASE_EXERCISES = [
   // صدر
   { id:'bench-press',         name_ar:'بنش بريس مستوي بالبار',     name_en:'Barbell Flat Bench Press',      category:'chest', icon:'🏋️', yt:'https://www.youtube.com/watch?v=rT7DgCr-3pg', alts:['db-flat-press', 'chest-press-machine', 'dips-chest'] },
@@ -156,7 +154,7 @@ const BASE_EXERCISES = [
   { id:'treadmill',           name_ar:'مشاية كهربائية (سير)',      name_en:'Treadmill Running / Incline',   category:'cardio', icon:'🏃', yt:'https://www.youtube.com/watch?v=8i3VqdIk-1U', alts:['stationary-bike'] }
 ];
 
-const STORAGE_KEY_PREFIX = 'gymTracker_v13_';
+const STORAGE_KEY_PREFIX = 'gymTracker_v14_';
 const GLOBAL_CUSTOM_KEY = 'gymTracker_global_custom_exercises';
 
 // ── State ─────────────────────────────────────────────────────────
@@ -172,7 +170,7 @@ let query          = '';
 // Multi-select state
 let selectedExIds  = [];
 
-// Interactive Session Modal State
+// Interactive Guided Session State
 let modalExId       = null;
 let modalSets       = [];
 let currentSetIdx   = 0;
@@ -183,7 +181,6 @@ let restRemaining   = 0;
 let swapTargetExId  = null;
 let pendingPlan     = null;
 
-// Combine base exercises, global custom, and current user custom exercises
 const getAllExercises = () => {
   const userCustom = currentData.customExercises || [];
   return [...BASE_EXERCISES, ...globalCustomExercises, ...userCustom];
@@ -260,7 +257,7 @@ const fmtDuration = (ms) => {
 const applyLanguage = () => {
   document.documentElement.lang = lang;
   document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-  $('btn-lang-toggle').textContent = lang === 'ar' ? 'EN' : 'عربي';
+  $('btn-lang-toggle').textContent = lang === 'ar' ? 'English 🇺🇸' : 'العربية 🇪🇬';
   $('search-input').placeholder = I18N[lang].search_placeholder;
 
   $$('[data-i18n]').forEach(el => {
@@ -274,7 +271,6 @@ const applyLanguage = () => {
   renderUserSelect();
   renderToday();
   renderLibrary();
-  renderHistory();
   renderPlanView();
   renderWaterDisplay();
 };
@@ -346,7 +342,7 @@ const applyTheme = () => {
   const isLight = theme === 'light';
   document.body.classList.toggle('light-theme', isLight);
   const themeBtn = $('btn-theme-toggle');
-  if (themeBtn) themeBtn.textContent = isLight ? '🌙' : '☀️';
+  if (themeBtn) themeBtn.textContent = isLight ? '🌙 الوضع الداكن' : '☀️ الوضع الفاتح';
 
   const metaTheme = document.querySelector('meta[name="theme-color"]');
   if (metaTheme) metaTheme.setAttribute('content', isLight ? '#f4f5fa' : '#09090e');
@@ -498,26 +494,23 @@ window.deleteCustomExercise = (exId, e) => {
 
   if (!confirm(lang === 'ar' ? `هل أنت متأكد من حذف تمرين "${exName}"؟` : `Delete exercise "${exName}"?`)) return;
 
-  // Check if global
   if (globalCustomExercises.some(item => item.id === exId)) {
     globalCustomExercises = globalCustomExercises.filter(item => item.id !== exId);
     saveGlobalCustomExercises();
   }
 
-  // Check if user custom
   if (currentData.customExercises && currentData.customExercises.some(item => item.id === exId)) {
     currentData.customExercises = currentData.customExercises.filter(item => item.id !== exId);
     saveUserData();
   }
 
-  // Remove from multi-select if selected
   selectedExIds = selectedExIds.filter(id => id !== exId);
   updateMultiSelectUI();
   renderLibrary();
   toast(lang === 'ar' ? 'تم حذف التمرين بنجاح 🗑️' : 'Exercise deleted 🗑️', 'error');
 };
 
-// ── Interactive Live Set-by-Set Logger ────────────────────────────
+// ── Interactive Guided Exercise Logger ────────────────────────────
 const openModal = (exId) => {
   const def = getAllExercises().find(e => e.id === exId);
   if (!def) return;
@@ -529,7 +522,6 @@ const openModal = (exId) => {
   const exName = lang === 'ar' ? def.name_ar : def.name_en;
   $('modal-title').textContent = exName;
 
-  // إعداد رابط الفيديو المباشر
   const videoBtn = $('btn-modal-video');
   if (videoBtn) {
     if (def.yt && def.yt.trim()) {
@@ -1017,6 +1009,11 @@ const renderToday = () => {
   updateTimer();
   renderWaterDisplay();
 
+  const startBtn = $('btn-start-guided-workout');
+  if (startBtn) {
+    startBtn.style.display = exCount > 0 ? 'inline-block' : 'none';
+  }
+
   const banner = $('plan-banner');
   if (currentData.plan && exCount === 0) {
     banner.style.display = 'flex';
@@ -1035,12 +1032,12 @@ const renderToday = () => {
     return;
   }
 
-  list.innerHTML = w.exercises.map(ex => {
+  list.innerHTML = w.exercises.map((ex, idx) => {
     const def = allEx.find(e => e.id === ex.id);
     if (!def) return '';
     const exName = lang === 'ar' ? def.name_ar : def.name_en;
-    const setsChips = (ex.sets || []).map((s, idx) => `
-      <span class="set-chip">${lang === 'ar' ? 'م' : 'S'}${idx+1}: <strong>${s.weight}kg</strong> × ${s.reps}</span>
+    const setsChips = (ex.sets || []).map((s, sIdx) => `
+      <span class="set-chip">${lang === 'ar' ? 'م' : 'S'}${sIdx+1}: <strong>${s.weight}kg</strong> × ${s.reps}</span>
     `).join('');
 
     return `
@@ -1048,7 +1045,7 @@ const renderToday = () => {
         <div class="today-card-top">
           <div class="icon">${def.icon}</div>
           <div class="info">
-            <h4>${exName}</h4>
+            <h4>${idx + 1}. ${exName}</h4>
           </div>
           <div class="card-actions">
             <button class="swap-btn" onclick="openSwapperModal('${ex.id}')" title="بديل التمرين">🔄</button>
@@ -1104,7 +1101,7 @@ const renderLibrary = () => {
         <div class="ex-select-checkbox" onclick="toggleExerciseSelection('${ex.id}', event)">✓</div>
         
         ${isCustom ? `
-          <button type="button" class="btn-delete-cust-ex" onclick="deleteCustomExercise('${ex.id}', event)" title="حذف هذا التمرين المخصص">
+          <button type="button" class="btn-delete-cust-ex" onclick="deleteCustomExercise('${ex.id}', event)" title="حذف هذا التمرين">
             🗑️
           </button>
         ` : ''}
@@ -1187,15 +1184,10 @@ const applyPlanDayToToday = (routineIdx) => {
   saveUserData();
   switchView('today-view');
   toast(lang === 'ar' ? `تم تجهيز جدول: ${routine.dayName} ✅` : `Loaded: ${routine.dayName} ✅`);
-
-  if (routine.exercises.length > 0) {
-    setTimeout(() => {
-      openModal(routine.exercises[0]);
-    }, 400);
-  }
 };
 
-const renderHistory = () => {
+// ── History View in Settings ──────────────────────────────────────
+const openHistoryModal = () => {
   const container = $('history-list');
   const past = [...currentData.workouts]
     .filter(w => w.exercises && w.exercises.length > 0)
@@ -1204,48 +1196,46 @@ const renderHistory = () => {
 
   if (past.length === 0) {
     container.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><p>${lang === 'ar' ? 'لا يوجد سجل تمارين بعد لـ ' : 'No history yet for '}<strong>${currentUser}</strong>.</p></div>`;
-    return;
+  } else {
+    container.innerHTML = past.map(w => {
+      const dur = w.start && w.end ? fmtDuration(w.end - w.start) : '';
+      return `
+        <div class="history-card" id="hw-${w.id}">
+          <div class="history-header" onclick="toggleHistory('${w.id}')">
+            <div>
+              <h4>${fmtDate(w.date)}</h4>
+              <span class="meta">${w.exercises.length} ${I18N[lang].exercises_label}${dur ? ' • ' + dur : ''}</span>
+            </div>
+            <span class="chevron">▾</span>
+          </div>
+          <div class="history-details">
+            ${w.exercises.map(ex => {
+              const def = allEx.find(e => e.id === ex.id);
+              const exName = def ? (lang === 'ar' ? def.name_ar : def.name_en) : ex.id;
+              const setsTxt = (ex.sets || []).map((s, i) => `[${lang === 'ar' ? 'م' : 'S'}${i+1}: ${s.weight}kg × ${s.reps}]`).join(' ');
+              return `
+                <div class="history-ex-row">
+                  <div class="ex-title">${exName}</div>
+                  <div class="history-sets-view">${setsTxt}</div>
+                </div>`;
+            }).join('')}
+          </div>
+        </div>`;
+    }).join('');
   }
 
-  container.innerHTML = past.map(w => {
-    const dur = w.start && w.end ? fmtDuration(w.end - w.start) : '';
-    return `
-      <div class="history-card" id="hw-${w.id}">
-        <div class="history-header" onclick="toggleHistory('${w.id}')">
-          <div>
-            <h4>${fmtDate(w.date)}</h4>
-            <span class="meta">${w.exercises.length} ${I18N[lang].exercises_label}${dur ? ' • ' + dur : ''}</span>
-          </div>
-          <span class="chevron">▾</span>
-        </div>
-        <div class="history-details">
-          ${w.exercises.map(ex => {
-            const def = allEx.find(e => e.id === ex.id);
-            const exName = def ? (lang === 'ar' ? def.name_ar : def.name_en) : ex.id;
-            const setsTxt = (ex.sets || []).map((s, i) => `[${lang === 'ar' ? 'م' : 'S'}${i+1}: ${s.weight}kg × ${s.reps}]`).join(' ');
-            return `
-              <div class="history-ex-row">
-                <div class="ex-title">${exName}</div>
-                <div class="history-sets-view">${setsTxt}</div>
-              </div>`;
-          }).join('')}
-          <div class="history-delete" onclick="deleteWorkout('${w.id}')">${lang === 'ar' ? 'حذف هذا اليوم من السجل' : 'Delete this day'}</div>
-        </div>
-      </div>`;
-  }).join('');
+  $('history-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+};
+
+const closeHistoryModal = () => {
+  $('history-modal').classList.remove('open');
+  document.body.style.overflow = '';
 };
 
 const toggleHistory = (wId) => {
   const card = document.getElementById(`hw-${wId}`);
   if (card) card.classList.toggle('open');
-};
-
-const deleteWorkout = (wId) => {
-  if (!confirm(lang === 'ar' ? 'حذف تمارين هذا اليوم؟' : 'Delete this day workout?')) return;
-  currentData.workouts = currentData.workouts.filter(w => w.id !== wId);
-  saveUserData();
-  renderHistory();
-  toast('🗑️', 'error');
 };
 
 // ── Notifications Modal ───────────────────────────────────────────
@@ -1291,6 +1281,7 @@ const clearAllNotifications = () => {
 const renderUserSelect = () => {
   const sel = $('user-select');
   sel.innerHTML = users.map(u => `<option value="${u}" ${u === currentUser ? 'selected' : ''}>${u}</option>`).join('');
+  $('header-user-badge').textContent = `👤 ${currentUser}`;
 };
 
 const openUsersModal = () => {
@@ -1376,6 +1367,7 @@ const handleUserSelectChange = (e) => {
   renderToday();
   renderLibrary();
   renderPlanView();
+  renderUserSelect();
   toast(`👤 ${currentUser}`);
 };
 
@@ -1389,10 +1381,10 @@ const switchView = (viewId) => {
   const fab = $('fab-btn');
   if (fab) fab.style.display = viewId === 'today-view' ? 'flex' : 'none';
 
-  if (viewId === 'today-view')   renderToday();
-  if (viewId === 'library-view') renderLibrary();
-  if (viewId === 'history-view') renderHistory();
-  if (viewId === 'plan-view')    renderPlanView();
+  if (viewId === 'today-view')    renderToday();
+  if (viewId === 'library-view')  renderLibrary();
+  if (viewId === 'plan-view')     renderPlanView();
+  if (viewId === 'settings-view') renderUserSelect();
 };
 
 const toast = (msg, type = 'success') => {
@@ -1418,7 +1410,6 @@ document.addEventListener('DOMContentLoaded', () => {
   $('users-modal-backdrop').addEventListener('click', closeUsersModal);
   $('btn-create-user').addEventListener('click', createNewUser);
 
-  // Custom Exercise modal bindings
   $('btn-open-custom-modal').addEventListener('click', openCustomExModal);
   $('btn-cancel-custom-ex').addEventListener('click', closeCustomExModal);
   $('custom-ex-backdrop').addEventListener('click', closeCustomExModal);
@@ -1428,6 +1419,10 @@ document.addEventListener('DOMContentLoaded', () => {
   $('btn-close-notif').addEventListener('click', closeNotifModal);
   $('notif-modal-backdrop').addEventListener('click', closeNotifModal);
   $('btn-clear-all-notifs').addEventListener('click', clearAllNotifications);
+
+  $('btn-open-history').addEventListener('click', openHistoryModal);
+  $('btn-close-history').addEventListener('click', closeHistoryModal);
+  $('history-modal-backdrop').addEventListener('click', closeHistoryModal);
 
   $('btn-close-swap').addEventListener('click', closeSwapperModal);
   $('swap-modal-backdrop').addEventListener('click', closeSwapperModal);
@@ -1455,6 +1450,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const bannerBtn = $('btn-load-plan-day');
   if (bannerBtn) bannerBtn.addEventListener('click', () => applyPlanDayToToday(0));
+
+  const startGuidedBtn = $('btn-start-guided-workout');
+  if (startGuidedBtn) {
+    startGuidedBtn.addEventListener('click', () => {
+      const w = todayWorkout();
+      if (w.exercises.length > 0) openModal(w.exercises[0].id);
+    });
+  }
 
   $$('.nav-btn').forEach(b => b.addEventListener('click', () => switchView(b.dataset.view)));
   $('fab-btn').addEventListener('click', () => switchView('library-view'));
@@ -1494,6 +1497,7 @@ document.addEventListener('DOMContentLoaded', () => {
       closeNotifModal();
       closeSwapperModal();
       closeCustomExModal();
+      closeHistoryModal();
       $('approval-modal').classList.remove('open');
     }
   });
