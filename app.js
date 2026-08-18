@@ -1,5 +1,5 @@
 /**
- * تمريني – Smart Gym Tracker Pro (Phased Journey & Settings Screen Architecture)
+ * تمريني – Smart Gym Tracker Pro (Active Row Indicator, 3 Default Sets & Delete Fix)
  */
 
 const I18N = {
@@ -154,7 +154,7 @@ const BASE_EXERCISES = [
   { id:'treadmill',           name_ar:'مشاية كهربائية (سير)',      name_en:'Treadmill Running / Incline',   category:'cardio', icon:'🏃', yt:'https://www.youtube.com/watch?v=8i3VqdIk-1U', alts:['stationary-bike'] }
 ];
 
-const STORAGE_KEY_PREFIX = 'gymTracker_v14_';
+const STORAGE_KEY_PREFIX = 'gymTracker_v15_';
 const GLOBAL_CUSTOM_KEY = 'gymTracker_global_custom_exercises';
 
 // ── State ─────────────────────────────────────────────────────────
@@ -370,12 +370,12 @@ const addWater = (delta) => {
   if (delta > 0) toast(lang === 'ar' ? 'عاش! كوب ماء إضافي للترطيب 💧' : 'Great! +250ml Water 💧');
 };
 
-// ── Enhanced Smart Coach ──────────────────────────────────────────
+// ── Smart Coach Plan Generator ────────────────────────────────────
 const generateSmartPlan = (weight, height, goal, level, days, injury, focus) => {
   let planTitle = '';
   let daysRoutines = [];
   const repScheme = goal === 'bulk' ? '8-12' : (goal === 'cut' ? '12-15' : '5-8');
-  const setsCount = level === 'beginner' ? 3 : 4;
+  const setsCount = 3; // Default 3 sets
 
   if (days === '3') {
     planTitle = 'Full Body 3x (شامل الجسم 3 أيام)';
@@ -487,7 +487,7 @@ const handleCustomExSubmit = (e) => {
 };
 
 window.deleteCustomExercise = (exId, e) => {
-  e.stopPropagation();
+  if (e) e.stopPropagation();
   const allEx = getAllExercises();
   const target = allEx.find(item => item.id === exId);
   const exName = target ? target.name_ar : 'هذا التمرين';
@@ -539,13 +539,14 @@ const openModal = (exId) => {
     $('last-session-text').textContent = lang === 'ar' ? 'أول مرة تلعب هذا التمرين! 💪' : 'First time doing this exercise! 💪';
   }
 
+  // 3 Sets as the default
   if (existing && existing.sets && existing.sets.length) {
     modalSets = JSON.parse(JSON.stringify(existing.sets));
   } else if (last && last.sets && last.sets.length) {
     modalSets = JSON.parse(JSON.stringify(last.sets));
   } else {
     const defaultReps = currentData.plan ? parseInt(currentData.plan.repScheme.split('-')[0], 10) || 10 : 10;
-    const defaultSetsCount = currentData.plan ? currentData.plan.setsCount : 4;
+    const defaultSetsCount = currentData.plan ? currentData.plan.setsCount : 3;
     modalSets = [];
     for (let i = 0; i < defaultSetsCount; i++) {
       modalSets.push({ weight: 20, reps: defaultReps });
@@ -600,6 +601,7 @@ const handleFinishSetClick = () => {
     }
     isResting = false;
     populateActiveSetInputs();
+    renderSetsTable();
     const btn = $('btn-finish-set');
     btn.textContent = I18N[lang].btn_finish_set;
     btn.classList.remove('start-next');
@@ -612,6 +614,7 @@ const handleFinishSetClick = () => {
       modalSets.push({ weight: wt, reps: rp });
     }
     populateActiveSetInputs();
+    renderSetsTable();
     toast(lang === 'ar' ? 'تم تسجيل المجموعة والانتقال للمجموعة التالية ⚡' : 'Set saved! Next set ready ⚡');
     return;
   }
@@ -657,20 +660,32 @@ const cancelLiveRestTimer = () => {
   isResting = false;
 };
 
+// Render Table with Active Set Highlight Indicator
 const renderSetsTable = () => {
   const container = $('sets-container');
-  container.innerHTML = modalSets.map((s, idx) => `
-    <div class="set-row">
-      <div class="set-index">${idx + 1}</div>
-      <div class="set-input-box">
-        <input type="number" step="0.5" class="set-input" value="${s.weight}" onchange="updateSetValue(${idx}, 'weight', this.value)">
+  container.innerHTML = modalSets.map((s, idx) => {
+    const isActive = idx === currentSetIdx;
+    return `
+      <div class="set-row ${isActive ? 'active-row' : ''}">
+        <div class="set-index">${idx + 1}</div>
+        <div class="set-input-box">
+          <input type="number" step="0.5" class="set-input" value="${s.weight}" onchange="updateSetValue(${idx}, 'weight', this.value)">
+        </div>
+        <div class="set-input-box">
+          <input type="number" class="set-input" value="${s.reps}" onchange="updateSetValue(${idx}, 'reps', this.value)">
+        </div>
+        <button type="button" class="btn-remove-set" onclick="removeSetRow(${idx})">✕</button>
       </div>
-      <div class="set-input-box">
-        <input type="number" class="set-input" value="${s.reps}" onchange="updateSetValue(${idx}, 'reps', this.value)">
-      </div>
-      <button type="button" class="btn-remove-set" onclick="removeSetRow(${idx})">✕</button>
-    </div>
-  `).join('');
+    `;
+  }).join('');
+};
+
+window.addNewSetRow = () => {
+  const lastSet = modalSets[modalSets.length - 1] || { weight: 20, reps: 10 };
+  modalSets.push({ weight: lastSet.weight, reps: lastSet.reps });
+  renderSetsTable();
+  populateActiveSetInputs();
+  toast(lang === 'ar' ? 'تمت إضافة مجموعة جديدة ➕' : 'New set added ➕');
 };
 
 window.updateSetValue = (idx, field, val) => {
@@ -780,7 +795,7 @@ const clearExerciseSelection = () => {
 const startSelectedExercisesRoutine = () => {
   if (selectedExIds.length === 0) return;
   const w = todayWorkout();
-  const defaultSetsCount = currentData.plan ? currentData.plan.setsCount : 4;
+  const defaultSetsCount = currentData.plan ? currentData.plan.setsCount : 3;
   const defaultReps = currentData.plan ? parseInt(currentData.plan.repScheme.split('-')[0], 10) || 10 : 10;
 
   selectedExIds.forEach(exId => {
@@ -1410,6 +1425,7 @@ document.addEventListener('DOMContentLoaded', () => {
   $('users-modal-backdrop').addEventListener('click', closeUsersModal);
   $('btn-create-user').addEventListener('click', createNewUser);
 
+  // Custom Exercise modal bindings
   $('btn-open-custom-modal').addEventListener('click', openCustomExModal);
   $('btn-cancel-custom-ex').addEventListener('click', closeCustomExModal);
   $('custom-ex-backdrop').addEventListener('click', closeCustomExModal);
