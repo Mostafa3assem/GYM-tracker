@@ -1,5 +1,5 @@
 /**
- * تمريني – Smart Gym Tracker Pro (Workout Timer Start/Stop Control & Session Finish)
+ * تمريني – Smart Gym Tracker Pro (Manual Schedule Builder, AI Sync & Weekly Management)
  */
 
 const I18N = {
@@ -154,7 +154,7 @@ const BASE_EXERCISES = [
   { id:'treadmill',           name_ar:'مشاية كهربائية (سير)',      name_en:'Treadmill Running / Incline',   category:'cardio', icon:'🏃', yt:'https://www.youtube.com/watch?v=8i3VqdIk-1U', alts:['stationary-bike'] }
 ];
 
-const STORAGE_KEY_PREFIX = 'gymTracker_v17_';
+const STORAGE_KEY_PREFIX = 'gymTracker_v18_';
 const GLOBAL_CUSTOM_KEY = 'gymTracker_global_custom_exercises';
 
 // ── State ─────────────────────────────────────────────────────────
@@ -370,7 +370,7 @@ const addWater = (delta) => {
   if (delta > 0) toast(lang === 'ar' ? 'عاش! كوب ماء إضافي للترطيب 💧' : 'Great! +250ml Water 💧');
 };
 
-// ── Smart Coach Plan Generator ────────────────────────────────────
+// ── Smart Coach & Manual Plan Builder ─────────────────────────────
 const generateSmartPlan = (weight, height, goal, level, days, injury, focus) => {
   let planTitle = '';
   let daysRoutines = [];
@@ -431,6 +431,69 @@ const generateSmartPlan = (weight, height, goal, level, days, injury, focus) => 
     setsCount,
     routines: daysRoutines
   };
+};
+
+window.createManualCustomSchedule = () => {
+  const daysCountStr = prompt(lang === 'ar' ? 'كم عدد أيام جدولك الأسبوعي؟ (مثال: 3، 4، 5 أو 6)' : 'How many workout days per week? (e.g. 3, 4, 5, 6)', '4');
+  const daysCount = Math.max(1, Math.min(7, parseInt(daysCountStr, 10) || 4));
+  
+  const manualRoutines = [];
+  for (let i = 1; i <= daysCount; i++) {
+    manualRoutines.push({
+      dayName: lang === 'ar' ? `اليوم ${i}: (تمرين مخصص)` : `Day ${i}: (Custom Workout)`,
+      exercises: []
+    });
+  }
+
+  currentData.plan = {
+    createdAt: Date.now(),
+    title: lang === 'ar' ? `جدول ${daysCount} أيام مخصص (يدوي)` : `Custom ${daysCount}-Day Routine`,
+    repScheme: '8-12',
+    setsCount: 3,
+    routines: manualRoutines
+  };
+
+  saveUserData();
+  renderPlanView();
+  toast(lang === 'ar' ? 'تم إنشاء الجدول! يمكنك الآن إضافة التمارين لكل يوم 📝' : 'Schedule created! Add your exercises 📝');
+};
+
+window.addNewDayToRoutine = () => {
+  if (!currentData.plan) return;
+  const nextNum = currentData.plan.routines.length + 1;
+  const newDayTitle = prompt(lang === 'ar' ? 'اكتب اسم اليوم الجديد:' : 'Enter new day name:', `اليوم ${nextNum}: (تمرين جديد)`);
+  if (!newDayTitle || !newDayTitle.trim()) return;
+
+  currentData.plan.routines.push({
+    dayName: newDayTitle.trim(),
+    exercises: []
+  });
+  saveUserData();
+  renderPlanView();
+  toast(lang === 'ar' ? 'تمت إضافة يوم جديد إلى الجدول ➕' : 'New day added to routine ➕');
+};
+
+window.removeDayFromRoutine = (rIdx) => {
+  if (!currentData.plan || !currentData.plan.routines[rIdx]) return;
+  const dayName = currentData.plan.routines[rIdx].dayName;
+  if (!confirm(lang === 'ar' ? `حذف "${dayName}" بالكامل من الجدول؟` : `Delete "${dayName}" from routine?`)) return;
+
+  currentData.plan.routines.splice(rIdx, 1);
+  saveUserData();
+  renderPlanView();
+  toast(lang === 'ar' ? 'تم حذف اليوم من الجدول 🗑️' : 'Day deleted from routine 🗑️', 'error');
+};
+
+window.editRoutineDayTitle = (rIdx) => {
+  if (!currentData.plan || !currentData.plan.routines[rIdx]) return;
+  const currentTitle = currentData.plan.routines[rIdx].dayName;
+  const newTitle = prompt(lang === 'ar' ? 'تعديل اسم اليوم:' : 'Edit day title:', currentTitle);
+  if (!newTitle || !newTitle.trim() || newTitle.trim() === currentTitle) return;
+
+  currentData.plan.routines[rIdx].dayName = newTitle.trim();
+  saveUserData();
+  renderPlanView();
+  toast('✅');
 };
 
 // ── Custom Exercise Addition & Smart Delete Prompt ────────────────
@@ -535,7 +598,7 @@ const openModal = (exId) => {
 
   const w = todayWorkout();
   if (w.isFinished) {
-    w.isFinished = false; // Resume timer if adding more sets
+    w.isFinished = false;
     saveUserData();
   }
 
@@ -726,7 +789,7 @@ const saveExerciseModal = () => {
   if (!modalExId) return;
   const w = todayWorkout();
   if (!w.start) w.start = Date.now();
-  w.isFinished = false; // Timer runs while working out
+  w.isFinished = false;
 
   const entry = {
     id: modalExId,
@@ -789,8 +852,11 @@ const renderPlanView = () => {
     container.innerHTML = `
       <div class="empty-state">
         <div class="empty-icon">🎯</div>
-        <p>${lang === 'ar' ? 'لا يوجد جدول تمارين أسبوعي مسجل لـ ' : 'No weekly schedule yet for '}<strong>${currentUser}</strong>.</p>
-        <button type="button" class="btn-save" style="margin-top:14px;" onclick="openPlanQuizModal()">${lang === 'ar' ? 'توليد جدول ذكي بالذكاء الاصطناعي 🚀' : 'Generate AI Smart Schedule 🚀'}</button>
+        <p style="font-size:1rem;margin-bottom:14px;">${lang === 'ar' ? 'لا يوجد جدول تمارين أسبوعي مسجل بعد لـ ' : 'No weekly schedule yet for '}<strong>${currentUser}</strong>.</p>
+        <div style="display:flex;flex-direction:column;gap:10px;max-width:320px;margin:0 auto;">
+          <button type="button" class="btn-save" onclick="createManualCustomSchedule()">✍️ إنشاء وتصميم جدول مخصص بنفسي</button>
+          <button type="button" class="btn-cancel" style="border-color:var(--accent);color:var(--accent);" onclick="openPlanQuizModal()">🤖 توليد جدول ذكي بالذكاء الاصطناعي</button>
+        </div>
       </div>`;
     return;
   }
@@ -804,23 +870,30 @@ const renderPlanView = () => {
           <span class="planner-badge">${p.title}</span>
           <h3 style="margin:6px 0 2px;font-size:1.15rem;font-weight:900;">جدولك الأسبوعي المخصص</h3>
         </div>
-        <button type="button" class="btn-quiz-coach" onclick="openPlanQuizModal()">🔄 تجديد الجدول</button>
+        <div style="display:flex;gap:6px;">
+          <button type="button" class="btn-quiz-coach" onclick="createManualCustomSchedule()">✍️ جدول يدوي</button>
+          <button type="button" class="btn-quiz-coach" onclick="openPlanQuizModal()">🤖 مدرب ذكي</button>
+        </div>
       </div>
-      <p style="margin:0;font-size:.82rem;color:var(--text2);">يمكنك تعديل تمارين كل يوم، إضافة وحذف تمارين، وبدء تمرين اليوم مباشرة:</p>
+      <p style="margin:0;font-size:.82rem;color:var(--text2);">يمكنك تعديل وحذف وإضافة تمارين لكل يوم، أو إضافة أيام جديدة وبدء تمرين اليوم مباشرة:</p>
     </div>
 
     <div class="weekly-routines-container">
       ${p.routines.map((r, rIdx) => `
         <div class="routine-day-card">
           <div class="routine-day-header">
-            <h4>${r.dayName}</h4>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <h4>${r.dayName}</h4>
+              <button type="button" onclick="editRoutineDayTitle(${rIdx})" style="font-size:.78rem;color:var(--text3);padding:2px;" title="تعديل اسم اليوم">✏️</button>
+            </div>
             <div class="routine-day-actions">
               <button type="button" class="btn-add-ex-to-day" onclick="openAddExToRoutineModal(${rIdx})">➕ تمرين</button>
               <button type="button" class="btn-start-day-now" onclick="applyPlanDayToToday(${rIdx})">بدء هذا اليوم ⚡</button>
+              ${p.routines.length > 1 ? `<button type="button" onclick="removeDayFromRoutine(${rIdx})" style="color:var(--danger);font-size:.9rem;padding:0 4px;" title="حذف اليوم بالكامل">🗑️</button>` : ''}
             </div>
           </div>
           <div class="routine-ex-list">
-            ${r.exercises.length === 0 ? `<p style="font-size:.8rem;color:var(--text3);text-align:center;padding:8px 0;">يوم راحة أو لا توجد تمارين مضافة</p>` : ''}
+            ${r.exercises.length === 0 ? `<p style="font-size:.8rem;color:var(--text3);text-align:center;padding:12px 0;">لا توجد تمارين بعد في هذا اليوم. اضغط على <strong>➕ تمرين</strong> لاختيار تمارينك!</p>` : ''}
             ${r.exercises.map((exId, exIdx) => {
               const def = allEx.find(e => e.id === exId);
               const exName = def ? (lang === 'ar' ? def.name_ar : def.name_en) : exId;
@@ -841,6 +914,10 @@ const renderPlanView = () => {
           </div>
         </div>
       `).join('')}
+
+      <button type="button" class="btn-add-set-row" onclick="addNewDayToRoutine()" style="margin-top:10px;padding:12px;">
+        ➕ إضافة يوم تدريب جديد إلى الجدول
+      </button>
     </div>
   `;
 };
@@ -1006,13 +1083,11 @@ const toggleWorkoutTimer = () => {
   }
 
   if (w.isFinished) {
-    // Resume
     w.isFinished = false;
     saveUserData();
     updateTimer();
     toast(lang === 'ar' ? 'تم استئناف وقت التمرين ▶️' : 'Workout timer resumed ▶️');
   } else {
-    // Stop & Finish
     w.end = Date.now();
     w.isFinished = true;
     saveUserData();
@@ -1575,13 +1650,11 @@ document.addEventListener('DOMContentLoaded', () => {
   $('users-modal-backdrop').addEventListener('click', closeUsersModal);
   $('btn-create-user').addEventListener('click', createNewUser);
 
-  // Toggle & Finish Session Timer
   const timerToggleBtn = $('btn-toggle-workout-timer');
   if (timerToggleBtn) {
     timerToggleBtn.addEventListener('click', toggleWorkoutTimer);
   }
 
-  // Custom Exercise modal bindings
   $('btn-open-custom-modal').addEventListener('click', openCustomExModal);
   $('btn-cancel-custom-ex').addEventListener('click', closeCustomExModal);
   $('custom-ex-backdrop').addEventListener('click', closeCustomExModal);
