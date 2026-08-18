@@ -140,6 +140,16 @@ body.light-theme .summary-card { background: linear-gradient(145deg, #ffffff 0%,
 .summary-label{font-size:.72rem;color:var(--text2);font-weight:700}
 .summary-divider{width:1px;height:32px;background:var(--border)}
 
+/* Timer Control Button */
+.btn-timer-control {
+  margin-top: 4px; padding: 4px 10px; border-radius: 8px;
+  background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.35);
+  color: var(--danger); font-size: .72rem; font-weight: 800; cursor: pointer;
+  transition: all .2s ease; white-space: nowrap;
+}
+.btn-timer-control:active { transform: scale(0.92); background: var(--danger); color: #fff; }
+.btn-timer-control.resumed { background: rgba(0, 212, 170, 0.12); border-color: var(--accent); color: var(--accent); }
+
 /* Water Hydration Card */
 .water-card{
   display:flex;align-items:center;justify-content:space-between;
@@ -220,7 +230,7 @@ body.light-theme .summary-card { background: linear-gradient(145deg, #ffffff 0%,
   color: var(--danger); font-size: .75rem; font-weight: 800; text-decoration: underline;
 }
 
-/* Exercise Cards & Grid - Completely Fixed Overlapping */
+/* Exercise Cards & Grid */
 .exercise-grid{
   display:grid;grid-template-columns:repeat(2,1fr);gap:12px;
   margin-bottom:20px;
@@ -256,10 +266,9 @@ body.light-theme .summary-card { background: linear-gradient(145deg, #ffffff 0%,
   background: var(--accent); border-color: var(--accent); color: var(--bg);
 }
 
-/* Custom Exercise Delete Button Fixed Location */
 .btn-delete-cust-ex {
   width: 26px; height: 26px; border-radius: 8px;
-  background: rgba(239, 68, 68, 0.15); border: 1px solid var(--danger);
+  background: rgba(239, 68, 68, 0.18); border: 1px solid var(--danger);
   font-size: .8rem; display: flex; align-items: center; justify-content: center;
   color: var(--danger); cursor: pointer; transition: transform .15s;
 }
@@ -273,7 +282,8 @@ body.light-theme .summary-card { background: linear-gradient(145deg, #ffffff 0%,
 body.light-theme .planner-header-card { background: linear-gradient(135deg, #e8f0fe 0%, #e0f2f1 100%); }
 .planner-header-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
 .planner-badge{display:inline-block;padding:4px 10px;background:var(--accent);color:var(--bg);border-radius:8px;font-size:.75rem;font-weight:800}
-.btn-quiz-coach{padding:8px 14px;background:var(--bg-card-up);border:1px solid var(--accent);color:var(--accent);border-radius:10px;font-size:.78rem;font-weight:800}
+.btn-quiz-coach{padding:8px 12px;background:var(--bg-card-up);border:1px solid var(--accent);color:var(--accent);border-radius:10px;font-size:.78rem;font-weight:800}
+.btn-delete-all-plan{padding:8px 12px;background:rgba(239,68,68,.12);border:1px solid var(--danger);color:var(--danger);border-radius:10px;font-size:.78rem;font-weight:800}
 
 .routine-day-card{
   background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-card);
@@ -281,7 +291,7 @@ body.light-theme .planner-header-card { background: linear-gradient(135deg, #e8f
 }
 .routine-day-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .routine-day-header h4{font-size:1.02rem;font-weight:800;color:var(--accent);margin:0}
-.routine-day-actions{display:flex;gap:6px}
+.routine-day-actions{display:flex;gap:6px;align-items:center}
 .btn-start-day-now{background:var(--accent);color:var(--bg);font-weight:900;padding:6px 12px;border-radius:8px;font-size:.78rem}
 .btn-add-ex-to-day{background:var(--bg-input);border:1px solid var(--border);color:var(--text);font-weight:700;padding:6px 10px;border-radius:8px;font-size:.78rem}
 
@@ -292,8 +302,42 @@ body.light-theme .planner-header-card { background: linear-gradient(135deg, #e8f
 .routine-ex-item:last-child{border-bottom:none}
 .routine-ex-info{display:flex;align-items:center;gap:8px}
 .routine-ex-info span.name{font-weight:700}
-.routine-ex-meta{display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--text2)}
-.btn-del-from-routine{color:var(--danger);font-size:.9rem;padding:4px}
+.routine-ex-meta{display:flex;align-items:center;gap:6px;font-size:.78rem;color:var(--text2)}
+.btn-reorder-ex{
+  width:24px;height:24px;border-radius:6px;background:var(--bg-input);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:.75rem;cursor:pointer;color:var(--text);
+}
+.btn-reorder-ex:active{background:var(--accent);color:var(--bg)}
+.btn-del-from-routine{color:var(--danger);font-size:.9rem;padding:4px;cursor:pointer}
+
+/* Picker Specific Category Pills */
+.picker-modal-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.picker-count-badge{font-size:.78rem;font-weight:800;background:var(--accent);color:var(--bg);padding:3px 10px;border-radius:var(--r-pill)}
+
+.picker-pill {
+  white-space: nowrap; flex-shrink: 0; padding: 6px 14px; border-radius: var(--r-pill);
+  font-size: .8rem; font-weight: 700; background: var(--bg-input); border: 1px solid var(--border);
+  color: var(--text2); cursor: pointer; transition: all .2s ease;
+}
+.picker-pill.active {
+  background: rgba(0, 212, 170, 0.18); color: var(--accent); border-color: var(--accent);
+}
+
+.routine-picker-list{display:flex;flex-direction:column;gap:8px;max-height:290px;overflow-y:auto;padding-right:2px}
+.routine-picker-item{
+  display:flex;align-items:center;justify-content:space-between;padding:12px;
+  background:var(--bg-input);border:1.5px solid var(--border);border-radius:12px;cursor:pointer;transition:all .2s ease;
+}
+.routine-picker-item.selected{
+  border-color:var(--accent);background:rgba(0,212,170,.08);box-shadow:0 0 10px var(--accent-glow);
+}
+.picker-checkbox{
+  width:22px;height:22px;border-radius:50%;border:2px solid var(--border);background:var(--bg-card);
+  display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:900;color:transparent;
+}
+.routine-picker-item.selected .picker-checkbox{
+  background:var(--accent);border-color:var(--accent);color:var(--bg);
+}
 
 /* Multi-start Floating Bar */
 .multi-start-bar {
@@ -420,13 +464,6 @@ body.light-theme .planner-header-card { background: linear-gradient(135deg, #e8f
 }
 .btn-add-set-row:active{background:rgba(0,212,170,.15)}
 
-.routine-picker-list{display:flex;flex-direction:column;gap:8px;max-height:300px;overflow-y:auto}
-.routine-picker-item{
-  display:flex;align-items:center;justify-content:space-between;padding:12px;
-  background:var(--bg-input);border:1px solid var(--border);border-radius:10px;cursor:pointer;
-}
-.routine-picker-item:active{background:var(--bg-card-up);border-color:var(--accent)}
-
 .notes-row{margin-bottom:14px}
 .notes-row label{display:block;font-size:.82rem;font-weight:700;color:var(--text2);margin-bottom:6px}
 .modal-actions{display:flex;gap:10px}
@@ -485,47 +522,4 @@ body.light-theme .planner-header-card { background: linear-gradient(135deg, #e8f
   #app{max-width:480px;margin:0 auto;box-shadow:0 0 60px rgba(0,0,0,.5)}
   .bottom-nav, .multi-start-bar{max-width:480px;margin:0 auto}
   .fab{inset-inline-end:calc(50% - 240px + 20px)}
-}
-/* Timer Control Button */
-.btn-timer-control {
-  margin-top: 4px;
-  padding: 4px 10px;
-  border-radius: 8px;
-  background: rgba(239, 68, 68, 0.12);
-  border: 1px solid rgba(239, 68, 68, 0.35);
-  color: var(--danger);
-  font-size: .72rem;
-  font-weight: 800;
-  cursor: pointer;
-  transition: all .2s ease;
-  white-space: nowrap;
-}
-.btn-timer-control:active {
-  transform: scale(0.92);
-  background: var(--danger);
-  color: #fff;
-}
-.btn-timer-control.resumed {
-  background: rgba(0, 212, 170, 0.12);
-  border-color: var(--accent);
-  color: var(--accent);
-}
-/* Picker Specific Category Pills */
-.picker-pill {
-  white-space: nowrap;
-  flex-shrink: 0;
-  padding: 6px 14px;
-  border-radius: var(--r-pill);
-  font-size: .8rem;
-  font-weight: 700;
-  background: var(--bg-input);
-  border: 1px solid var(--border);
-  color: var(--text2);
-  cursor: pointer;
-  transition: all .2s ease;
-}
-.picker-pill.active {
-  background: rgba(0, 212, 170, 0.18);
-  color: var(--accent);
-  border-color: var(--accent);
 }
