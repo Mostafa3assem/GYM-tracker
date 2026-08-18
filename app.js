@@ -1180,7 +1180,7 @@ const toggleWorkoutTimer = () => {
   }
 };
 
-// ── PDF Export Report ─────────────────────────────────────────────
+// ── Clean & Isolated PDF Export ──────────────────────────────────
 const exportPDFReport = () => {
   const p = currentData.plan;
   const prof = currentData.userProfile || {};
@@ -1188,32 +1188,121 @@ const exportPDFReport = () => {
   const allEx = getAllExercises();
 
   let html = `
-    <div class="pdf-header">
-      <div>
-        <div class="pdf-title">💪 تقرير وخطة تمريني (Tamriny Pro)</div>
-        <div>تاريخ التقرير: ${fmtDate(todayISO())}</div>
+    <!DOCTYPE html>
+    <html lang="ar" dir="rtl">
+    <head>
+      <meta charset="UTF-8">
+      <title>تقرير وخطة تمريني - ${currentUser}</title>
+      <style>
+        @page { size: A4; margin: 15mm; }
+        body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Cairo', 'Segoe UI', Roboto, sans-serif;
+          color: #111;
+          background: #fff;
+          margin: 0;
+          padding: 0;
+          direction: rtl;
+          line-height: 1.45;
+        }
+        .pdf-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border-bottom: 2.5px solid #00a884;
+          padding-bottom: 12px;
+          margin-bottom: 14px;
+        }
+        .pdf-title { font-size: 20px; font-weight: 900; color: #00a884; }
+        .brand-sec { font-size: 16px; font-weight: 900; color: #ff6b35; }
+        
+        .pdf-meta-box {
+          background: #f8fafc;
+          border: 1px solid #e2e8f0;
+          padding: 10px 14px;
+          border-radius: 8px;
+          margin-bottom: 16px;
+          font-size: 13px;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 8px;
+        }
+        .meta-item { display: flex; gap: 4px; }
+        .meta-item strong { color: #334155; }
+        
+        .section-heading {
+          font-size: 15px;
+          font-weight: 800;
+          color: #0f172a;
+          border-bottom: 1.5px solid #cbd5e1;
+          padding-bottom: 4px;
+          margin: 16px 0 10px;
+        }
+        .routine-day-block {
+          border: 1px solid #e2e8f0;
+          border-radius: 8px;
+          padding: 10px 14px;
+          margin-bottom: 10px;
+          page-break-inside: avoid;
+        }
+        .routine-day-title {
+          font-size: 14px;
+          font-weight: 800;
+          color: #00a884;
+          margin-bottom: 6px;
+        }
+        .ex-row {
+          display: flex;
+          justify-content: space-between;
+          border-bottom: 1px dashed #e2e8f0;
+          padding: 5px 0;
+          font-size: 12.5px;
+        }
+        .ex-row:last-child { border-bottom: none; }
+        .ex-name { font-weight: 700; color: #1e293b; }
+        .ex-meta { color: #64748b; font-weight: 600; }
+        .last-weights { color: #ff6b35; font-weight: 700; }
+      </style>
+    </head>
+    <body>
+      <div class="pdf-header">
+        <div>
+          <div class="pdf-title">💪 تقرير وخطة تمريني (Tamriny Pro)</div>
+          <div style="font-size:12px;color:#64748b;">تاريخ التقرير: ${fmtDate(todayISO())}</div>
+        </div>
+        <div class="brand-sec">SEC ASSEM</div>
       </div>
-      <div style="font-weight:900;font-size:20px;color:#ff6b35;">SEC ASSEM</div>
-    </div>
 
-    <div class="pdf-meta-box">
-      <strong>بيانات المتدرب:</strong> ${currentUser} | 
-      <strong>الوزن:</strong> ${prof.weight || p?.weight || '—'} كجم | 
-      <strong>الطول:</strong> ${prof.height || p?.height || '—'} سم | 
-      <strong>الهدف:</strong> ${p?.goal === 'bulk' ? 'تضخيم وبناء عضل' : (p?.goal === 'cut' ? 'تنشيف وحرق دهون' : 'لياقة وقوة')} | 
-      <strong>الإصابات:</strong> ${p?.injury || 'لا توجد'}
-    </div>
+      <div class="pdf-meta-box">
+        <div class="meta-item"><strong>المتدرب:</strong> <span>${currentUser}</span></div>
+        <div class="meta-item"><strong>الوزن:</strong> <span>${prof.weight || p?.weight || '—'} كجم</span></div>
+        <div class="meta-item"><strong>الطول:</strong> <span>${prof.height || p?.height || '—'} سم</span></div>
+        <div class="meta-item"><strong>الهدف:</strong> <span>${p?.goal === 'bulk' ? 'تضخيم وبناء عضل' : (p?.goal === 'cut' ? 'تنشيف وحرق دهون' : 'لياقة وقوة بدنية')}</span></div>
+        <div class="meta-item"><strong>الإصابات:</strong> <span>${p?.injury || 'لا توجد'}</span></div>
+        <div class="meta-item"><strong>النظام:</strong> <span>${p?.setsCount || 3} مجموعات × ${p?.repScheme || '8-12'} عدات</span></div>
+      </div>
   `;
 
   if (p && p.routines) {
-    html += `<h3 style="margin-bottom:10px;color:#00a884;">📋 جدول التمارين الأسبوعي (${p.title})</h3>`;
+    html += `<div class="section-heading">📋 جدول التمارين الأسبوعي المخصص (${p.title})</div>`;
     p.routines.forEach(r => {
       html += `
-        <div class="pdf-day-block">
-          <div class="pdf-day-title">${r.dayName}</div>
+        <div class="routine-day-block">
+          <div class="routine-day-title">${r.dayName} (${r.exercises.length} تمارين)</div>
           ${r.exercises.map(exId => {
             const def = allEx.find(e => e.id === exId);
-            return `<div class="pdf-ex-row"><span>${def ? (lang === 'ar' ? def.name_ar : def.name_en) : exId}</span><span>${p.setsCount} مجموعات × ${p.repScheme} عدات</span></div>`;
+            const last = lastSession(exId);
+            let lastStr = '';
+            if (last && last.sets && last.sets.length) {
+              lastStr = last.sets.map((s, i) => `م${i+1}: ${s.weight}kg×${s.reps}`).join(' | ');
+            }
+            return `
+              <div class="ex-row">
+                <span class="ex-name">${def ? def.icon : '🏋️'} ${def ? def.name_ar : exId}</span>
+                <span class="ex-meta">
+                  ${lastStr ? `<span class="last-weights">[${lastStr}]</span>` : `${p.setsCount} مجموعات × ${p.repScheme} عدات`}
+                </span>
+              </div>
+            `;
           }).join('')}
         </div>
       `;
@@ -1221,25 +1310,51 @@ const exportPDFReport = () => {
   }
 
   if (pastWorkouts.length > 0) {
-    html += `<h3 style="margin-top:20px;margin-bottom:10px;color:#00a884;">📊 سجل آخر الأوزان المسجلة</h3>`;
-    pastWorkouts.slice(-5).reverse().forEach(w => {
+    html += `<div class="section-heading">📊 سجل آخر الأوزان المسجلة للجلسات</div>`;
+    pastWorkouts.slice(-4).reverse().forEach(w => {
       html += `
-        <div class="pdf-day-block">
-          <div class="pdf-day-title">${fmtDate(w.date)}</div>
+        <div class="routine-day-block">
+          <div class="routine-day-title" style="color:#334155;">جلسة: ${fmtDate(w.date)}</div>
           ${w.exercises.map(ex => {
             const def = allEx.find(e => e.id === ex.id);
             const setsStr = (ex.sets || []).map((s, i) => `[م${i+1}: ${s.weight}كجم × ${s.reps}]`).join(' ');
-            return `<div class="pdf-ex-row"><span>${def ? def.name_ar : ex.id}</span><span>${setsStr}</span></div>`;
+            return `
+              <div class="ex-row">
+                <span class="ex-name">${def ? def.name_ar : ex.id}</span>
+                <span class="ex-meta" style="color:#00a884;font-weight:700;">${setsStr}</span>
+              </div>
+            `;
           }).join('')}
         </div>
       `;
     });
   }
 
-  $('printable-pdf').innerHTML = html;
-  window.print();
-};
+  html += `</body></html>`;
 
+  // المعالجة الطباعية المعزولة لضمان عدم تداخل واجهة التطبيق مع الـ PDF
+  const printFrame = document.createElement('iframe');
+  printFrame.style.position = 'fixed';
+  printFrame.style.right = '0';
+  printFrame.style.bottom = '0';
+  printFrame.style.width = '0';
+  printFrame.style.height = '0';
+  printFrame.style.border = 'none';
+  document.body.appendChild(printFrame);
+
+  const frameDoc = printFrame.contentWindow.document;
+  frameDoc.open();
+  frameDoc.write(html);
+  frameDoc.close();
+
+  setTimeout(() => {
+    printFrame.contentWindow.focus();
+    printFrame.contentWindow.print();
+    setTimeout(() => {
+      document.body.removeChild(printFrame);
+    }, 1000);
+  }, 500);
+};
 // ── Swapper Modal ─────────────────────────────────────────────────
 const openSwapperModal = (currentExId) => {
   swapTargetExId = currentExId;
