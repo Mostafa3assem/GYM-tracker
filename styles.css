@@ -510,3 +510,22 @@ body.light-theme .planner-header-card { background: linear-gradient(135deg, #e8f
   border-color: var(--accent);
   color: var(--accent);
 }
+/* Picker Specific Category Pills */
+.picker-pill {
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding: 6px 14px;
+  border-radius: var(--r-pill);
+  font-size: .8rem;
+  font-weight: 700;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  cursor: pointer;
+  transition: all .2s ease;
+}
+.picker-pill.active {
+  background: rgba(0, 212, 170, 0.18);
+  color: var(--accent);
+  border-color: var(--accent);
+}
