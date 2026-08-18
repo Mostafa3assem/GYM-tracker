@@ -1,5 +1,5 @@
 /**
- * تمريني – Smart Gym Tracker Pro (Active Row Indicator, 3 Default Sets & Delete Fix)
+ * تمريني – Smart Gym Tracker Pro (Workout Timer Start/Stop Control & Session Finish)
  */
 
 const I18N = {
@@ -42,7 +42,7 @@ const I18N = {
     generate_plan_btn: 'توليد الخطة الذكية 🚀',
     approval_title: '🎉 تم تجهيز برنامجك التدريبي!',
     edit_plan_btn: 'تعديل',
-    accept_plan_btn: 'اعتماد وبدء تمرين اليوم ⚡',
+    accept_plan_btn: 'اعتماد الخطة في الجدول ⚡',
     notif_title: '🔔 التنبيهات والمتابعة',
     clear_all: 'مسح الكل',
     manage_users_title: 'إدارة المتدربين',
@@ -90,7 +90,7 @@ const I18N = {
     generate_plan_btn: 'Generate Smart Plan 🚀',
     approval_title: '🎉 Your Workout Plan is Ready!',
     edit_plan_btn: 'Edit',
-    accept_plan_btn: 'Accept & Start Today ⚡',
+    accept_plan_btn: 'Accept & Set Weekly Schedule ⚡',
     notif_title: '🔔 Notifications & Check-in',
     clear_all: 'Clear All',
     manage_users_title: 'Manage Athletes',
@@ -101,7 +101,7 @@ const I18N = {
   }
 };
 
-// Base Built-in Database
+// Base Built-in Exercises
 const BASE_EXERCISES = [
   // صدر
   { id:'bench-press',         name_ar:'بنش بريس مستوي بالبار',     name_en:'Barbell Flat Bench Press',      category:'chest', icon:'🏋️', yt:'https://www.youtube.com/watch?v=rT7DgCr-3pg', alts:['db-flat-press', 'chest-press-machine', 'dips-chest'] },
@@ -154,7 +154,7 @@ const BASE_EXERCISES = [
   { id:'treadmill',           name_ar:'مشاية كهربائية (سير)',      name_en:'Treadmill Running / Incline',   category:'cardio', icon:'🏃', yt:'https://www.youtube.com/watch?v=8i3VqdIk-1U', alts:['stationary-bike'] }
 ];
 
-const STORAGE_KEY_PREFIX = 'gymTracker_v15_';
+const STORAGE_KEY_PREFIX = 'gymTracker_v17_';
 const GLOBAL_CUSTOM_KEY = 'gymTracker_global_custom_exercises';
 
 // ── State ─────────────────────────────────────────────────────────
@@ -167,10 +167,10 @@ let globalCustomExercises = [];
 let category       = 'all';
 let query          = '';
 
-// Multi-select state
 let selectedExIds  = [];
+let targetRoutineIndexForAdd = null;
 
-// Interactive Guided Session State
+// Modal State
 let modalExId       = null;
 let modalSets       = [];
 let currentSetIdx   = 0;
@@ -319,7 +319,7 @@ const todayWorkout = () => {
   const iso = todayISO();
   let w = currentData.workouts.find(x => x.date === iso);
   if (!w) {
-    w = { id: crypto.randomUUID?.() || Math.random().toString(36).slice(2), date: iso, start: null, end: null, exercises: [] };
+    w = { id: crypto.randomUUID?.() || Math.random().toString(36).slice(2), date: iso, start: null, end: null, isFinished: false, exercises: [] };
     currentData.workouts.push(w);
     saveUserData();
   }
@@ -375,7 +375,7 @@ const generateSmartPlan = (weight, height, goal, level, days, injury, focus) => 
   let planTitle = '';
   let daysRoutines = [];
   const repScheme = goal === 'bulk' ? '8-12' : (goal === 'cut' ? '12-15' : '5-8');
-  const setsCount = 3; // Default 3 sets
+  const setsCount = 3;
 
   if (days === '3') {
     planTitle = 'Full Body 3x (شامل الجسم 3 أيام)';
@@ -433,7 +433,7 @@ const generateSmartPlan = (weight, height, goal, level, days, injury, focus) => 
   };
 };
 
-// ── Custom Exercise Addition & Deletion ───────────────────────────
+// ── Custom Exercise Addition & Smart Delete Prompt ────────────────
 const openCustomExModal = () => {
   const altsSelect = $('cust-alts');
   const allEx = getAllExercises();
@@ -492,22 +492,40 @@ window.deleteCustomExercise = (exId, e) => {
   const target = allEx.find(item => item.id === exId);
   const exName = target ? target.name_ar : 'هذا التمرين';
 
-  if (!confirm(lang === 'ar' ? `هل أنت متأكد من حذف تمرين "${exName}"؟` : `Delete exercise "${exName}"?`)) return;
+  const isGlobal = globalCustomExercises.some(item => item.id === exId);
 
-  if (globalCustomExercises.some(item => item.id === exId)) {
-    globalCustomExercises = globalCustomExercises.filter(item => item.id !== exId);
-    saveGlobalCustomExercises();
-  }
+  if (isGlobal) {
+    const choice = prompt(
+      lang === 'ar' 
+        ? `تمرين "${exName}" متاح للجميع.\nاكتب (1) لحذفه نهائياً من كل المتدربين.\nاكتب (2) لإخفائه من حساب "${currentUser}" فقط.`
+        : `Exercise "${exName}" is global.\nType (1) to delete for ALL athletes.\nType (2) to remove for "${currentUser}" only.`,
+      '1'
+    );
 
-  if (currentData.customExercises && currentData.customExercises.some(item => item.id === exId)) {
-    currentData.customExercises = currentData.customExercises.filter(item => item.id !== exId);
-    saveUserData();
+    if (choice === '1') {
+      globalCustomExercises = globalCustomExercises.filter(item => item.id !== exId);
+      saveGlobalCustomExercises();
+      toast(lang === 'ar' ? 'تم حذف التمرين من جميع الحسابات 🗑️' : 'Deleted for all athletes 🗑️', 'error');
+    } else if (choice === '2') {
+      if (!currentData.hiddenGlobalExercises) currentData.hiddenGlobalExercises = [];
+      currentData.hiddenGlobalExercises.push(exId);
+      saveUserData();
+      toast(lang === 'ar' ? `تم إخفاء التمرين من حساب ${currentUser} 👤` : `Hidden for ${currentUser} 👤`);
+    } else {
+      return;
+    }
+  } else {
+    if (!confirm(lang === 'ar' ? `هل أنت متأكد من حذف تمرين "${exName}"؟` : `Delete exercise "${exName}"?`)) return;
+    if (currentData.customExercises) {
+      currentData.customExercises = currentData.customExercises.filter(item => item.id !== exId);
+      saveUserData();
+    }
+    toast(lang === 'ar' ? 'تم حذف التمرين بنجاح 🗑️' : 'Exercise deleted 🗑️', 'error');
   }
 
   selectedExIds = selectedExIds.filter(id => id !== exId);
   updateMultiSelectUI();
   renderLibrary();
-  toast(lang === 'ar' ? 'تم حذف التمرين بنجاح 🗑️' : 'Exercise deleted 🗑️', 'error');
 };
 
 // ── Interactive Guided Exercise Logger ────────────────────────────
@@ -515,8 +533,14 @@ const openModal = (exId) => {
   const def = getAllExercises().find(e => e.id === exId);
   if (!def) return;
 
+  const w = todayWorkout();
+  if (w.isFinished) {
+    w.isFinished = false; // Resume timer if adding more sets
+    saveUserData();
+  }
+
   modalExId = exId;
-  const existing = todayWorkout().exercises.find(e => e.id === exId);
+  const existing = w.exercises.find(e => e.id === exId);
   const last = lastSession(exId);
 
   const exName = lang === 'ar' ? def.name_ar : def.name_en;
@@ -534,12 +558,11 @@ const openModal = (exId) => {
 
   if (last && last.sets && last.sets.length) {
     const lastSetsStr = last.sets.map((s, i) => `${lang === 'ar' ? 'م' : 'S'}${i+1}: ${s.weight}kg×${s.reps}`).join(' | ');
-    $('last-session-text').innerHTML = `${lang === 'ar' ? 'آخر تمرين' : 'Last Session'} (${fmtDate(last.date)}):<br><strong>${lastSetsStr}</strong>`;
+    $('last-session-text').innerHTML = `${lang === 'ar' ? 'آخر وزن لعبته' : 'Last Session'} (${fmtDate(last.date)}):<br><strong>${lastSetsStr}</strong>`;
   } else {
     $('last-session-text').textContent = lang === 'ar' ? 'أول مرة تلعب هذا التمرين! 💪' : 'First time doing this exercise! 💪';
   }
 
-  // 3 Sets as the default
   if (existing && existing.sets && existing.sets.length) {
     modalSets = JSON.parse(JSON.stringify(existing.sets));
   } else if (last && last.sets && last.sets.length) {
@@ -660,7 +683,6 @@ const cancelLiveRestTimer = () => {
   isResting = false;
 };
 
-// Render Table with Active Set Highlight Indicator
 const renderSetsTable = () => {
   const container = $('sets-container');
   container.innerHTML = modalSets.map((s, idx) => {
@@ -704,6 +726,7 @@ const saveExerciseModal = () => {
   if (!modalExId) return;
   const w = todayWorkout();
   if (!w.start) w.start = Date.now();
+  w.isFinished = false; // Timer runs while working out
 
   const entry = {
     id: modalExId,
@@ -755,6 +778,152 @@ const closeModal = () => {
   $('exercise-modal').classList.remove('open');
   document.body.style.overflow = '';
   modalExId = null;
+};
+
+// ── Interactive Weekly Schedule & Plan Management ─────────────────
+const renderPlanView = () => {
+  const container = $('plan-display-container');
+  const allEx = getAllExercises();
+
+  if (!currentData.plan || !currentData.plan.routines) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🎯</div>
+        <p>${lang === 'ar' ? 'لا يوجد جدول تمارين أسبوعي مسجل لـ ' : 'No weekly schedule yet for '}<strong>${currentUser}</strong>.</p>
+        <button type="button" class="btn-save" style="margin-top:14px;" onclick="openPlanQuizModal()">${lang === 'ar' ? 'توليد جدول ذكي بالذكاء الاصطناعي 🚀' : 'Generate AI Smart Schedule 🚀'}</button>
+      </div>`;
+    return;
+  }
+
+  const p = currentData.plan;
+
+  container.innerHTML = `
+    <div class="planner-header-card">
+      <div class="planner-header-top">
+        <div>
+          <span class="planner-badge">${p.title}</span>
+          <h3 style="margin:6px 0 2px;font-size:1.15rem;font-weight:900;">جدولك الأسبوعي المخصص</h3>
+        </div>
+        <button type="button" class="btn-quiz-coach" onclick="openPlanQuizModal()">🔄 تجديد الجدول</button>
+      </div>
+      <p style="margin:0;font-size:.82rem;color:var(--text2);">يمكنك تعديل تمارين كل يوم، إضافة وحذف تمارين، وبدء تمرين اليوم مباشرة:</p>
+    </div>
+
+    <div class="weekly-routines-container">
+      ${p.routines.map((r, rIdx) => `
+        <div class="routine-day-card">
+          <div class="routine-day-header">
+            <h4>${r.dayName}</h4>
+            <div class="routine-day-actions">
+              <button type="button" class="btn-add-ex-to-day" onclick="openAddExToRoutineModal(${rIdx})">➕ تمرين</button>
+              <button type="button" class="btn-start-day-now" onclick="applyPlanDayToToday(${rIdx})">بدء هذا اليوم ⚡</button>
+            </div>
+          </div>
+          <div class="routine-ex-list">
+            ${r.exercises.length === 0 ? `<p style="font-size:.8rem;color:var(--text3);text-align:center;padding:8px 0;">يوم راحة أو لا توجد تمارين مضافة</p>` : ''}
+            ${r.exercises.map((exId, exIdx) => {
+              const def = allEx.find(e => e.id === exId);
+              const exName = def ? (lang === 'ar' ? def.name_ar : def.name_en) : exId;
+              const last = lastSession(exId);
+              const lastWeightStr = last?.sets?.[0]?.weight ? `آخر وزن: ${last.sets[0].weight}kg` : 'جديد';
+              return `
+                <div class="routine-ex-item">
+                  <div class="routine-ex-info">
+                    <span>${def ? def.icon : '🏋️'}</span>
+                    <span class="name">${exName}</span>
+                  </div>
+                  <div class="routine-ex-meta">
+                    <span>${lastWeightStr}</span>
+                    <button type="button" class="btn-del-from-routine" onclick="removeExFromRoutine(${rIdx}, ${exIdx})" title="حذف من جدول هذا اليوم">✕</button>
+                  </div>
+                </div>`;
+            }).join('')}
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+};
+
+window.openAddExToRoutineModal = (routineIdx) => {
+  targetRoutineIndexForAdd = routineIdx;
+  renderRoutineExPicker();
+  $('add-to-routine-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+};
+
+const renderRoutineExPicker = () => {
+  const container = $('routine-ex-picker-list');
+  const allEx = getAllExercises();
+  const searchQ = ($('routine-ex-search')?.value || '').toLowerCase().trim();
+
+  let list = allEx;
+  if (searchQ) {
+    list = list.filter(e => e.name_ar.toLowerCase().includes(searchQ) || e.name_en.toLowerCase().includes(searchQ));
+  }
+
+  container.innerHTML = list.map(e => `
+    <div class="routine-picker-item" onclick="confirmAddExToRoutine('${e.id}')">
+      <div>
+        <strong>${e.icon} ${e.name_ar}</strong>
+        <div style="font-size:.75rem;color:var(--orange);">${e.category}</div>
+      </div>
+      <span style="color:var(--accent);font-weight:800;">إضافة ➕</span>
+    </div>
+  `).join('');
+};
+
+window.confirmAddExToRoutine = (exId) => {
+  if (targetRoutineIndexForAdd === null || !currentData.plan) return;
+  const routine = currentData.plan.routines[targetRoutineIndexForAdd];
+  if (!routine.exercises.includes(exId)) {
+    routine.exercises.push(exId);
+    saveUserData();
+    renderPlanView();
+    toast(lang === 'ar' ? 'تمت إضافة التمرين إلى اليوم المختار ✅' : 'Exercise added to routine ✅');
+  }
+  $('add-to-routine-modal').classList.remove('open');
+  document.body.style.overflow = '';
+  targetRoutineIndexForAdd = null;
+};
+
+window.removeExFromRoutine = (rIdx, exIdx) => {
+  if (!currentData.plan || !currentData.plan.routines[rIdx]) return;
+  currentData.plan.routines[rIdx].exercises.splice(exIdx, 1);
+  saveUserData();
+  renderPlanView();
+  toast(lang === 'ar' ? 'تم حذف التمرين من الجدول 🗑️' : 'Removed from routine 🗑️', 'error');
+};
+
+const applyPlanDayToToday = (routineIdx) => {
+  const p = currentData.plan;
+  if (!p || !p.routines[routineIdx]) return;
+  const routine = p.routines[routineIdx];
+  const w = todayWorkout();
+
+  routine.exercises.forEach(exId => {
+    if (!w.exercises.some(e => e.id === exId)) {
+      const last = lastSession(exId);
+      const defaultSets = [];
+      for (let i = 0; i < p.setsCount; i++) {
+        defaultSets.push({
+          weight: last?.sets?.[i]?.weight || last?.sets?.[0]?.weight || 20,
+          reps: parseInt(p.repScheme.split('-')[0], 10) || 10
+        });
+      }
+      w.exercises.push({ id: exId, sets: defaultSets, notes: '', time: Date.now() });
+    }
+  });
+
+  saveUserData();
+  switchView('today-view');
+  toast(lang === 'ar' ? `تم تجهيز تمارين: ${routine.dayName} ✅` : `Loaded: ${routine.dayName} ✅`);
+
+  if (routine.exercises.length > 0) {
+    setTimeout(() => {
+      openModal(routine.exercises[0]);
+    }, 400);
+  }
 };
 
 // ── Multi-Exercise Selection Flow ─────────────────────────────────
@@ -823,6 +992,35 @@ const startSelectedExercisesRoutine = () => {
   }, 400);
 };
 
+// ── Toggle / Stop Workout Timer ───────────────────────────────────
+const toggleWorkoutTimer = () => {
+  const w = todayWorkout();
+  if (!w.start) {
+    w.start = Date.now();
+    w.end = null;
+    w.isFinished = false;
+    saveUserData();
+    updateTimer();
+    toast(lang === 'ar' ? 'تم بدء احتساب وقت التمرين ⏱️' : 'Workout timer started ⏱️');
+    return;
+  }
+
+  if (w.isFinished) {
+    // Resume
+    w.isFinished = false;
+    saveUserData();
+    updateTimer();
+    toast(lang === 'ar' ? 'تم استئناف وقت التمرين ▶️' : 'Workout timer resumed ▶️');
+  } else {
+    // Stop & Finish
+    w.end = Date.now();
+    w.isFinished = true;
+    saveUserData();
+    updateTimer();
+    toast(lang === 'ar' ? 'عاش يا بطل! تم إنهاء الجلسة وحفظ الوقت 🏆' : 'Great session! Workout finished 🏆');
+  }
+};
+
 // ── PDF Export Report ─────────────────────────────────────────────
 const exportPDFReport = () => {
   const p = currentData.plan;
@@ -849,7 +1047,7 @@ const exportPDFReport = () => {
   `;
 
   if (p && p.routines) {
-    html += `<h3 style="margin-bottom:10px;color:#00a884;">📋 جدول التمارين المخصص (${p.title})</h3>`;
+    html += `<h3 style="margin-bottom:10px;color:#00a884;">📋 جدول التمارين الأسبوعي (${p.title})</h3>`;
     p.routines.forEach(r => {
       html += `
         <div class="pdf-day-block">
@@ -1008,8 +1206,9 @@ const acceptGeneratedPlan = () => {
   document.body.style.overflow = '';
   pendingPlan = null;
 
+  renderPlanView();
   applyPlanDayToToday(0);
-  toast(lang === 'ar' ? 'تم اعتماد الخطة وبدء تمرين اليوم 🚀' : 'Plan accepted! Starting workout 🚀');
+  toast(lang === 'ar' ? 'تم اعتماد الخطة في جدولك الأسبوعي 🚀' : 'Plan set in weekly schedule 🚀');
 };
 
 // ── Render Views ──────────────────────────────────────────────────
@@ -1076,8 +1275,27 @@ const renderToday = () => {
 const updateTimer = () => {
   const w = todayWorkout();
   const el = $('summary-timer');
-  if (!w.start) { el.textContent = '00:00'; return; }
-  el.textContent = fmtTimer(Date.now() - w.start);
+  const timerBtn = $('btn-toggle-workout-timer');
+
+  if (!w.start) {
+    el.textContent = '00:00';
+    if (timerBtn) timerBtn.textContent = '▶️ بدء الوقت';
+    return;
+  }
+
+  if (w.isFinished && w.end) {
+    el.textContent = fmtTimer(w.end - w.start);
+    if (timerBtn) {
+      timerBtn.textContent = '▶️ استئناف الوقت';
+      timerBtn.classList.add('resumed');
+    }
+  } else {
+    el.textContent = fmtTimer(Date.now() - w.start);
+    if (timerBtn) {
+      timerBtn.textContent = '⏹️ إنهاء الجلسة';
+      timerBtn.classList.remove('resumed');
+    }
+  }
 };
 
 const removeExercise = (exId) => {
@@ -1093,7 +1311,9 @@ const removeExercise = (exId) => {
 const renderLibrary = () => {
   $$('.pill').forEach(p => p.classList.toggle('active', p.dataset.category === category));
 
-  let list = getAllExercises();
+  const hidden = currentData.hiddenGlobalExercises || [];
+  let list = getAllExercises().filter(e => !hidden.includes(e.id));
+
   if (category !== 'all') list = list.filter(e => e.category === category);
   if (query.trim()) {
     const q = query.trim().toLowerCase();
@@ -1113,15 +1333,15 @@ const renderLibrary = () => {
 
     return `
       <div class="ex-card ${isSelected ? 'selected' : ''}" data-exid="${ex.id}" onclick="openModal('${ex.id}')">
-        <div class="ex-select-checkbox" onclick="toggleExerciseSelection('${ex.id}', event)">✓</div>
-        
-        ${isCustom ? `
-          <button type="button" class="btn-delete-cust-ex" onclick="deleteCustomExercise('${ex.id}', event)" title="حذف هذا التمرين">
-            🗑️
-          </button>
-        ` : ''}
-
-        <div class="card-icon">${ex.icon}</div>
+        <div class="ex-card-top-bar">
+          <div class="ex-select-checkbox" onclick="toggleExerciseSelection('${ex.id}', event)">✓</div>
+          <div class="card-icon">${ex.icon}</div>
+          ${isCustom ? `
+            <button type="button" class="btn-delete-cust-ex" onclick="deleteCustomExercise('${ex.id}', event)" title="حذف هذا التمرين">
+              🗑️
+            </button>
+          ` : '<div style="width:26px;"></div>'}
+        </div>
         <h4>${exName}</h4>
         <div class="ex-card-actions">
           <span class="muscle-tag">${ex.category}${isCustom ? ' (مخصص)' : ''}</span>
@@ -1131,77 +1351,7 @@ const renderLibrary = () => {
   }).join('');
 };
 
-const renderPlanView = () => {
-  const container = $('plan-display-container');
-  if (!currentData.plan) {
-    container.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-icon">🎯</div>
-        <p>${lang === 'ar' ? 'لا توجد خطة مخصصة لـ ' : 'No plan yet for '}<strong>${currentUser}</strong>.</p>
-        <button type="button" class="btn-save" style="margin-top:14px;" onclick="openPlanQuizModal()">${lang === 'ar' ? 'ابدأ مع المدرب الذكي 🚀' : 'Start Smart Coach 🚀'}</button>
-      </div>`;
-    return;
-  }
-
-  const p = currentData.plan;
-  const allEx = getAllExercises();
-  container.innerHTML = `
-    <div class="coach-header-card">
-      <span class="coach-badge">${p.goal === 'bulk' ? (lang === 'ar' ? 'تضخيم وبناء عضل' : 'Bulking') : (p.goal === 'cut' ? (lang === 'ar' ? 'تنشيف وحرق دهون' : 'Cutting') : (lang === 'ar' ? 'قوة ولياقة' : 'Strength'))}</span>
-      <h3>${p.title}</h3>
-      <p>${lang === 'ar' ? 'نظام التكرارات:' : 'Reps:'} <strong>${p.repScheme} ${lang === 'ar' ? 'عدات' : 'reps'}</strong> | ${lang === 'ar' ? 'المجموعات:' : 'Sets:'} <strong>${p.setsCount} ${lang === 'ar' ? 'مجاميع' : 'sets'}</strong></p>
-      <button type="button" class="btn-user-action" style="margin-top:10px;" onclick="openPlanQuizModal()">${lang === 'ar' ? 'تعديل الخطة ⚙️' : 'Edit Plan ⚙️'}</button>
-    </div>
-    <div class="plan-routines-list">
-      ${p.routines.map((r, rIdx) => `
-        <div class="plan-day-card">
-          <div class="plan-day-header">
-            <h4>${r.dayName}</h4>
-            <button type="button" class="btn-user-action" onclick="applyPlanDayToToday(${rIdx})">${lang === 'ar' ? 'بدء تمرين هذا اليوم ⚡' : 'Start Today Workout ⚡'}</button>
-          </div>
-          <div class="plan-ex-list">
-            ${r.exercises.map(exId => {
-              const def = allEx.find(e => e.id === exId);
-              const exName = def ? (lang === 'ar' ? def.name_ar : def.name_en) : exId;
-              return `
-                <div class="plan-ex-item">
-                  <span class="plan-ex-name">${def ? def.icon : '🏋️'} ${exName}</span>
-                  <span class="plan-ex-meta">${p.setsCount}×${p.repScheme}</span>
-                </div>`;
-            }).join('')}
-          </div>
-        </div>
-      `).join('')}
-    </div>
-  `;
-};
-
-const applyPlanDayToToday = (routineIdx) => {
-  const p = currentData.plan;
-  if (!p || !p.routines[routineIdx]) return;
-  const routine = p.routines[routineIdx];
-  const w = todayWorkout();
-
-  routine.exercises.forEach(exId => {
-    if (!w.exercises.some(e => e.id === exId)) {
-      const last = lastSession(exId);
-      const defaultSets = [];
-      for (let i = 0; i < p.setsCount; i++) {
-        defaultSets.push({
-          weight: last?.sets?.[i]?.weight || last?.sets?.[0]?.weight || 20,
-          reps: parseInt(p.repScheme.split('-')[0], 10) || 10
-        });
-      }
-      w.exercises.push({ id: exId, sets: defaultSets, notes: '', time: Date.now() });
-    }
-  });
-
-  saveUserData();
-  switchView('today-view');
-  toast(lang === 'ar' ? `تم تجهيز جدول: ${routine.dayName} ✅` : `Loaded: ${routine.dayName} ✅`);
-};
-
-// ── History View in Settings ──────────────────────────────────────
+// ── History Modal in Settings ─────────────────────────────────────
 const openHistoryModal = () => {
   const container = $('history-list');
   const past = [...currentData.workouts]
@@ -1253,7 +1403,7 @@ const toggleHistory = (wId) => {
   if (card) card.classList.toggle('open');
 };
 
-// ── Notifications Modal ───────────────────────────────────────────
+// ── Notifications ─────────────────────────────────────────────────
 const openNotifModal = () => {
   const container = $('notif-content-box');
   if (!currentData.notifications || currentData.notifications.length === 0) {
@@ -1425,6 +1575,12 @@ document.addEventListener('DOMContentLoaded', () => {
   $('users-modal-backdrop').addEventListener('click', closeUsersModal);
   $('btn-create-user').addEventListener('click', createNewUser);
 
+  // Toggle & Finish Session Timer
+  const timerToggleBtn = $('btn-toggle-workout-timer');
+  if (timerToggleBtn) {
+    timerToggleBtn.addEventListener('click', toggleWorkoutTimer);
+  }
+
   // Custom Exercise modal bindings
   $('btn-open-custom-modal').addEventListener('click', openCustomExModal);
   $('btn-cancel-custom-ex').addEventListener('click', closeCustomExModal);
@@ -1439,6 +1595,16 @@ document.addEventListener('DOMContentLoaded', () => {
   $('btn-open-history').addEventListener('click', openHistoryModal);
   $('btn-close-history').addEventListener('click', closeHistoryModal);
   $('history-modal-backdrop').addEventListener('click', closeHistoryModal);
+
+  $('btn-close-routine-picker').addEventListener('click', () => {
+    $('add-to-routine-modal').classList.remove('open');
+    document.body.style.overflow = '';
+  });
+  $('add-to-routine-backdrop').addEventListener('click', () => {
+    $('add-to-routine-modal').classList.remove('open');
+    document.body.style.overflow = '';
+  });
+  $('routine-ex-search').addEventListener('input', renderRoutineExPicker);
 
   $('btn-close-swap').addEventListener('click', closeSwapperModal);
   $('swap-modal-backdrop').addEventListener('click', closeSwapperModal);
@@ -1514,6 +1680,7 @@ document.addEventListener('DOMContentLoaded', () => {
       closeSwapperModal();
       closeCustomExModal();
       closeHistoryModal();
+      $('add-to-routine-modal').classList.remove('open');
       $('approval-modal').classList.remove('open');
     }
   });
