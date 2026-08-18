@@ -98,7 +98,7 @@
                 </button>
             </section>
 
-            <!-- === VIEW: Library (With Multi-select Flow) === -->
+            <!-- === VIEW: Library (With Add Custom Exercise) === -->
             <section id="library-view" class="view">
                 <div class="library-top-bar">
                     <div class="search-box">
@@ -108,6 +108,9 @@
                         </svg>
                         <input type="text" id="search-input" placeholder="ابحث عن تمرين..." autocomplete="off">
                     </div>
+                    <button type="button" class="btn-add-custom-trigger" id="btn-open-custom-modal">
+                        <span>➕ إضافة تمرين</span>
+                    </button>
                 </div>
 
                 <div class="category-pills" id="category-pills">
@@ -154,7 +157,7 @@
                 <div id="history-list" class="history-list"></div>
             </section>
 
-            <!-- === Compact Footer at Bottom === -->
+            <!-- Compact Footer at Bottom -->
             <footer class="app-social-footer">
                 <div class="footer-brand-title">SEC ASSEM • Tamriny App</div>
                 <div class="social-footer-links">
@@ -209,6 +212,69 @@
             </button>
         </nav>
 
+        <!-- === MODAL: Add Custom Exercise with User Scope Option === -->
+        <div id="custom-ex-modal" class="modal">
+            <div class="modal-backdrop" id="custom-ex-backdrop"></div>
+            <div class="modal-sheet">
+                <div class="modal-handle"></div>
+                <h2 class="modal-title">➕ إضافة تمرين جديد</h2>
+                <form id="custom-ex-form">
+                    <div class="quiz-group">
+                        <label>اسم التمرين بالعربي:</label>
+                        <input type="text" id="cust-name-ar" class="quiz-input" placeholder="مثال: رفرفة دمبلز مائل للخلف" required>
+                    </div>
+                    <div class="quiz-group">
+                        <label>اسم التمرين بالإنجليزي (اختياري):</label>
+                        <input type="text" id="cust-name-en" class="quiz-input" placeholder="e.g. Incline Rear Delt Fly">
+                    </div>
+                    <div class="quiz-row-2">
+                        <div class="quiz-group">
+                            <label>العضلة المستهدفة:</label>
+                            <select id="cust-category" class="quiz-select">
+                                <option value="chest">صدر</option>
+                                <option value="back">ظهر</option>
+                                <option value="shoulders">أكتاف</option>
+                                <option value="arms">ذراع</option>
+                                <option value="legs">أرجل</option>
+                                <option value="core">بطن</option>
+                                <option value="cardio">كارديو</option>
+                            </select>
+                        </div>
+                        <div class="quiz-group">
+                            <label>الأيقونة:</label>
+                            <select id="cust-icon" class="quiz-select">
+                                <option value="🏋️">🏋️ بار / أوزان</option>
+                                <option value="💪">💪 كابل / عضل</option>
+                                <option value="🦋">🦋 فراشة / فلاي</option>
+                                <option value="🤖">🤖 جهاز</option>
+                                <option value="🦵">🦵 أرجل</option>
+                                <option value="🏃">🏃 كارديو</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="quiz-group">
+                        <label>إضافة التمرين إلى:</label>
+                        <select id="cust-scope" class="quiz-select">
+                            <option value="all">🌐 جميع المتدربين (تمرين عام)</option>
+                            <option value="single">👤 المتدرب الحالي فقط</option>
+                        </select>
+                    </div>
+                    <div class="quiz-group">
+                        <label>رابط فيديو الشرح (يوتيوب أو أي موقع):</label>
+                        <input type="url" id="cust-video-url" class="quiz-input" placeholder="https://www.youtube.com/watch?v=...">
+                    </div>
+                    <div class="quiz-group">
+                        <label>اختر بدائل لهذا التمرين:</label>
+                        <select id="cust-alts" class="quiz-select" multiple size="3" style="height:80px;"></select>
+                    </div>
+                    <div class="modal-actions" style="margin-top:16px;">
+                        <button type="button" class="btn-cancel" id="btn-cancel-custom-ex">إلغاء</button>
+                        <button type="submit" class="btn-save">حفظ التمرين 💾</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <!-- === MODAL: Interactive Live Exercise Logger === -->
         <div id="exercise-modal" class="modal">
             <div class="modal-backdrop" id="modal-backdrop"></div>
@@ -217,7 +283,9 @@
                 <div class="modal-header-actions">
                     <h2 class="modal-title" id="modal-title">اسم التمرين</h2>
                     <div class="modal-actions-top-row">
-                        <button type="button" class="btn-video-modal" id="btn-modal-video">▶️ شرح يوتيوب</button>
+                        <a href="#" target="_blank" rel="noopener noreferrer" class="btn-video-modal" id="btn-modal-video">
+                            ▶️ فيديو الشرح
+                        </a>
                         <button type="button" class="btn-alt-modal" id="btn-modal-swap-alt" data-i18n="btn_alt_ex">🔄 بديل التمرين</button>
                     </div>
                 </div>
