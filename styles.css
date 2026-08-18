@@ -486,3 +486,27 @@ body.light-theme .planner-header-card { background: linear-gradient(135deg, #e8f
   .bottom-nav, .multi-start-bar{max-width:480px;margin:0 auto}
   .fab{inset-inline-end:calc(50% - 240px + 20px)}
 }
+/* Timer Control Button */
+.btn-timer-control {
+  margin-top: 4px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: var(--danger);
+  font-size: .72rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all .2s ease;
+  white-space: nowrap;
+}
+.btn-timer-control:active {
+  transform: scale(0.92);
+  background: var(--danger);
+  color: #fff;
+}
+.btn-timer-control.resumed {
+  background: rgba(0, 212, 170, 0.12);
+  border-color: var(--accent);
+  color: var(--accent);
+}
